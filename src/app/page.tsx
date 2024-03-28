@@ -3,6 +3,7 @@ import Map, { Marker, GeolocateControl, NavigationControl } from "react-map-gl";
 import { useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import classes from "./Page.module.css";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
 
@@ -24,6 +25,10 @@ export default function Home() {
     setMarkers([...markers, newMarker]);
   }
 
+  const clearMarker = () => {
+    setMarkers([]);
+  }
+
   return (
     <main className={classes.mainStyle}>
       <Map mapboxAccessToken={mapboxToken}
@@ -41,7 +46,9 @@ export default function Home() {
         ))}
       </Map>
 
-      <button onClick={() => setMarkers([])}>Clear</button>
+      <Button variant="default" size="sm" onClick={clearMarker}>
+        Clear Marker
+      </Button>
 
     </main>
   );

@@ -1,7 +1,6 @@
 "use client";
 import { db } from "@/app/db/firebase";
 import { useAuthStore } from "@/app/store/authStore";
-import { Button } from "@/components/ui/button";
 import { addDoc, collection } from "firebase/firestore";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState } from "react";
@@ -30,7 +29,6 @@ export default function Home() {
     const colref = collection(db, "markers");
     addDoc(colref, {
       location: newMarker.latitude + "," + newMarker.longitude,
-      user: user?.uid,
     });
   };
 
@@ -43,7 +41,7 @@ export default function Home() {
       <Map
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "90%" }}
         initialViewState={{
           latitude: 35.668641,
           longitude: 139.750567,
@@ -63,10 +61,6 @@ export default function Home() {
           />
         ))}
       </Map>
-
-      <Button variant="default" size="sm" onClick={clearMarker}>
-        Clear Marker
-      </Button>
     </main>
   );
 }

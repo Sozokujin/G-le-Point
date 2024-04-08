@@ -24,16 +24,20 @@ const Navbar = () => {
               <Link href="/friends">Amis</Link>
             </li>
             <li>
-              <Link href="/profile">
-                <Image
-                  alt="image de profile google"
-                  src={user.photoURL}
-                  width={"50"}
-                  height={"50"}
-                  className="rounded-full"
-                  priority
-                ></Image>
-              </Link>
+              {!isAuthenticated ? (
+                <Link href="/login">Se connecter</Link>
+              ) : (
+                <Link href="/profile">
+                  <Image
+                    alt="image de profil Google"
+                    src={user.photoURL}
+                    width={50}
+                    height={50}
+                    className="rounded-full"
+                    priority
+                  />
+                </Link>
+              )}
             </li>
           </ul>
         </nav>

@@ -1,7 +1,6 @@
 "use client";
-import { db } from "@/db/firebase";
+import ModalCreateMarker from "@/components/modelCreateMarker";
 import { useAuthStore } from "@/store/authStore";
-import { addDoc, collection } from "firebase/firestore";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState } from "react";
 import Map, { GeolocateControl, Marker, NavigationControl } from "react-map-gl";
@@ -9,6 +8,8 @@ import classes from "../Page.module.css";
 
 export default function Home() {
   const { user } = useAuthStore();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   interface Marker {
     longitude: number;
@@ -19,22 +20,22 @@ export default function Home() {
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
 
-  const handleMapClick = (event: { lngLat: any }) => {
-    const { lngLat } = event;
-    const newMarker = {
-      longitude: lngLat.lng,
-      latitude: lngLat.lat,
-    };
-    setMarkers([...markers, newMarker]);
-    const colref = collection(db, "markers");
-    addDoc(colref, {
-      location: newMarker.latitude + "," + newMarker.longitude,
-    });
-  };
+  // const handleMapClick = (event: { lngLat: any }) => {
+  //   const { lngLat } = event;
+  //   const newMarker = {
+  //     longitude: lngLat.lng,
+  //     latitude: lngLat.lat,
+  //   };
+  //   setMarkers([...markers, newMarker]);
+  //   const colref = collection(db, "markers");
+  //   addDoc(colref, {
+  //     location: newMarker.latitude + "," + newMarker.longitude,
+  //   });
+  // };
 
-  const clearMarker = () => {
-    setMarkers([]);
-  };
+  // const clearMarker = () => {
+  //   setMarkers([]);
+  // };
 
   return (
     <main className={classes.mainStyle}>
@@ -49,7 +50,6 @@ export default function Home() {
         }}
         maxZoom={30}
         minZoom={3}
-        onClick={handleMapClick}
       >
         <GeolocateControl position="top-left" />
         <NavigationControl position="top-left" />
@@ -60,6 +60,7 @@ export default function Home() {
             latitude={marker.latitude}
           />
         ))}
+        <ModalCreateMarker />
       </Map>
     </main>
   );

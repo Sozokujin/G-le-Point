@@ -1,11 +1,21 @@
 "use client";
 
-import { useAuthStore } from "@/store/authStore";
+import { Button } from "@/components/ui/button";
+import { googleLogOut, useAuthStore } from "@/store/authStore";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
 const Profile = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await googleLogOut();
+      logout();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -16,6 +26,9 @@ const Profile = () => {
   return (
     <div>
       <h1>Profile</h1>
+      <Button onClick={handleLogout} variant="default" size="sm">
+        Logout
+      </Button>
     </div>
   );
 };

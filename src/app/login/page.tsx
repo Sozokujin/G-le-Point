@@ -1,11 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/db/firebase";
-import { googleLogOut, googleSignIn, useAuthStore } from "@/store/authStore";
+import { googleSignIn, useAuthStore } from "@/store/authStore";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 const Login = () => {
-  const { isAuthenticated, login, logout, user } = useAuthStore();
+  const { isAuthenticated, login, user } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      redirect("/map");
+    }
+  }, [isAuthenticated]);
 
   const handleSignIn = async () => {
     try {
@@ -13,31 +21,18 @@ const Login = () => {
       const authUser = await googleSignIn();
       if (authUser && authUser.user) {
         login(authUser.user);
+        redirect("/map");
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await googleLogOut();
-      logout();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log(isAuthenticated, user);
-
   return (
     <>
       <div>
         <Button variant="default" size="sm" onClick={handleSignIn}>
           Login
-        </Button>
-        <Button variant="default" size="sm" onClick={handleLogout}>
-          Logout
         </Button>
       </div>
 

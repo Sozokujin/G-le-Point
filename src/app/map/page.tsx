@@ -2,15 +2,18 @@
 import ModalCreateMarker from "@/components/modalCreateMarker";
 import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
 import classes from "../Page.module.css";
 
 export default function Home() {
   const { isAuthenticated, user } = useAuthStore();
   const { markers, getMarkers } = useMarkerStore();
+
+  const map = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -20,7 +23,6 @@ export default function Home() {
 
   useEffect(() => {
     getMarkers(user.uid);
-    console.log(markers);
   }, [getMarkers, user]);
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
@@ -38,6 +40,7 @@ export default function Home() {
         }}
         maxZoom={30}
         minZoom={3}
+        ref={map}
       >
         <GeolocateControl position="top-left" />
         {markers.map((marker, index) => {

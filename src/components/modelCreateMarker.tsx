@@ -19,8 +19,8 @@ const ModalCreateMarker = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <button className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-blue-500 rounded-full flex items-center justify-center">
-          <PlusIcon className="h-8 w-8 text-white" />
+        <button className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-md">
+          <PlusIcon className="h-8 w-8 text-black" />
         </button>
       </DialogTrigger>
       <DialogContent>
@@ -40,7 +40,7 @@ const ModalCreateMarker = () => {
             <div
               className={`h-full w-full flex items-center justify-center cursor-pointer ${
                 display == "address"
-                  ? "outline outline-4 outline-offset-[-4px] outline-blue-500"
+                  ? "outline outline-4 outline-offset-[-4px] outline-black"
                   : ""
               }`}
               onClick={() => setDisplay("address")}
@@ -50,7 +50,7 @@ const ModalCreateMarker = () => {
             <div
               className={`h-full w-full flex items-center justify-center cursor-pointer ${
                 display == "gps"
-                  ? "outline outline-4 outline-offset-[-4px] outline-blue-500"
+                  ? "outline outline-4 outline-offset-[-4px] outline-black"
                   : ""
               }`}
               onClick={() => setDisplay("gps")}
@@ -60,7 +60,7 @@ const ModalCreateMarker = () => {
             <div
               className={`h-full w-full flex items-center justify-center cursor-pointer ${
                 display == "position"
-                  ? "outline outline-4 outline-offset-[-4px] outline-blue-500"
+                  ? "outline outline-4 outline-offset-[-4px] outline-black"
                   : ""
               }`}
               onClick={() => setDisplay("position")}

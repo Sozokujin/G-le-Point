@@ -9,7 +9,10 @@ interface Marker {
   address: string | null;
   latitude: number;
   longitude: number;
-  userUid: string;
+  user: {
+    uid: string;
+    displayName: string;
+  };
 }
 
 const useMarkerStore = create((set: any) => ({

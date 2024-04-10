@@ -41,7 +41,10 @@ const ModalCreateMarker = () => {
         address: "",
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
-        userUid: user.uid,
+        user: {
+          uid: user.uid,
+          displayName: user.displayName,
+        },
       });
     });
   };
@@ -57,7 +60,10 @@ const ModalCreateMarker = () => {
       address: pointAddressRef.current?.value || "",
       latitude: 0,
       longitude: 0,
-      userUid: user.uid,
+      user: {
+        uid: user.uid,
+        displayName: user.displayName,
+      },
     });
   };
 
@@ -76,7 +82,10 @@ const ModalCreateMarker = () => {
       address: "",
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
-      userUid: user.uid,
+      user: {
+        uid: user.uid,
+        displayName: user.displayName,
+      },
     });
   };
 

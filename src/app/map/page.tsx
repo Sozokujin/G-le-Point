@@ -2,40 +2,28 @@
 import ModalCreateMarker from "@/components/modelCreateMarker";
 import { useAuthStore } from "@/store/authStore";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useState } from "react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 import Map, { GeolocateControl, Marker, NavigationControl } from "react-map-gl";
 import classes from "../Page.module.css";
 
 export default function Home() {
-  const { user } = useAuthStore();
-
-  const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated } = useAuthStore();
 
   interface Marker {
     longitude: number;
     latitude: number;
   }
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      redirect("/login");
+    }
+  }, [isAuthenticated]);
+
   const [markers, setMarkers] = useState<Marker[]>([]);
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
-
-  // const handleMapClick = (event: { lngLat: any }) => {
-  //   const { lngLat } = event;
-  //   const newMarker = {
-  //     longitude: lngLat.lng,
-  //     latitude: lngLat.lat,
-  //   };
-  //   setMarkers([...markers, newMarker]);
-  //   const colref = collection(db, "markers");
-  //   addDoc(colref, {
-  //     location: newMarker.latitude + "," + newMarker.longitude,
-  //   });
-  // };
-
-  // const clearMarker = () => {
-  //   setMarkers([]);
-  // };
 
   return (
     <main className={classes.mainStyle}>

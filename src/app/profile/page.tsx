@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { googleLogOut, useAuthStore } from "@/store/authStore";
+import { googleLogOut, useAuthStore } from "@/stores/authStore";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 

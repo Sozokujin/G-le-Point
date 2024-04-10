@@ -7,14 +7,78 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useAuthStore } from "@/stores/authStore";
+import { useMarkerStore } from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
 const ModalCreateMarker = () => {
+  const pointNameRef = useRef<HTMLInputElement>(null);
+  const pointDescriptionRef = useRef<HTMLInputElement>(null);
+  const pointAddressRef = useRef<HTMLInputElement>(null);
+  const pointGpsRef = useRef<HTMLInputElement>(null);
+
   const [display, setDisplay] = useState<string>("");
+
+  const { addMarker } = useMarkerStore();
+
+  const { user } = useAuthStore();
+
+  const addMarkerWithCurrentLocation = () => {
+    const geo = navigator.geolocation;
+    if (!geo)
+      return alert(
+        "La géolocalisation n'est pas disponible sur votre navigateur"
+      );
+    navigator.geolocation.getCurrentPosition((position) => {
+      addMarker({
+        name: pointNameRef.current?.value || "Point",
+        description: pointDescriptionRef.current?.value || "",
+        tags: [],
+        address: "",
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        userUid: user.uid,
+      });
+    });
+  };
+
+  const addMarkerWithAddress = () => {
+    if (!pointAddressRef.current?.value) {
+      return alert("Veuillez renseigner une adresse");
+    }
+    addMarker({
+      name: pointNameRef.current?.value || "Point",
+      description: pointDescriptionRef.current?.value || "",
+      tags: [],
+      address: pointAddressRef.current?.value || "",
+      latitude: 0,
+      longitude: 0,
+      userUid: user.uid,
+    });
+  };
+
+  const addMarkerWithGps = () => {
+    if (!pointGpsRef.current?.value) {
+      return alert("Veuillez renseigner un point GPS");
+    }
+    const [latitude, longitude] = pointGpsRef.current?.value.split(",");
+    if (!latitude || !longitude) {
+      return alert("Le point GPS est invalide");
+    }
+    addMarker({
+      name: pointNameRef.current?.value || "Point",
+      description: pointDescriptionRef.current?.value || "",
+      tags: [],
+      address: "",
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      userUid: user.uid,
+    });
+  };
 
   return (
     <Dialog>
@@ -31,9 +95,9 @@ const ModalCreateMarker = () => {
           </DialogDescription>
         </DialogHeader>
         <Label htmlFor="name">Nom du lieu</Label>
-        <Input id="name" type="text" />
+        <Input ref={pointNameRef} id="name" type="text" />
         <Label htmlFor="description">Description</Label>
-        <Input id="description" type="text" />
+        <Input ref={pointDescriptionRef} id="description" type="text" />
 
         <div>
           <div className="w-full h-8 flex flex-row border mb-4 text-xs">
@@ -71,9 +135,11 @@ const ModalCreateMarker = () => {
           {display == "address" && (
             <>
               <Label htmlFor="address">Adresse</Label>
-              <Input id="address" type="text" />
+              <Input ref={pointAddressRef} id="address" type="text" />
               <DialogClose>
-                <Button className="mt-4">Enregistrer le point</Button>
+                <Button onClick={addMarkerWithAddress} className="mt-4">
+                  Enregistrer le point
+                </Button>
               </DialogClose>
             </>
           )}
@@ -84,15 +150,18 @@ const ModalCreateMarker = () => {
                 id="gps"
                 type="text"
                 placeholder="Exemple: 48.86127461, 2.334830083"
+                ref={pointGpsRef}
               />
               <DialogClose>
-                <Button className="mt-4">Enregistrer le point</Button>
+                <Button onClick={addMarkerWithGps} className="mt-4">
+                  Enregistrer le point
+                </Button>
               </DialogClose>
             </>
           )}
           {display == "position" && (
             <DialogClose>
-              <Button className="m-auto">
+              <Button onClick={addMarkerWithCurrentLocation} className="m-auto">
                 Enregistrer le point à ma position
               </Button>
             </DialogClose>

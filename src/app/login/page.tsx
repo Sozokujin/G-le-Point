@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@/db/firebase";
-import { googleSignIn, useAuthStore } from "@/store/authStore";
+import { googleSignIn, useAuthStore } from "@/stores/authStore";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import Image from "next/image";
 import { redirect } from "next/navigation";

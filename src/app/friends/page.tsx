@@ -1,5 +1,5 @@
 "use client";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/stores/authStore";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 

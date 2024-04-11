@@ -1,29 +1,31 @@
 "use client";
 import ModalCreateMarker from "@/components/modalCreateMarker";
+import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { redirect } from "next/navigation";
 import { useEffect, useRef } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
 import classes from "../Page.module.css";
 
 export default function Home() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isAuthChecking } = useAuthStore();
   const { markers, getMarkers } = useMarkerStore();
 
   const map = useRef(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirect("/login");
+      redirectTo("/login");
     }
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getMarkers(user.uid);
-  }, [getMarkers, user]);
+    if (!isAuthChecking) {
+      getMarkers(user?.uid);
+    }
+  }, [user, getMarkers, isAuthChecking]);
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
 

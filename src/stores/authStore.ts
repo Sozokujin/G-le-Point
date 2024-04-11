@@ -7,22 +7,18 @@ import {
 import { create } from "zustand";
 import { auth } from "../db/firebase";
 
-interface FirebaseUser {
-  uid: string | null;
+export interface FirebaseUser {
+  uid: string | null | undefined;
   displayName: string | null;
   email: string | null;
   photoURL: string | null | undefined;
 }
 
-export interface User extends FirebaseUser {
-  friends: string[];
-  invitationCode: string;
-}
 interface AuthStore {
-  user: User | null;
+  user: FirebaseUser | null;
   isAuthenticated: boolean;
   isAuthChecking: boolean;
-  login: (user: any) => void;
+  login: (user: FirebaseUser) => void;
   logout: () => void;
 }
 
@@ -38,9 +34,11 @@ const googleLogOut = () => {
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
-  isAuthChecking: true, // Nouvel état pour suivre la vérification initiale
-  login: (user: any) =>
-    set({ user, isAuthenticated: true, isAuthChecking: false }),
+  isAuthChecking: true,
+  login: (user: FirebaseUser) => {
+    set({ user, isAuthenticated: true, isAuthChecking: false });
+  },
+
   logout: () =>
     set({ user: null, isAuthenticated: false, isAuthChecking: false }),
 }));

@@ -11,7 +11,6 @@ import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
@@ -42,8 +41,8 @@ const ModalCreateMarker = () => {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         user: {
-          uid: user?.uid,
-          displayName: user?.displayName,
+          uid: user?.uid ?? null,
+          displayName: user?.displayName ?? null,
         },
       });
     });
@@ -61,8 +60,8 @@ const ModalCreateMarker = () => {
       latitude: 0,
       longitude: 0,
       user: {
-        uid: user?.uid,
-        displayName: user?.displayName,
+        uid: user?.uid ?? null,
+        displayName: user?.displayName ?? null,
       },
     });
   };
@@ -83,18 +82,16 @@ const ModalCreateMarker = () => {
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
       user: {
-        uid: user?.uid,
-        displayName: user?.displayName,
+        uid: user?.uid ?? null,
+        displayName: user?.displayName ?? null,
       },
     });
   };
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <button className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-md">
-          <PlusIcon className="h-8 w-8 text-black" />
-        </button>
+      <DialogTrigger className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-md">
+        <PlusIcon className="h-8 w-8 text-black" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -145,10 +142,8 @@ const ModalCreateMarker = () => {
             <>
               <Label htmlFor="address">Adresse</Label>
               <Input ref={pointAddressRef} id="address" type="text" />
-              <DialogClose>
-                <Button onClick={addMarkerWithAddress} className="mt-4">
-                  Enregistrer le point
-                </Button>
+              <DialogClose onClick={addMarkerWithAddress} className="mt-4">
+                Enregistrer le point
               </DialogClose>
             </>
           )}
@@ -161,18 +156,17 @@ const ModalCreateMarker = () => {
                 placeholder="Exemple: 48.86127461, 2.334830083"
                 ref={pointGpsRef}
               />
-              <DialogClose>
-                <Button onClick={addMarkerWithGps} className="mt-4">
-                  Enregistrer le point
-                </Button>
+              <DialogClose onClick={addMarkerWithGps} className="mt-4">
+                Enregistrer le point
               </DialogClose>
             </>
           )}
           {display == "position" && (
-            <DialogClose>
-              <Button onClick={addMarkerWithCurrentLocation} className="m-auto">
-                Enregistrer le point à ma position
-              </Button>
+            <DialogClose
+              onClick={addMarkerWithCurrentLocation}
+              className="m-auto"
+            >
+              Enregistrer le point à ma position
             </DialogClose>
           )}
         </div>

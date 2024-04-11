@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db } from "@/db/firebase";
+import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
 import {
   collection,
@@ -12,7 +13,6 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const Friends = () => {
@@ -24,7 +24,7 @@ const Friends = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirect("/login");
+      redirectTo("/login");
     }
   }, [isAuthenticated]);
 

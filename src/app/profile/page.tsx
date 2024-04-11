@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { redirectTo } from "@/lib/actions";
 import { googleLogOut, useAuthStore } from "@/stores/authStore";
-import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
 const Profile = () => {
@@ -19,7 +19,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirect("/login");
+      redirectTo("/login");
     }
   }, [isAuthenticated]);
 

@@ -10,8 +10,8 @@ interface Marker {
   latitude: number;
   longitude: number;
   user: {
-    uid: string;
-    displayName: string;
+    uid: string | null;
+    displayName: string | null;
   };
 }
 

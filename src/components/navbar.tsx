@@ -8,6 +8,8 @@ import Link from "next/link";
 const Navbar = () => {
   const { isAuthenticated, isAuthChecking, user } = useAuthStore();
 
+  console.log(user);
+
   return (
     <nav className="fixed bottom-0 w-full h-[10%]">
       <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">

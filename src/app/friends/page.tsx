@@ -35,7 +35,7 @@ const Friends = () => {
   const getAllFriends = async () => {
     const currentUser = useAuthStore.getState().user;
     const usersCollectionRef = collection(db, "users");
-    const q = query(usersCollectionRef, where("uid", "==", currentUser.uid));
+    const q = query(usersCollectionRef, where("uid", "==", currentUser?.uid));
 
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
@@ -76,8 +76,8 @@ const Friends = () => {
     const friends = querySnapshot.docs[0].data().friends
       ? querySnapshot.docs[0].data().friends
       : [];
-    if (!friends.includes(currentUser.uid)) {
-      friends.push(currentUser.uid);
+    if (!friends.includes(currentUser?.uid)) {
+      friends.push(currentUser?.uid);
       await updateDoc(userDocRef, {
         friends: friends,
       });

@@ -43,7 +43,7 @@ const Friends = () => {
     }
 
     const friendsUid = querySnapshot.docs[0].data().friends;
-    if (!friendsUid) {
+    if (friendsUid.length === 0) {
       return;
     }
     const q2 = query(usersCollectionRef, where("uid", "in", friendsUid));
@@ -93,9 +93,15 @@ const Friends = () => {
       <div>
         <h2>Mes amis</h2>
         <ul>
-          {friends.map((friend, key) => {
-            return <li key={key}>{friend.displayName}</li>;
-          })}
+          {friends.length !== 0 ? (
+            friends.map((friend, key) => {
+              return <li key={key}>{friend.displayName}</li>;
+            })
+          ) : (
+            <div>
+              <p>Vous n&apos;avez pas encore d&apos;amis</p>
+            </div>
+          )}
         </ul>
       </div>
     </div>

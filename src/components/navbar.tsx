@@ -8,8 +8,6 @@ import Link from "next/link";
 const Navbar = () => {
   const { isAuthenticated, isAuthChecking, user } = useAuthStore();
 
-  console.log(user);
-
   return (
     <nav className="fixed bottom-0 w-full h-[10%]">
       <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">
@@ -31,7 +29,7 @@ const Navbar = () => {
             <Link href="/profile">
               <Image
                 alt="image de profil Google"
-                src={user.photoURL}
+                src={user?.photoURL ?? ""}
                 width={50}
                 height={50}
                 className="rounded-full"

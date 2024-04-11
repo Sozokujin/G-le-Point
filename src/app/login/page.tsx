@@ -1,9 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth } from "@/db/firebase";
+import { auth, db } from "@/db/firebase";
 import { googleSignIn, useAuthStore } from "@/stores/authStore";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
@@ -17,12 +18,29 @@ const Login = () => {
     }
   }, [isAuthenticated]);
 
+  const addToDbIfNewUser = async (user: any) => {
+    const usersCollectionRef = collection(db, "users");
+    const querry = query(usersCollectionRef, where("uid", "==", user.uid));
+    const querySnapshot = await getDocs(querry);
+    if (querySnapshot.empty) {
+      addDoc(usersCollectionRef, {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        invitationCode: Math.random().toString(36).substring(7),
+        friends: [],
+      });
+    }
+  };
+
   const handleSignIn = async () => {
     try {
       await setPersistence(auth, browserLocalPersistence);
       const authUser = await googleSignIn();
       if (authUser && authUser.user) {
         login(authUser.user);
+        addToDbIfNewUser(authUser.user);
         redirect("/map");
       }
     } catch (error) {

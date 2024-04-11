@@ -7,6 +7,14 @@ import {
 import { create } from "zustand";
 import { auth } from "../db/firebase";
 
+interface User {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+  friends: string[];
+}
+
 const googleSignIn = () => {
   const provider = new GoogleAuthProvider();
   return signInWithPopup(auth, provider);
@@ -34,4 +42,4 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-export { googleLogOut, googleSignIn, useAuthStore };
+export { googleLogOut, googleSignIn, useAuthStore, type User };

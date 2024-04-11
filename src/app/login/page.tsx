@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth, db } from "@/db/firebase";
-import { googleSignIn, useAuthStore } from "@/stores/authStore";
+import { User, googleSignIn, useAuthStore } from "@/stores/authStore";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
@@ -18,19 +18,12 @@ const Login = () => {
     }
   }, [isAuthenticated]);
 
-  const addToDbIfNewUser = async (user: any) => {
+  const addToDbIfNewUser = async (user: User) => {
     const usersCollectionRef = collection(db, "users");
     const querry = query(usersCollectionRef, where("uid", "==", user.uid));
     const querySnapshot = await getDocs(querry);
     if (querySnapshot.empty) {
-      addDoc(usersCollectionRef, {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        invitationCode: Math.random().toString(36).substring(7),
-        friends: [],
-      });
+      addDoc(usersCollectionRef, user);
     }
   };
 
@@ -39,8 +32,16 @@ const Login = () => {
       await setPersistence(auth, browserLocalPersistence);
       const authUser = await googleSignIn();
       if (authUser && authUser.user) {
-        login(authUser.user);
-        addToDbIfNewUser(authUser.user);
+        const user = {
+          uid: authUser.user.uid,
+          displayName: authUser.user.displayName,
+          email: authUser.user.email,
+          photoURL: authUser.user.photoURL,
+          invitationCode: Math.random().toString(36).substring(7),
+          friends: [],
+        };
+        login(user);
+        addToDbIfNewUser(user);
         redirect("/map");
       }
     } catch (error) {
@@ -76,12 +77,6 @@ const Login = () => {
           </Button>
         </CardContent>
       </Card>
-
-      {isAuthenticated && (
-        <div>
-          <h1>Welcome {user.displayName}</h1>
-        </div>
-      )}
     </main>
   );
 };

@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
@@ -90,8 +91,10 @@ const ModalCreateMarker = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-md">
-        <PlusIcon className="h-8 w-8 text-black" />
+      <DialogTrigger asChild>
+        <button className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-white rounded-full flex items-center justify-center shadow-md">
+          <PlusIcon className="h-8 w-8 text-black" />
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -142,8 +145,10 @@ const ModalCreateMarker = () => {
             <>
               <Label htmlFor="address">Adresse</Label>
               <Input ref={pointAddressRef} id="address" type="text" />
-              <DialogClose onClick={addMarkerWithAddress} className="mt-4">
-                Enregistrer le point
+              <DialogClose asChild>
+                <Button onClick={addMarkerWithAddress} className="mt-4">
+                  Enregistrer le point
+                </Button>
               </DialogClose>
             </>
           )}
@@ -156,17 +161,18 @@ const ModalCreateMarker = () => {
                 placeholder="Exemple: 48.86127461, 2.334830083"
                 ref={pointGpsRef}
               />
-              <DialogClose onClick={addMarkerWithGps} className="mt-4">
-                Enregistrer le point
+              <DialogClose asChild>
+                <Button onClick={addMarkerWithGps} className="mt-4">
+                  Enregistrer le point
+                </Button>
               </DialogClose>
             </>
           )}
           {display == "position" && (
-            <DialogClose
-              onClick={addMarkerWithCurrentLocation}
-              className="m-auto"
-            >
-              Enregistrer le point à ma position
+            <DialogClose asChild>
+              <Button onClick={addMarkerWithCurrentLocation} className="mt-4">
+                Enregistrer le point à ma position
+              </Button>
             </DialogClose>
           )}
         </div>

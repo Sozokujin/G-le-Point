@@ -47,11 +47,11 @@ const useMarkerStore = create((set: any) => ({
 
     const userDocSnapshot = await getDocs(userCollectionRef);
 
-    const friends = userDocSnapshot.docs
+    const friends: [] = userDocSnapshot.docs
       .map((doc) => doc.data())
       .find((user) => user.uid === userUid)?.friends;
 
-    if (!friends) return;
+    if (!friends || friends.length == 0) return;
     const querry = query(
       markersCollectionRef,
       where("user.uid", "in", friends)

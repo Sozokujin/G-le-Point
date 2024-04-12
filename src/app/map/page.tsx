@@ -63,13 +63,14 @@ export default function Home() {
               latitude={marker.latitude}
               longitude={marker.longitude}
               style={{
-                backgroundColor: "#ff0000", // Couleur de fond rouge
+                backgroundColor: "blue", // Couleur de fond rouge
                 width: "20px", // Largeur du marqueur
                 height: "20px", // Hauteur du marqueur, // Rendre le marqueur circulaire
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 border: "2px solid #ffffff",
+                cursor: "pointer",
               }}
               onClick={() => {
                 console.log(marker);

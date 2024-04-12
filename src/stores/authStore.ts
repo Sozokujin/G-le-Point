@@ -8,7 +8,7 @@ import { create } from "zustand";
 import { auth } from "../db/firebase";
 
 export interface FirebaseUser {
-  uid: string | null | undefined;
+  uid: string;
   displayName: string | null;
   email: string | null;
   photoURL: string | null | undefined;

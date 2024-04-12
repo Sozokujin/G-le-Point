@@ -37,7 +37,6 @@ const useMarkerStore = create((set: any) => ({
       id: doc.id,
     }));
     set({ markers: markersData });
-    console.log(markersData);
   },
 }));
 

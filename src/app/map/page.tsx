@@ -22,8 +22,9 @@ export default function Home() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!isAuthChecking) {
-      getMarkers(user?.uid);
+    if (!isAuthChecking && user?.uid) {
+      console.log(user.uid);
+      getMarkers(user.uid);
     }
   }, [user, getMarkers, isAuthChecking]);
 

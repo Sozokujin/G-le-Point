@@ -34,18 +34,20 @@ const ModalCreateMarker = () => {
         "La géolocalisation n'est pas disponible sur votre navigateur"
       );
     navigator.geolocation.getCurrentPosition((position) => {
-      addMarker({
-        name: pointNameRef.current?.value || "Point",
-        description: pointDescriptionRef.current?.value || "",
-        tags: [],
-        address: "",
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        user: {
-          uid: user?.uid ?? null,
-          displayName: user?.displayName ?? null,
-        },
-      });
+      if (user?.uid && user?.displayName) {
+        addMarker({
+          name: pointNameRef.current?.value || "Point",
+          description: pointDescriptionRef.current?.value || "",
+          tags: [],
+          address: "",
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          user: {
+            uid: user.uid,
+            displayName: user.displayName,
+          },
+        });
+      }
     });
   };
 
@@ -53,18 +55,20 @@ const ModalCreateMarker = () => {
     if (!pointAddressRef.current?.value) {
       return alert("Veuillez renseigner une adresse");
     }
-    addMarker({
-      name: pointNameRef.current?.value || "Point",
-      description: pointDescriptionRef.current?.value || "",
-      tags: [],
-      address: pointAddressRef.current?.value || "",
-      latitude: 0,
-      longitude: 0,
-      user: {
-        uid: user?.uid ?? null,
-        displayName: user?.displayName ?? null,
-      },
-    });
+    if (user?.uid && user?.displayName) {
+      addMarker({
+        name: pointNameRef.current?.value || "Point",
+        description: pointDescriptionRef.current?.value || "",
+        tags: [],
+        address: pointAddressRef.current?.value || "",
+        latitude: 0,
+        longitude: 0,
+        user: {
+          uid: user.uid,
+          displayName: user.displayName,
+        },
+      });
+    }
   };
 
   const addMarkerWithGps = () => {
@@ -75,18 +79,20 @@ const ModalCreateMarker = () => {
     if (!latitude || !longitude) {
       return alert("Le point GPS est invalide");
     }
-    addMarker({
-      name: pointNameRef.current?.value || "Point",
-      description: pointDescriptionRef.current?.value || "",
-      tags: [],
-      address: "",
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      user: {
-        uid: user?.uid ?? null,
-        displayName: user?.displayName ?? null,
-      },
-    });
+    if (user?.uid && user?.displayName) {
+      addMarker({
+        name: pointNameRef.current?.value || "Point",
+        description: pointDescriptionRef.current?.value || "",
+        tags: [],
+        address: "",
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        user: {
+          uid: user.uid,
+          displayName: user.displayName,
+        },
+      });
+    }
   };
 
   return (

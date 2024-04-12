@@ -30,7 +30,10 @@ const useMarkerStore = create((set: any) => ({
   clearMarkers: () => set({ markers: [] }),
   getMarkers: async (userUid: any) => {
     const markersCollectionRef = collection(db, "markers");
-    const querry = query(markersCollectionRef, where("userUid", "==", userUid));
+    const querry = query(
+      markersCollectionRef,
+      where("user.uid", "==", userUid)
+    );
     const querySnapshot = await getDocs(querry);
     const markersData = querySnapshot.docs.map((doc) => ({
       ...doc.data(),

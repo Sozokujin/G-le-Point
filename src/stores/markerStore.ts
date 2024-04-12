@@ -41,6 +41,28 @@ const useMarkerStore = create((set: any) => ({
     }));
     set({ markers: markersData });
   },
+  getFriendsMarkers: async (userUid: any) => {
+    const markersCollectionRef = collection(db, "markers");
+    const userCollectionRef = collection(db, "users");
+
+    const userDocSnapshot = await getDocs(userCollectionRef);
+
+    const friends = userDocSnapshot.docs
+      .map((doc) => doc.data())
+      .find((user) => user.uid === userUid)?.friends;
+
+    if (!friends) return;
+    const querry = query(
+      markersCollectionRef,
+      where("user.uid", "in", friends)
+    );
+    const querySnapshot = await getDocs(querry);
+    const markersData = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    set((state: any) => ({ markers: [...state.markers, ...markersData] }));
+  },
 }));
 
 export { useMarkerStore };

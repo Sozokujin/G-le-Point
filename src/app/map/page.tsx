@@ -5,13 +5,16 @@ import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
 import classes from "../Page.module.css";
 
 export default function Home() {
+  const [displayFriendsMarkers, setDisplayFriendsMarkers] =
+    useState<Boolean>(true);
+
   const { isAuthenticated, user, isAuthChecking } = useAuthStore();
-  const { markers, getMarkers } = useMarkerStore();
+  const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
 
   const map = useRef(null);
 
@@ -23,10 +26,16 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthChecking && user?.uid) {
-      console.log(user.uid);
       getMarkers(user.uid);
+      displayFriendsMarkers ? getFriendsMarkers(user.uid) : null;
     }
-  }, [user, getMarkers, isAuthChecking]);
+  }, [
+    user,
+    getFriendsMarkers,
+    getMarkers,
+    isAuthChecking,
+    displayFriendsMarkers,
+  ]);
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
 

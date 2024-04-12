@@ -1,5 +1,6 @@
 "use client";
 import ModalCreateMarker from "@/components/modalCreateMarker";
+import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
 import { useMarkerStore } from "@/stores/markerStore";
@@ -11,7 +12,7 @@ import classes from "../Page.module.css";
 
 export default function Home() {
   const [displayFriendsMarkers, setDisplayFriendsMarkers] =
-    useState<Boolean>(true);
+    useState<boolean>(false);
 
   const { isAuthenticated, user, isAuthChecking } = useAuthStore();
   const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
@@ -76,6 +77,13 @@ export default function Home() {
             />
           );
         })}
+        <Switch
+          checked={displayFriendsMarkers}
+          onCheckedChange={() =>
+            setDisplayFriendsMarkers(!displayFriendsMarkers)
+          }
+          className="absolute top-4 right-4 z-10"
+        />
         <ModalCreateMarker />
       </Map>
     </main>

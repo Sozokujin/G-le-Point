@@ -64,12 +64,12 @@ const Login = () => {
         </h2>
       </div>
 
-      <Card className="w-3/4 flex items-center flex-col">
+      <Card className="w-3/4 flex items-center flex-col md:w-auto md:px-24">
         <CardHeader>
           <CardTitle>Connectez vous</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Button variant="default" size="sm" onClick={handleSignInGoogle}>
+        <CardContent className="flex flex-col gap-4">
+          <Button variant="outline" size="sm" onClick={handleSignInGoogle}>
             Se connecter avec
             <Image
               src="google-icon.svg"
@@ -79,13 +79,13 @@ const Login = () => {
               className="ml-2"
             />
           </Button>
-          <Button variant="default" size="sm" onClick={handleSignInFacebook}>
+          <Button variant="outline" size="sm" onClick={handleSignInFacebook}>
             Se connecter avec
             <Image
-              src="google-icon.svg"
+              src="facebook-icon.svg"
               height={18}
               width={18}
-              alt="Google Icon"
+              alt="Facebook Icon"
               className="ml-2"
             />
           </Button>

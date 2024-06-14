@@ -1,5 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useAuthStore } from "../stores/authStore";
+import { Button } from "./ui/button";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
   const { user } = useAuthStore();
@@ -22,9 +23,9 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
       </p>
       <p className="text-sm text-gray-500">{marker.description}</p>
       {marker.user.uid === user?.uid ? (
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">
+        <Button className="bg-primary text-white px-4 py-2 rounded-lg mt-2">
           Passer le point en premium
-        </button>
+        </Button>
       ) : null}
     </div>
   );

@@ -9,7 +9,7 @@ const Navbar = () => {
   const { isAuthenticated, isAuthChecking, user } = useAuthStore();
 
   return (
-    <nav className="fixed bottom-0 w-full h-[10%]">
+    <nav className="fixed bottom-0 w-full h-[10%] bg-white text-primary">
       <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">
         <li>
           <Link href="/map">

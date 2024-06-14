@@ -63,9 +63,6 @@ const Login = () => {
           height={250}
           alt="Logo de GlePoint"
         />
-        <h2 className="text-2xl font-semibold leading-none tracking-tight text-center mt-4">
-          Votre carte collaborative
-        </h2>
       </div>
 
       <Card className="w-3/4 flex items-center flex-col md:w-auto md:px-24">

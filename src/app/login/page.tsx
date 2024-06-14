@@ -55,11 +55,15 @@ const Login = () => {
 
   return (
     <main className="h-[90vh] flex justify-center items-center flex-col gap-24">
-      <div>
-        <h1 className="text-3xl font-semibold leading-none tracking-tight text-center">
-          G&apos;Le point
-        </h1>
-        <h2 className="text-xl font-semibold leading-none tracking-tight text-center mt-4">
+      <div className="flex flex-col gap-4">
+        <Image
+          className="mx-auto"
+          src={"logo-glepoint.svg"}
+          width={250}
+          height={250}
+          alt="Logo de GlePoint"
+        />
+        <h2 className="text-2xl font-semibold leading-none tracking-tight text-center mt-4">
           Votre carte collaborative
         </h2>
       </div>

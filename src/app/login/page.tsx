@@ -31,7 +31,9 @@ const Login = () => {
     }
   };
 
-  const handleSignIn = async () => {
+  const handleSignInFacebook = async () => {};
+
+  const handleSignInGoogle = async () => {
     try {
       await setPersistence(auth, browserLocalPersistence);
       const authUser = await googleSignIn();
@@ -67,7 +69,17 @@ const Login = () => {
           <CardTitle>Connectez vous</CardTitle>
         </CardHeader>
         <CardContent>
-          <Button variant="default" size="sm" onClick={handleSignIn}>
+          <Button variant="default" size="sm" onClick={handleSignInGoogle}>
+            Se connecter avec
+            <Image
+              src="google-icon.svg"
+              height={18}
+              width={18}
+              alt="Google Icon"
+              className="ml-2"
+            />
+          </Button>
+          <Button variant="default" size="sm" onClick={handleSignInFacebook}>
             Se connecter avec
             <Image
               src="google-icon.svg"

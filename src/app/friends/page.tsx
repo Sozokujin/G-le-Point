@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db } from "@/db/firebase";
@@ -16,7 +17,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const Friends = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   const [friends, setFriends] = useState<any[]>([]);
 
@@ -86,16 +87,34 @@ const Friends = () => {
 
   return (
     <div>
-      <Label htmlFor="invitationCode">Code d&apos;invitation</Label>
-      <Input ref={invitationCodeRef} id="invitationCode" type="text" />
-      <Button onClick={sendFriendRequest}>Envoyer la demande</Button>
+      <Card className="p-4 flex flex-col gap-4">
+        <Label htmlFor="invitationCode">Code d&apos;invitation</Label>
+        <Input
+          ref={invitationCodeRef}
+          placeholder="Entrez le code d'invitation d'un ami"
+          id="invitationCode"
+          type="text"
+        />
+        <Button onClick={sendFriendRequest}>Envoyer la demande</Button>
+
+        <span>Mon code : {}</span>
+      </Card>
 
       <div>
-        <h2>Mes amis</h2>
-        <ul>
+        <h2 className="text-primary text-xl font-bold px-2 py-4">Vos amis</h2>
+        <ul className="flex gap-3">
           {friends.length !== 0 ? (
             friends.map((friend, key) => {
-              return <li key={key}>{friend.displayName}</li>;
+              return (
+                <li
+                  className="h-24 w-full border-primary border-y-2 p-2 rounded-sm"
+                  key={key}
+                >
+                  <span className="text-primary font-semibold">
+                    {friend.displayName}
+                  </span>
+                </li>
+              );
             })
           ) : (
             <div>

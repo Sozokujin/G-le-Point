@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Dialog } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -10,7 +10,7 @@ import {
   LockClosedIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { CheckIcon } from "@heroicons/react/20/solid";
+import { useState } from "react";
 
 const navigation = [
   { name: "Présentation", href: "#" },
@@ -141,7 +141,7 @@ export default function Example() {
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="/images/main-logo-green.png"
                 alt=""
               />
             </a>
@@ -258,7 +258,7 @@ export default function Example() {
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                   <a
                     href="#"
-                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-glpGreen-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     Débutez maintenant
                   </a>
@@ -300,7 +300,7 @@ export default function Example() {
         {/* Feature section */}
         <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-semibold leading-7 text-indigo-600">
+            <h2 className="text-base font-semibold leading-7 text-primary">
               Explorons ensemble
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -319,7 +319,7 @@ export default function Example() {
               {features.map((feature) => (
                 <div key={feature.name} className="relative pl-16">
                   <dt className="text-base font-semibold leading-7 text-gray-900">
-                    <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
+                    <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
                       <feature.icon
                         className="h-6 w-6 text-white"
                         aria-hidden="true"
@@ -399,7 +399,7 @@ export default function Example() {
         <div className="py-24 sm:pt-48">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-              <h2 className="text-base font-semibold leading-7 text-indigo-600">
+              <h2 className="text-base font-semibold leading-7 text-primary">
                 Nos Plans
               </h2>
               <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -426,16 +426,14 @@ export default function Example() {
                       <h3
                         id={tier.id}
                         className={classNames(
-                          tier.mostPopular
-                            ? "text-indigo-600"
-                            : "text-gray-900",
+                          tier.mostPopular ? "text-primary" : "text-gray-900",
                           "text-lg font-semibold leading-8"
                         )}
                       >
                         {tier.name}
                       </h3>
                       {tier.mostPopular ? (
-                        <p className="rounded-full bg-indigo-600/10 px-2.5 py-1 text-xs font-semibold leading-5 text-indigo-600">
+                        <p className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold leading-5 text-primary">
                           Most popular
                         </p>
                       ) : null}
@@ -458,7 +456,7 @@ export default function Example() {
                       {tier.features.map((feature) => (
                         <li key={feature} className="flex gap-x-3">
                           <CheckIcon
-                            className="h-6 w-5 flex-none text-indigo-600"
+                            className="h-6 w-5 flex-none text-primary"
                             aria-hidden="true"
                           />
                           {feature}
@@ -471,9 +469,9 @@ export default function Example() {
                     aria-describedby={tier.id}
                     className={classNames(
                       tier.mostPopular
-                        ? "bg-indigo-600 text-white shadow-sm hover:bg-indigo-500"
-                        : "text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300",
-                      "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        ? "bg-primary text-white shadow-sm hover:bg-indigo-500"
+                        : "text-primary ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300",
+                      "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     )}
                   >
                     Buy plan
@@ -512,7 +510,7 @@ export default function Example() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 href="#"
-                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 Get started
               </a>

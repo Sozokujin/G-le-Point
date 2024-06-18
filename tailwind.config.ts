@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       colors: {
-        glpGreen: {
+        "glp-green": {
           DEFAULT: "00a661",
           "50": "#edfff7",
           "100": "#d6ffee",

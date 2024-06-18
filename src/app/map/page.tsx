@@ -1,5 +1,6 @@
 "use client";
 import ModalCreateMarker from "@/components/modalCreateMarker";
+import ModalMarker from "@/components/modalMarker";
 import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
@@ -13,6 +14,7 @@ import classes from "../Page.module.css";
 export default function Home() {
   const [displayFriendsMarkers, setDisplayFriendsMarkers] =
     useState<boolean>(false);
+  const [modalMarker, setModalMarker] = useState<any>(null);
 
   const { isAuthenticated, user, isAuthChecking } = useAuthStore();
   const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
@@ -74,6 +76,7 @@ export default function Home() {
               }}
               onClick={() => {
                 console.log(marker);
+                setModalMarker(marker);
               }}
             />
           );
@@ -86,6 +89,9 @@ export default function Home() {
           className="absolute top-4 right-4 z-10"
         />
         <ModalCreateMarker />
+        {modalMarker && (
+          <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />
+        )}
       </Map>
     </main>
   );

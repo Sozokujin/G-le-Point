@@ -22,15 +22,6 @@ interface AuthStore {
   logout: () => void;
 }
 
-const googleSignIn = () => {
-  const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
-};
-
-const googleLogOut = () => {
-  return signOut(auth);
-};
-
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,
@@ -42,6 +33,15 @@ const useAuthStore = create<AuthStore>((set) => ({
   logout: () =>
     set({ user: null, isAuthenticated: false, isAuthChecking: false }),
 }));
+
+const googleSignIn = () => {
+  const provider = new GoogleAuthProvider();
+  return signInWithPopup(auth, provider);
+};
+
+const googleLogOut = () => {
+  return signOut(auth);
+};
 
 onAuthStateChanged(auth, (firebaseUser) => {
   if (firebaseUser) {

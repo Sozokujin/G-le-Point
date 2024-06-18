@@ -9,8 +9,17 @@ const Navbar = () => {
   const { isAuthenticated, isAuthChecking, user } = useAuthStore();
 
   return (
-    <nav className="fixed bottom-0 w-full h-[10%]">
+    <nav className="fixed bottom-0 w-full h-[10%] bg-white text-primary">
       <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">
+        <li>
+          <Image
+            src={"logo-glepoint-secondaire.svg"}
+            width={40}
+            height={40}
+            className="rounded-full"
+            alt="Logo de GlePoint"
+          />
+        </li>
         <li>
           <Link href="/map">
             <MapIcon className="h-8 w-8 mx-auto" />

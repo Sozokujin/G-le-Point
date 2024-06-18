@@ -31,7 +31,9 @@ const Login = () => {
     }
   };
 
-  const handleSignIn = async () => {
+  const handleSignInFacebook = async () => {};
+
+  const handleSignInGoogle = async () => {
     try {
       await setPersistence(auth, browserLocalPersistence);
       const authUser = await googleSignIn();
@@ -53,27 +55,38 @@ const Login = () => {
 
   return (
     <main className="h-[90vh] flex justify-center items-center flex-col gap-24">
-      <div>
-        <h1 className="text-3xl font-semibold leading-none tracking-tight text-center">
-          G&apos;Le point
-        </h1>
-        <h2 className="text-xl font-semibold leading-none tracking-tight text-center mt-4">
-          Votre carte collaborative
-        </h2>
+      <div className="flex flex-col gap-4">
+        <Image
+          className="mx-auto"
+          src={"logo-glepoint.svg"}
+          width={250}
+          height={250}
+          alt="Logo de GlePoint"
+        />
       </div>
 
-      <Card className="w-3/4 flex items-center flex-col">
+      <Card className="w-3/4 flex items-center flex-col md:w-auto md:px-24">
         <CardHeader>
           <CardTitle>Connectez vous</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Button variant="default" size="sm" onClick={handleSignIn}>
+        <CardContent className="flex flex-col gap-4">
+          <Button variant="outline" size="sm" onClick={handleSignInGoogle}>
             Se connecter avec
             <Image
               src="google-icon.svg"
               height={18}
               width={18}
               alt="Google Icon"
+              className="ml-2"
+            />
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleSignInFacebook}>
+            Se connecter avec
+            <Image
+              src="facebook-icon.svg"
+              height={18}
+              width={18}
+              alt="Facebook Icon"
               className="ml-2"
             />
           </Button>

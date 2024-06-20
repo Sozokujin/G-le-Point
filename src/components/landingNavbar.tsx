@@ -54,7 +54,7 @@ export default function LandingNavbar() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
-            href="/login"
+            href="/map/login"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Log in <span aria-hidden="true">&rarr;</span>
@@ -73,7 +73,7 @@ export default function LandingNavbar() {
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="/images/main-logo-green.png"
                 alt=""
               />
             </a>
@@ -100,12 +100,12 @@ export default function LandingNavbar() {
                 ))}
               </div>
               <div className="py-6">
-                <a
-                  href="#"
+                <Link
+                  href="/map/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log in
-                </a>
+                </Link>
               </div>
             </div>
           </div>

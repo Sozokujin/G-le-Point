@@ -23,7 +23,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirectTo("/login");
+      redirectTo("/map/login");
     }
   }, [isAuthenticated]);
 

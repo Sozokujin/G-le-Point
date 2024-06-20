@@ -27,7 +27,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link href="/friends">
+          <Link href="/map/friends">
             <UsersIcon className="h-8 w-8 mx-auto" />
             Amis
           </Link>
@@ -35,7 +35,7 @@ const Navbar = () => {
 
         {!isAuthenticated ? null : (
           <li>
-            <Link href="/profile">
+            <Link href="/map/profile">
               <Image
                 alt="image de profil Google"
                 src={user?.photoURL ?? ""}

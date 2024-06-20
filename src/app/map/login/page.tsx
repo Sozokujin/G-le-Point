@@ -58,7 +58,7 @@ const Login = () => {
       <div className="flex flex-col gap-4">
         <Image
           className="mx-auto"
-          src={"logo-glepoint.svg"}
+          src={"/images/logo-glepoint.svg"}
           width={250}
           height={250}
           alt="Logo de GlePoint"
@@ -73,7 +73,7 @@ const Login = () => {
           <Button variant="outline" size="sm" onClick={handleSignInGoogle}>
             Se connecter avec
             <Image
-              src="google-icon.svg"
+              src="/images/google-icon.svg"
               height={18}
               width={18}
               alt="Google Icon"
@@ -83,7 +83,7 @@ const Login = () => {
           <Button variant="outline" size="sm" onClick={handleSignInFacebook}>
             Se connecter avec
             <Image
-              src="facebook-icon.svg"
+              src="/images/facebook-icon.svg"
               height={18}
               width={18}
               alt="Facebook Icon"

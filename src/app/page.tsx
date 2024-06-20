@@ -1,4 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
+import LandingFooter from "@/components/landingFooter";
+import LandingNavbar from "@/components/landingNavbar";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,
@@ -90,6 +92,8 @@ function classNames(...classes: any[]) {
 export default function Page() {
   return (
     <div className="bg-white">
+      <LandingNavbar />
+
       <main className="isolate">
         {/* Hero section */}
         <div className="relative pt-14">
@@ -398,6 +402,7 @@ export default function Page() {
           </div>
         </div>
       </main>
+      <LandingFooter />
     </div>
   );
 }

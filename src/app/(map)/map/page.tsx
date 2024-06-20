@@ -9,7 +9,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
-import classes from "../Page.module.css";
+import classes from "../../Page.module.css";
 
 export default function Home() {
   const [displayFriendsMarkers, setDisplayFriendsMarkers] =
@@ -23,7 +23,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirectTo("/map/login");
+      console.log("redirecting to login");
+      redirectTo("/login");
     }
   }, [isAuthenticated]);
 

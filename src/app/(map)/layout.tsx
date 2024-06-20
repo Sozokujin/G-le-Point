@@ -2,9 +2,11 @@ import Navbar from "@/components/navbar";
 
 export default function MapLayout({ children }: { children: React.ReactNode }) {
   return (
-    <section>
-      {children}
-      <Navbar />
-    </section>
+    <html lang="fr">
+      <body>
+        {children}
+        <Navbar />
+      </body>
+    </html>
   );
 }

@@ -24,7 +24,7 @@ const Friends = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      redirectTo("/map/login");
+      redirectTo("/login");
     }
   }, [isAuthenticated]);
 

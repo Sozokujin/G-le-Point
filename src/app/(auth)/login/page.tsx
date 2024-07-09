@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth, db } from "@/db/firebase";
 import { redirectTo } from "@/lib/actions";
-import { FirebaseUser, googleSignIn, useAuthStore } from "@/stores/authStore";
+import {
+  FirebaseUser,
+  faceBookSignIn,
+  googleSignIn,
+  useAuthStore,
+} from "@/stores/authStore";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
@@ -31,7 +36,25 @@ const Login = () => {
     }
   };
 
-  const handleSignInFacebook = async () => {};
+  const handleSignInFacebook = async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      const authUser = await faceBookSignIn();
+      if (authUser && authUser.user) {
+        const firebaseUser: FirebaseUser = {
+          uid: authUser.user.uid,
+          displayName: authUser.user.displayName,
+          email: authUser.user.email,
+          photoURL: authUser.user.photoURL,
+        };
+        login(firebaseUser);
+        addToDbIfNewUser(firebaseUser);
+        redirectTo("/map");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSignInGoogle = async () => {
     try {

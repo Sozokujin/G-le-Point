@@ -1,4 +1,5 @@
 import {
+  FacebookAuthProvider,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
@@ -39,8 +40,13 @@ const googleSignIn = () => {
   return signInWithPopup(auth, provider);
 };
 
-const googleLogOut = () => {
+const logOut = () => {
   return signOut(auth);
+};
+
+const faceBookSignIn = () => {
+  const provider = new FacebookAuthProvider();
+  return signInWithPopup(auth, provider);
 };
 
 onAuthStateChanged(auth, (firebaseUser) => {
@@ -56,4 +62,4 @@ onAuthStateChanged(auth, (firebaseUser) => {
   }
 });
 
-export { googleLogOut, googleSignIn, useAuthStore };
+export { faceBookSignIn, googleSignIn, logOut, useAuthStore };

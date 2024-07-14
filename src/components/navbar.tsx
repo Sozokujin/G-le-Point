@@ -13,9 +13,9 @@ const Navbar = () => {
       <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">
         <li>
           <Image
-            src={"logo-glepoint-secondaire.svg"}
-            width={40}
-            height={40}
+            src={"/images/logo-glepoint-secondaire.svg"}
+            width={32}
+            height={32}
             className="rounded-full"
             alt="Logo de GlePoint"
           />

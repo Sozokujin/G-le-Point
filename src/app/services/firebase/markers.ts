@@ -3,12 +3,12 @@ import { db } from "@/app/services/firebase/config";
 import { Marker } from "@/app/types/types";
 
 
-export const addMarkerToFirebase = async (marker: Marker) => {
+export const addMarker = async (marker: Marker) => {
     const markersCollectionRef = collection(db, "markers");
     await addDoc(markersCollectionRef, marker);
   };
   
-  export const fetchMarkersFromFirebase = async (userUid: any) => {
+  export const getMarkers = async (userUid: any) => {
     const markersCollectionRef = collection(db, "markers");
     const querry = query(markersCollectionRef, where("user.uid", "==", userUid));
     const querySnapshot = await getDocs(querry);
@@ -18,7 +18,7 @@ export const addMarkerToFirebase = async (marker: Marker) => {
     }));
   };
   
-  export const fetchFriendsMarkersFromFirebase = async (userUid: any) => {
+  export const getFriendsMarkers = async (userUid: any) => {
     const markersCollectionRef = collection(db, "markers");
     const userCollectionRef = collection(db, "users");
   

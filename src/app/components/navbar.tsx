@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthStore } from "@/stores/authStore";
+import { useAuthStore } from "@/app/stores/authStore";
 import { MapIcon, UsersIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";

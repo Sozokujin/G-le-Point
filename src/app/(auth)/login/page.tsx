@@ -1,14 +1,14 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth, db } from "@/db/firebase";
-import { redirectTo } from "@/lib/actions";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { auth, db } from "@/app/services/firebase/config";
+import { redirectTo } from "@/app/lib/actions";
 import {
-  FirebaseUser,
   faceBookSignIn,
   googleSignIn,
   useAuthStore,
-} from "@/stores/authStore";
+} from "@/app/stores/authStore";
+import { FirebaseUser } from "@/app/types/types";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";

@@ -1,10 +1,10 @@
 "use client";
-import ModalCreateMarker from "@/components/modalCreateMarker";
-import ModalMarker from "@/components/modalMarker";
-import { Switch } from "@/components/ui/switch";
-import { redirectTo } from "@/lib/actions";
-import { useAuthStore } from "@/stores/authStore";
-import { useMarkerStore } from "@/stores/markerStore";
+import ModalCreateMarker from "@/app/components/modalCreateMarker";
+import ModalMarker from "@/app/components/modalMarker";
+import { Switch } from "@/app/components/ui/switch";
+import { redirectTo } from "@/app/lib/actions";
+import { useAuthStore } from "@/app/stores/authStore";
+import useMarkerStore from "@/app/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";

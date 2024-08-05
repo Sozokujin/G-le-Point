@@ -1,5 +1,5 @@
-import LandingFooter from "@/components/landingFooter";
-import LandingNavbar from "@/components/landingNavbar";
+import LandingFooter from "@/app/components/landingFooter";
+import LandingNavbar from "@/app/components/landingNavbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";

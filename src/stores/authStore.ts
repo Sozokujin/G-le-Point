@@ -8,7 +8,7 @@ import {
 import { create } from "zustand";
 import { auth } from "@/services/firebase/config";
 import { FirebaseUser, AuthStore
- } from "@/types/types";
+ } from "@/types/index";
 
 
 const useAuthStore = create<AuthStore>((set) => ({

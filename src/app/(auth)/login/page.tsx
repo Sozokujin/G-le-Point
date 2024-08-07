@@ -8,7 +8,7 @@ import {
   googleSignIn,
   useAuthStore,
 } from "@/stores/authStore";
-import { FirebaseUser } from "@/types/types";
+import { FirebaseUser } from "@/types/index";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";

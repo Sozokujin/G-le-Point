@@ -6,9 +6,9 @@ import {
   signOut,
 } from "firebase/auth";
 import { create } from "zustand";
-import { auth } from "@/app/services/firebase/config";
+import { auth } from "@/services/firebase/config";
 import { FirebaseUser, AuthStore
- } from "@/app/types/types";
+ } from "@/types/types";
 
 
 const useAuthStore = create<AuthStore>((set) => ({

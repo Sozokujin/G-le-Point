@@ -1,8 +1,8 @@
-import { db } from "@/app/services/firebase/config";
+import { db } from "@/services/firebase/config";
 
 import {
   useAuthStore,
-} from "@/app/stores/authStore";
+} from "@/stores/authStore";
 
 import {  collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
 

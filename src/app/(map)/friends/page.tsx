@@ -2,11 +2,11 @@
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
-import { redirectTo } from "@/app/lib/actions";
-import { useAuthStore } from "@/app/stores/authStore";
+import { redirectTo } from "@/lib/actions";
+import { useAuthStore } from "@/stores/authStore";
 import { useEffect, useState } from "react";
 
-import { getAllFriends, sendFriendRequest } from "@/app/services/firebase/friends";
+import { getAllFriends, sendFriendRequest } from "@/services/firebase/friends";
 
 const Friends = () => {
   const { isAuthenticated } = useAuthStore();

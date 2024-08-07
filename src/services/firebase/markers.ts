@@ -1,6 +1,6 @@
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/app/services/firebase/config";
-import { Marker } from "@/app/types/types";
+import { db } from "@/services/firebase/config";
+import { Marker } from "@/types/types";
 
 
 export const addMarker = async (marker: Marker) => {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { addMarker, getMarkers, getFriendsMarkers } from '@/app/services/firebase/markers';
-import { Marker } from '@/app/types/types';
+import { addMarker, getMarkers, getFriendsMarkers } from '@/services/firebase/markers';
+import { Marker } from '@/types/types';
 
 const useMarkerStore = create((set: any) => ({
   markers: [] as Marker[],

@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
-import { useAuthStore } from "@/app/stores/authStore";
-import useMarkerStore from "@/app/stores/markerStore";
+import { useAuthStore } from "@/stores/authStore";
+import useMarkerStore from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";

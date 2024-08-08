@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /* eslint-disable react/no-unescaped-entities */
 export default function LandingFooter() {
   const footerNavigation = {
@@ -10,7 +12,10 @@ export default function LandingFooter() {
     legal: [
       { name: "Mentions légales", href: "#" },
       { name: "Condition générales d'utilisation", href: "#" },
-      { name: "Politique de confidentialité", href: "#" },
+      {
+        name: "Politique de confidentialité",
+        href: "/politique-de-confidentialite",
+      },
       { name: "🍪 Gérer les cookies", href: "#" },
     ],
     about: [
@@ -24,7 +29,7 @@ export default function LandingFooter() {
     <div className="mx-auto mt-32 max-w-7xl px-6 lg:px-8">
       <footer
         aria-labelledby="footer-heading"
-        className="relative border-t border-gray-900/10 sm:mt-56 py-4"
+        className="relative border-t border-gray-900/10 py-4"
       >
         <h2 id="footer-heading" className="sr-only">
           Footer
@@ -72,12 +77,12 @@ export default function LandingFooter() {
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.legal.map((item) => (
                 <li key={item.name}>
-                  <a
+                  <Link
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

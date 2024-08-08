@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
-import LandingFooter from "@/app/components/landingFooter";
-import LandingNavbar from "@/app/components/landingNavbar";
+import LandingFooter from "@/components/landingFooter";
+import LandingNavbar from "@/components/landingNavbar";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,

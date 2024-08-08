@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/app/components/ui/dialog";
+} from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/authStore";
 import useMarkerStore from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";

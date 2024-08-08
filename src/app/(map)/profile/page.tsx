@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { redirectTo } from "@/lib/actions";
 import { logOut, useAuthStore } from "@/stores/authStore";
 import { useEffect } from "react";

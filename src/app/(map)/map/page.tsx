@@ -1,7 +1,7 @@
 "use client";
-import ModalCreateMarker from "@/app/components/modalCreateMarker";
-import ModalMarker from "@/app/components/modalMarker";
-import { Switch } from "@/app/components/ui/switch";
+import ModalCreateMarker from "@/components/modalCreateMarker";
+import ModalMarker from "@/components/modalMarker";
+import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
 import useMarkerStore from "@/stores/markerStore";

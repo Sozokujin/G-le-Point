@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/app/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth, db } from "@/services/firebase/config";
 import { redirectTo } from "@/lib/actions";
 import {

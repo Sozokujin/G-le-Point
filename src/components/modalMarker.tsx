@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useAuthStore } from "../stores/authStore";
+import { useAuthStore } from "@/stores/authStore";
 import { Button } from "./ui/button";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {

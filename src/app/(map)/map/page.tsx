@@ -4,7 +4,7 @@ import ModalMarker from "@/components/modalMarker";
 import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
-import { useMarkerStore } from "@/stores/markerStore";
+import useMarkerStore from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";

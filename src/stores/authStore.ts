@@ -6,22 +6,10 @@ import {
   signOut,
 } from "firebase/auth";
 import { create } from "zustand";
-import { auth } from "../db/firebase";
+import { auth } from "@/services/firebase/config";
+import { FirebaseUser, AuthStore
+ } from "@/types/index";
 
-export interface FirebaseUser {
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-  photoURL: string | null | undefined;
-}
-
-interface AuthStore {
-  user: FirebaseUser | null;
-  isAuthenticated: boolean;
-  isAuthChecking: boolean;
-  login: (user: FirebaseUser) => void;
-  logout: () => void;
-}
 
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,

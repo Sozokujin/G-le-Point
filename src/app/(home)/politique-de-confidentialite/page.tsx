@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-export default function Legal() {
+export default function Privacy() {
   return (
     <main className="isolate">
       <div className="pt-24 sm:pt-32">
@@ -53,13 +53,13 @@ export default function Legal() {
           <h2>Contact</h2>
           <p>
             Pour toute question concernant cette politique de confidentialité,
-            veuillez nous contacter à l'adresse suivante :{" "}
+            veuillez nous contacter à l'adresse suivante :
             <a
-              className=" text-primary underline"
+              className="text-primary underline"
               href="mailto:team.glepoint@gmail.com"
             >
-              team.glepoint@gmail.com{" "}
-            </a>{" "}
+              team.glepoint@gmail.com
+            </a>
             Cette politique de confidentialité est conçue pour être claire et
             concise, tout en respectant les pratiques de confidentialité
             standard. Assurez-vous de l'adapter en fonction des lois et

@@ -10,7 +10,7 @@ export default function LandingFooter() {
       { name: "Contact", href: "#" },
     ],
     legal: [
-      { name: "Mentions légales", href: "#" },
+      { name: "Mentions légales", href: "/mentions-legales" },
       { name: "Condition générales d'utilisation", href: "#" },
       {
         name: "Politique de confidentialité",

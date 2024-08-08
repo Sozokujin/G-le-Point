@@ -94,11 +94,9 @@ ul.reset ul li {
 }
 
 h1 {
-  @apply text-2xl font-bold;
-  margin: 2rem 0 2rem 0;
+  @apply text-2xl font-bold my-8;
 }
 
 h2 {
-  @apply text-lg font-bold;
-  margin: 1rem 0 1rem 0;
+  @apply text-lg font-bold my-4;
 }

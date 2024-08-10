@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { redirectTo } from "@/lib/actions";
-import { googleLogOut, useAuthStore } from "@/stores/authStore";
+import { logOut, useAuthStore } from "@/stores/authStore";
 import { useEffect } from "react";
 
 const Profile = () => {
@@ -10,7 +10,8 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await googleLogOut();
+      await logOut();
+      localStorage.clear();
       logout();
     } catch (error) {
       console.log(error);

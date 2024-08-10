@@ -1,4 +1,5 @@
-import { Analytics } from "@vercel/analytics/react";
+import LandingFooter from "@/components/landingFooter";
+import LandingNavbar from "@/components/landingNavbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/global.css";
@@ -16,11 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className={inter.className}>
-        {children}
-        <Analytics />
-      </body>
-    </html>
+    <>
+      <LandingNavbar />
+      {children}
+      <LandingFooter />
+    </>
   );
 }

@@ -19,14 +19,28 @@ const config = {
     },
     extend: {
       colors: {
+        "glp-green": {
+          DEFAULT: "#00a661",
+          "50": "#edfff7",
+          "100": "#d6ffee",
+          "200": "#afffdd",
+          "300": "#71ffc4",
+          "400": "#2dfba3",
+          "500": "#02e586",
+          "600": "#00bf6b",
+          "700": "#00a661",
+          "800": "#067547",
+          "900": "#085f3c",
+          "950": "#003620",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#37B978",
-          foreground: "#37B978",
+          DEFAULT: "var(--primary)",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
           DEFAULT: "#BAD66A",

@@ -4,12 +4,12 @@ import ModalMarker from "@/components/modalMarker";
 import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
-import { useMarkerStore } from "@/stores/markerStore";
+import useMarkerStore from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
-import classes from "../Page.module.css";
+import classes from "../../Page.module.css";
 
 export default function Home() {
   const [displayFriendsMarkers, setDisplayFriendsMarkers] =
@@ -23,6 +23,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      console.log("redirecting to login");
       redirectTo("/login");
     }
   }, [isAuthenticated]);

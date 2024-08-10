@@ -1,9 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth, db } from "@/db/firebase";
+import { auth, db } from "@/services/firebase/config";
 import { redirectTo } from "@/lib/actions";
-import { FirebaseUser, googleSignIn, useAuthStore } from "@/stores/authStore";
+import {
+  faceBookSignIn,
+  googleSignIn,
+  useAuthStore,
+} from "@/stores/authStore";
+import { FirebaseUser } from "@/types/index";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
@@ -31,7 +36,25 @@ const Login = () => {
     }
   };
 
-  const handleSignInFacebook = async () => {};
+  const handleSignInFacebook = async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      const authUser = await faceBookSignIn();
+      if (authUser && authUser.user) {
+        const firebaseUser: FirebaseUser = {
+          uid: authUser.user.uid,
+          displayName: authUser.user.displayName,
+          email: authUser.user.email,
+          photoURL: authUser.user.photoURL,
+        };
+        login(firebaseUser);
+        addToDbIfNewUser(firebaseUser);
+        redirectTo("/map");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSignInGoogle = async () => {
     try {
@@ -63,14 +86,11 @@ const Login = () => {
       <div className="flex flex-col gap-4">
         <Image
           className="mx-auto"
-          src={"logo-glepoint.svg"}
+          src={"/images/logo-glepoint.svg"}
           width={250}
           height={250}
           alt="Logo de GlePoint"
         />
-        <h2 className="text-2xl font-semibold leading-none tracking-tight text-center mt-4">
-          Votre carte collaborative
-        </h2>
       </div>
 
       <Card className="w-3/4 flex items-center flex-col md:w-auto md:px-24">
@@ -81,7 +101,7 @@ const Login = () => {
           <Button variant="outline" size="sm" onClick={handleSignInGoogle}>
             Se connecter avec
             <Image
-              src="google-icon.svg"
+              src="/images/google-icon.svg"
               height={18}
               width={18}
               alt="Google Icon"
@@ -91,7 +111,7 @@ const Login = () => {
           <Button variant="outline" size="sm" onClick={handleSignInFacebook}>
             Se connecter avec
             <Image
-              src="facebook-icon.svg"
+              src="/images/facebook-icon.svg"
               height={18}
               width={18}
               alt="Facebook Icon"

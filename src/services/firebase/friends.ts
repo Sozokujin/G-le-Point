@@ -4,7 +4,7 @@ import {
   useAuthStore,
 } from "@/stores/authStore";
 
-import {  collection, getDocs, query, where, addDoc, doc } from "firebase/firestore";
+import {  collection, getDocs, query, where, addDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 export const getAllFriends = async () => {
     try {
@@ -70,7 +70,51 @@ export const getFriendRequests = async () => {
       return [];
     }
 
-    return querySnapshot.docs.map((doc) => doc.data());
+    const q2 = query(collection(db, "users"), where("uid", "in", querySnapshot.docs.map((doc) => doc.data().from)));
+
+    const querySnapshot2 = await getDocs(q2);
+
+    return querySnapshot2.docs.map((doc) => doc.data());
+};
+
+export const acceptFriendRequest = async (from: string) => {
+  const currentUser = useAuthStore.getState().user;
+
+  if (!currentUser?.uid) {
+    return alert("Utilisateur non authentifié");
+  }
+
+  const friendRequestsCollectionRef = collection(db, "friendRequests");
+  const q = query(
+    friendRequestsCollectionRef,
+    where("from", "==", from),
+    where("to", "==", currentUser.uid),
+    where("status", "==", "pending")
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) {
+    return alert("Demande introuvable");
+  }
+
+  const docId = querySnapshot.docs[0].id;
+
+
+  await updateDoc(doc(friendRequestsCollectionRef, docId), {
+    status: "accepted",
+  });
+
+  const usersCollectionRef = collection(db, "users");
+  const currentUserDocRef = doc(usersCollectionRef, currentUser.uid);
+  const friendUserDocRef = doc(usersCollectionRef, from);
+
+  await updateDoc(currentUserDocRef, {
+    friends: arrayUnion(from),
+  });
+
+  await updateDoc(friendUserDocRef, {
+    friends: arrayUnion(currentUser.uid),
+  });
 };
 
 

@@ -1,8 +1,9 @@
-import { getAllFriends } from "@/services/firebase/friends";
+import { getAllFriends, getFriendRequests } from "@/services/firebase/friends";
 import { FirebaseUser } from "@/types";
 import { create } from "zustand";
 
-const useFriendStore = create((set: any) => ({
+
+export const useFriendStore = create((set: any) => ({
     friends: [] as FirebaseUser[],
     getFriends: async () => {
     const friends = await getAllFriends();
@@ -13,4 +14,11 @@ const useFriendStore = create((set: any) => ({
     clearFriends: () => set({ friends: [] }),
     }));
 
-export default useFriendStore;
+
+export const useFriendRequestStore = create((set: any) => ({
+    friendRequests: [] as any[],
+    getFriendRequests: async () => {
+    const friendRequests = await getFriendRequests();
+    set({ friendRequests });
+    },
+}));

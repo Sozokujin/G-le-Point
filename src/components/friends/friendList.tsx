@@ -1,4 +1,4 @@
-import  useFriendStore from "@/stores/friendStore";
+import  { useFriendStore } from "@/stores/friendStore";
 import { useEffect } from "react";
 
 export const FriendList = () => {

@@ -41,6 +41,11 @@ const microsoftSignIn = () => {
   return signInWithPopup(auth, provider);
 };
 
+const xSignIn = () => {
+  const provider = new OAuthProvider("twitter.com");
+  return signInWithPopup(auth, provider);
+};
+
 onAuthStateChanged(auth, (firebaseUser) => {
   if (firebaseUser) {
     useAuthStore.getState().login({
@@ -54,4 +59,11 @@ onAuthStateChanged(auth, (firebaseUser) => {
   }
 });
 
-export { faceBookSignIn, googleSignIn, logOut, microsoftSignIn, useAuthStore };
+export {
+  faceBookSignIn,
+  googleSignIn,
+  logOut,
+  microsoftSignIn,
+  useAuthStore,
+  xSignIn,
+};

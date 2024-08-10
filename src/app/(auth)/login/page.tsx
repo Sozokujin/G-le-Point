@@ -8,6 +8,7 @@ import {
   googleSignIn,
   microsoftSignIn,
   useAuthStore,
+  xSignIn,
 } from "@/stores/authStore";
 import { FirebaseUser } from "@/types/index";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
@@ -122,7 +123,29 @@ const Login = () => {
     }
   };
 
-  const handleSignInX = async () => {};
+  const handleSignInX = async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      const authUser = await xSignIn();
+      if (authUser && authUser.user) {
+        const firebaseUser: FirebaseUser = {
+          uid: authUser.user.uid,
+          displayName: authUser.user.displayName,
+          email: authUser.user.email,
+          photoURL: authUser.user.photoURL,
+        };
+        login(firebaseUser);
+        addToDbIfNewUser(firebaseUser);
+        redirectTo("/map");
+      }
+    } catch (error: Error | any) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setErrorMessage(
+          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
+        );
+      }
+    }
+  };
 
   const handleSignInApple = async () => {};
 

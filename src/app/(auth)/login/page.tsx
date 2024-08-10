@@ -3,13 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { redirectTo } from "@/lib/actions";
 import { auth, db } from "@/services/firebase/config";
-import { faceBookSignIn, googleSignIn, useAuthStore } from "@/stores/authStore";
+import {
+  faceBookSignIn,
+  googleSignIn,
+  microsoftSignIn,
+  useAuthStore,
+} from "@/stores/authStore";
 import { FirebaseUser } from "@/types/index";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   const { isAuthenticated, login } = useAuthStore();
@@ -19,6 +24,17 @@ const Login = () => {
       redirectTo("/map");
     }
   }, [isAuthenticated]);
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const addToDbIfNewUser = async (user: any) => {
     const usersCollectionRef = collection(db, "users");
@@ -48,8 +64,12 @@ const Login = () => {
         addToDbIfNewUser(firebaseUser);
         redirectTo("/map");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: Error | any) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setErrorMessage(
+          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
+        );
+      }
     }
   };
 
@@ -68,12 +88,39 @@ const Login = () => {
         addToDbIfNewUser(firebaseUser);
         redirectTo("/map");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: Error | any) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setErrorMessage(
+          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
+        );
+      }
     }
   };
 
-  const handleSignInMicrosoft = async () => {};
+  const handleSignInMicrosoft = async () => {
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      const authUser = await microsoftSignIn();
+      console.log(authUser);
+      if (authUser && authUser.user) {
+        const firebaseUser: FirebaseUser = {
+          uid: authUser.user.uid,
+          displayName: authUser.user.displayName,
+          email: authUser.user.email,
+          photoURL: authUser.user.photoURL,
+        };
+        login(firebaseUser);
+        addToDbIfNewUser(firebaseUser);
+        redirectTo("/map");
+      }
+    } catch (error: Error | any) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setErrorMessage(
+          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
+        );
+      }
+    }
+  };
 
   const handleSignInX = async () => {};
 
@@ -142,6 +189,11 @@ const Login = () => {
             <Link href="/" className="text-center text-xs underline">
               Retourner sur la page d'accueil
             </Link>
+            {errorMessage && (
+              <div className="absolute top-4 right-4 h-auto w-48 bg-glp-green-600 p-5 rounded-sm flex justify-center items-center text-white">
+                {errorMessage}
+              </div>
+            )}
           </div>
         </div>
       </div>

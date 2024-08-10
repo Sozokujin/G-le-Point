@@ -1,17 +1,14 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { auth, db } from "@/services/firebase/config";
 import { redirectTo } from "@/lib/actions";
-import {
-  faceBookSignIn,
-  googleSignIn,
-  useAuthStore,
-} from "@/stores/authStore";
+import { auth, db } from "@/services/firebase/config";
+import { faceBookSignIn, googleSignIn, useAuthStore } from "@/stores/authStore";
 import { FirebaseUser } from "@/types/index";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 const Login = () => {
@@ -76,46 +73,88 @@ const Login = () => {
     }
   };
 
+  const handleSignInMicrosoft = async () => {};
+
+  const handleSignInX = async () => {};
+
+  const handleSignInApple = async () => {};
+
+  const tierceApps = [
+    {
+      name: "Google",
+      icon: "/images/google-icon.svg",
+      action: handleSignInGoogle,
+      active: true,
+    },
+    {
+      name: "Facebook",
+      icon: "/images/facebook-icon.svg",
+      action: handleSignInFacebook,
+      active: true,
+    },
+    {
+      name: "Microsoft",
+      icon: "/images/microsoft-icon.svg",
+      action: handleSignInMicrosoft,
+      active: true,
+    },
+    {
+      name: "X",
+      icon: "/images/x-icon.svg",
+      action: handleSignInX,
+      active: true,
+    },
+    {
+      name: "Apple",
+      icon: "/images/apple-icon.svg",
+      action: handleSignInApple,
+      active: false,
+    },
+  ];
+
   return (
-    <main className="h-[90vh] flex justify-center items-center flex-col gap-24">
-      <div className="flex flex-col gap-4">
+    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+      <div className="flex items-center justify-center py-12">
+        <div className="mx-auto grid w-[350px] gap-6">
+          <div className="grid gap-2 text-center">
+            <h1 className="text-3xl font-bold">
+              Commencez à explorer de nouveaux horizons
+            </h1>
+            <p className="text-balance text-muted-foreground">
+              Veuillez choisir votre méthode de connexion :
+            </p>
+          </div>
+          <div className="grid gap-4">
+            {tierceApps.map((app) => (
+              <Button
+                key={app.name}
+                variant="outline"
+                className={`w-full flex justify-center items-center gap-4 ${
+                  app.active ? "" : "opacity-50 cursor-not-allowed"
+                }`}
+                onClick={app.action}
+              >
+                <Image src={app.icon} alt="" width={16} height={16} />
+                Se connecter avec {app.name}
+              </Button>
+            ))}
+
+            <Link href="/" className="text-center text-xs underline">
+              Retourner sur la page d'accueil
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div className="hidden bg-muted lg:block">
         <Image
-          className="mx-auto"
-          src={"/images/logo-glepoint.svg"}
-          width={250}
-          height={250}
-          alt="Logo de GlePoint"
+          src="/images/wallpaper.jpg"
+          alt="Image"
+          width="1920"
+          height="1080"
+          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>
-
-      <Card className="w-3/4 flex items-center flex-col md:w-auto md:px-24">
-        <CardHeader>
-          <CardTitle>Connectez vous</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <Button variant="outline" size="sm" onClick={handleSignInGoogle}>
-            Se connecter avec
-            <Image
-              src="/images/google-icon.svg"
-              height={18}
-              width={18}
-              alt="Google Icon"
-              className="ml-2"
-            />
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleSignInFacebook}>
-            Se connecter avec
-            <Image
-              src="/images/facebook-icon.svg"
-              height={18}
-              width={18}
-              alt="Facebook Icon"
-              className="ml-2"
-            />
-          </Button>
-        </CardContent>
-      </Card>
-    </main>
+    </div>
   );
 };
 

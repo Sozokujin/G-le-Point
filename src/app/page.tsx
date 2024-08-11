@@ -219,9 +219,11 @@ export default function Page() {
 
         <div className="mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8">
           <div className="relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20">
-            <img
+            <Image
+              width={1097}
+              height={845}
               className="absolute inset-0 h-full w-full object-cover brightness-150 saturate-0"
-              src="https://images.unsplash.com/photo-1601381718415-a05fb0a261f3?ixid=MXwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8ODl8fHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1216&q=80"
+              src="/images/women-nature.avif"
               alt=""
             />
             <div className="absolute inset-0 bg-gray-900/90 mix-blend-multiply" />

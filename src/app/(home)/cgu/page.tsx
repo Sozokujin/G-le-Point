@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
-export default function Legal() {
+export default function Cgu() {
   return (
-    <main className="isolate">
+    <main className="isolate mx-[20%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
           <h1>Conditions Générales d'Utilisation</h1>
@@ -49,7 +49,9 @@ export default function Legal() {
               concerné.
             </p>
           </div>
-          <p className="bold text-lg mt-8">Date de mise à jour : 9 Août 2024</p>
+          <p className="bold text-lg mt-8">
+            Date de mise à jour : 11 Août 2024
+          </p>
         </div>
       </div>
     </main>

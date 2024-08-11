@@ -1,14 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 export default function Legal() {
   return (
-    <main className="isolate">
+    <main className="isolate mx-[20%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
           <h1>Mentions légales</h1>
           <h2>Éditeur du Site :</h2>
           <p>G'Le Point</p>
           <p>
-            Adresse :
+            Adresse :{" "}
             <a
               className="text-primary underline"
               href="https://maps.app.goo.gl/X8s1LXaSXdEzNGSi8"
@@ -26,7 +26,7 @@ export default function Legal() {
           <h2>Contact :</h2>
           <p>
             Pour toute question ou demande d'information, vous pouvez nous
-            contacter à l'adresse suivante :
+            contacter à l'adresse suivante :{" "}
             <a
               className="text-primary underline"
               href="mailto:team.glepoint@gmail.com"
@@ -44,7 +44,9 @@ export default function Legal() {
             différents éléments est strictement interdite sans l'accord écrit
             préalable de G'Le Point.
           </p>
-          <p className="bold text-lg mt-8">Date de mise à jour : 9 Août 2024</p>
+          <p className="bold text-lg mt-8">
+            Date de mise à jour : 11 Août 2024
+          </p>
         </div>
       </div>
     </main>

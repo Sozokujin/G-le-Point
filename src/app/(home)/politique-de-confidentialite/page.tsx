@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 export default function Privacy() {
   return (
-    <main className="isolate">
+    <main className="isolate mx-[20%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
           <h1>Politique de confidentialité</h1>
@@ -53,18 +53,21 @@ export default function Privacy() {
           <h2>Contact</h2>
           <p>
             Pour toute question concernant cette politique de confidentialité,
-            veuillez nous contacter à l'adresse suivante :
+            veuillez nous contacter à l'adresse suivante : {""}
             <a
               className="text-primary underline"
               href="mailto:team.glepoint@gmail.com"
             >
               team.glepoint@gmail.com
             </a>
-            Cette politique de confidentialité est conçue pour être claire et
-            concise, tout en respectant les pratiques de confidentialité
-            standard. Assurez-vous de l'adapter en fonction des lois et
-            réglementations locales applicables, telles que le RGPD en Europe,
-            si nécessaire.
+            .
+            <p className="mt-2">
+              Cette politique de confidentialité est conçue pour être claire et
+              concise, tout en respectant les pratiques de confidentialité
+              standard. Assurez-vous de l'adapter en fonction des lois et
+              réglementations locales applicables, telles que le RGPD en Europe,
+              si nécessaire.
+            </p>
           </p>
         </div>
       </div>

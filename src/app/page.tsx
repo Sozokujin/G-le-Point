@@ -2,6 +2,7 @@
 import LandingFooter from "@/components/landingFooter";
 import LandingNavbar from "@/components/landingNavbar";
 import { BorderBeam } from "@/components/magicui/border-beam";
+import PulsatingButton from "@/components/ui/pulsating-button";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,
@@ -9,6 +10,8 @@ import {
   FingerPrintIcon,
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
 
 const features = [
   {
@@ -38,18 +41,18 @@ const features = [
 ];
 const tiers = [
   {
-    name: "Explorateur Pro",
+    name: "1 Super Point",
     id: "tier-premium",
     href: "#",
-    priceMonthly: "$9/mois",
+    priceYearly: "10€",
     description:
-      "Pour les aventuriers passionnés souhaitant une visibilité accrue et plus de fonctionnalités.",
+      "Pour les aventuriers passionnés souhaitant une visibilité accrue.",
     features: [
       "Toutes les fonctionnalités du plan Découvreur",
       "Mise en avant de vos lieux partagés",
       "Fonctionnalités avancées de cartographie",
+      "Promotion prioritaire dans les résultats de recherche",
       "Support prioritaire",
-      "Statistiques détaillées des visites",
     ],
     mostPopular: false,
   },
@@ -57,30 +60,30 @@ const tiers = [
     name: "Découvreur",
     id: "tier-free",
     href: "#",
-    priceMonthly: "Gratuit",
+    priceYearly: "Gratuit",
     description:
-      "Idéal pour les explorateurs occasionnels désirant partager et découvrir de nouveaux lieux.",
+      "Idéal pour les explorateurs désirant partager et découvrir de nouveaux lieux.",
     features: [
       "Accès complet à la carte",
       "Possibilité de partager des lieux",
-      "Communauté active",
-      "Support par la communauté",
+      "Possibilité d'ajouter des amis",
+      "Création de groupes d'amis",
     ],
     mostPopular: true,
   },
   {
-    name: "Partenaire Professionnel",
+    name: "5 Super Points",
     id: "tier-professional",
     href: "#",
-    priceMonthly: "$29/mois",
+    priceYearly: "40€",
     description:
       "Le choix optimal pour les entreprises et les professionnels cherchant à maximiser leur visibilité.",
     features: [
-      "Toutes les fonctionnalités du plan Explorateur Pro",
+      "Toutes les fonctionnalités du plan Découvreur",
+      "Mise en avant de vos lieux partagés",
+      "Fonctionnalités avancées de cartographie",
       "Promotion prioritaire dans les résultats de recherche",
-      "Intégrations marketing et API d'accès",
-      "Outils d'analyse et de reporting avancés",
-      "Support dédié 24/7",
+      "Support prioritaire",
     ],
     mostPopular: false,
   },
@@ -110,7 +113,7 @@ export default function Page() {
               }}
             />
           </div>
-          <div className="py-24 sm:py-32">
+          <div id="presentation" className="py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
@@ -123,31 +126,33 @@ export default function Page() {
                   à notre plateforme collaborative de cartographie.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
-                  <a
-                    href="#"
-                    className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-glp-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                  >
-                    Débutez maintenant
-                  </a>
-                  <a
-                    href="#"
-                    className="text-sm font-semibold leading-6 text-gray-900"
+                  <Link href="/login">
+                    <PulsatingButton
+                      className="bg-primary"
+                      pulseColor="#00a661"
+                    >
+                      Débutez maintenant
+                    </PulsatingButton>
+                  </Link>
+                  <Link
+                    href="#fonctionnalites"
+                    className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
                   >
                     En savoir plus <span aria-hidden="true">→</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-16 flow-root sm:mt-24">
                 <div className="relative -m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                  <img
-                    src="https://tailwindui.com/img/component-images/project-app-screenshot.png"
+                  <Image
+                    src="/images/wallpaper.jpg"
                     alt="App screenshot"
                     width={2432}
                     height={1442}
                     className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
                   />
                   <BorderBeam
-                    size={500}
+                    size={800}
                     duration={12}
                     delay={9}
                     colorFrom="#9FCF6D"
@@ -171,8 +176,10 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Feature section */}
-        <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
+        <div
+          id="fonctionnalites"
+          className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8"
+        >
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-primary">
               Explorons ensemble
@@ -210,7 +217,6 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Testimonial section */}
         <div className="mx-auto mt-32 max-w-7xl sm:mt-56 sm:px-6 lg:px-8">
           <div className="relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20">
             <img
@@ -244,10 +250,11 @@ export default function Page() {
               />
             </div>
             <div className="relative mx-auto max-w-2xl lg:mx-0">
-              <img
-                className="h-12 w-auto"
-                src="https://tailwindui.com/img/logos/workcation-logo-white.svg"
-                alt=""
+              <Image
+                height={64}
+                width={64}
+                src="/images/main-logo-white.svg"
+                alt="Logo G'Le Point"
               />
               <figure>
                 <blockquote className="mt-6 text-lg font-semibold text-white sm:text-xl sm:leading-8">
@@ -259,9 +266,9 @@ export default function Page() {
                   </p>
                 </blockquote>
                 <figcaption className="mt-6 text-base text-white">
-                  <div className="font-semibold">Alex Durand</div>
+                  <div className="font-semibold">Alexia Durand</div>
                   <div className="mt-1">
-                    Aventurier passionné et contributeur actif
+                    Aventurière passionnée et contributrice active
                   </div>
                 </figcaption>
               </figure>
@@ -269,8 +276,7 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Pricing section */}
-        <div className="py-24 sm:pt-48">
+        <div id="tarifs" className="mt-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
               <h2 className="text-base font-semibold leading-7 text-primary">
@@ -296,7 +302,7 @@ export default function Page() {
                   )}
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-x-4">
+                    <div className="flex items-center justify-between flex-col gap-x-4">
                       <h3
                         id={tier.id}
                         className={classNames(
@@ -308,7 +314,7 @@ export default function Page() {
                       </h3>
                       {tier.mostPopular ? (
                         <p className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold leading-5 text-primary">
-                          Most popular
+                          Lancez-vous gratuitement
                         </p>
                       ) : null}
                     </div>
@@ -317,11 +323,13 @@ export default function Page() {
                     </p>
                     <p className="mt-6 flex items-baseline gap-x-1">
                       <span className="text-4xl font-bold tracking-tight text-gray-900">
-                        {tier.priceMonthly}
+                        {tier.priceYearly}
                       </span>
-                      <span className="text-sm font-semibold leading-6 text-gray-600">
-                        /month
-                      </span>
+                      {tier.priceYearly !== "Gratuit" && (
+                        <span className="text-sm font-semibold leading-6 text-gray-600">
+                          /an
+                        </span>
+                      )}
                     </p>
                     <ul
                       role="list"
@@ -338,25 +346,40 @@ export default function Page() {
                       ))}
                     </ul>
                   </div>
-                  <a
-                    href={tier.href}
-                    aria-describedby={tier.id}
-                    className={classNames(
-                      tier.mostPopular
-                        ? "bg-primary text-white shadow-sm hover:bg-indigo-500"
-                        : "text-primary ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300",
-                      "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                    )}
-                  >
-                    Buy plan
-                  </a>
+
+                  {tier.priceYearly === "Gratuit" ? (
+                    <a
+                      href={tier.href}
+                      aria-describedby={tier.id}
+                      className={classNames(
+                        tier.mostPopular
+                          ? "bg-primary text-white shadow-sm hover:bg-glp-green-800"
+                          : "text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300",
+                        "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      )}
+                    >
+                      Commencer maintenant
+                    </a>
+                  ) : (
+                    <a
+                      href={tier.href}
+                      aria-describedby={tier.id}
+                      className={classNames(
+                        tier.mostPopular
+                          ? "bg-primary text-white shadow-sm hover:bg-glp-green-800"
+                          : "text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300",
+                        "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      )}
+                    >
+                      Acheter maintenant
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* CTA section */}
         <div className="relative -z-10 mt-32 px-6 lg:px-8">
           <div
             className="absolute inset-x-0 top-1/2 -z-10 flex -translate-y-1/2 transform-gpu justify-center overflow-hidden blur-3xl sm:bottom-0 sm:right-[calc(50%-6rem)] sm:top-auto sm:translate-y-0 sm:transform-gpu sm:justify-end"
@@ -374,7 +397,7 @@ export default function Page() {
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Boostez votre curiosité.
               <br />
-              Commencez à explorer avec notre app aujourd'hui.
+              Commencer à explorer avec notre app aujourd'hui.
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
               Rejoignez notre communauté et commencez à découvrir et partager
@@ -382,17 +405,16 @@ export default function Page() {
               vous attend.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link href="/login">
+                <PulsatingButton className="bg-primary" pulseColor="#00a661">
+                  Commencer maintenant
+                </PulsatingButton>
+              </Link>
               <a
-                href="#"
-                className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                href="mailto:team.glepoint@gmail.com"
+                className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
               >
-                Get started
-              </a>
-              <a
-                href="#"
-                className="text-sm font-semibold leading-6 text-gray-900"
-              >
-                Learn more <span aria-hidden="true">→</span>
+                Nous contacter <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>

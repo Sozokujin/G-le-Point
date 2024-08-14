@@ -262,13 +262,13 @@ export default function Page() {
                 <blockquote className="mt-6 text-lg font-semibold text-white sm:text-xl sm:leading-8">
                   <p>
                     “Grâce à cette plateforme, j'ai pu découvrir des spots de
-                    randonnée incroyables que je n'aurais jamais trouvés seul.
+                    randonnée incroyables que je n'aurais jamais trouvés seule.
                     C'est fantastique de pouvoir partager mes propres
                     trouvailles aussi!”
                   </p>
                 </blockquote>
                 <figcaption className="mt-6 text-base text-white">
-                  <div className="font-semibold">Alexia Durand</div>
+                  <div className="font-semibold">Alexia D.</div>
                   <div className="mt-1">
                     Aventurière passionnée et contributrice active
                   </div>

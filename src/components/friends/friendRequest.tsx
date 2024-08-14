@@ -6,12 +6,15 @@ import { sendFriendRequest, getInvitationCode, acceptFriendRequest, declineFrien
 import { useEffect, useRef, useState } from "react";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { useFriendRequestStore } from "@/stores/friendStore";
+import  Popup  from "../popup";
 
 export const FriendRequest = () => {
 
   const { friendRequests, getFriendRequests } = useFriendRequestStore();
 
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
+  const [showPopupCopy, setShowPopupCopy] = useState(false);
+  const [showPopupSend, setShowPopupSend] = useState(false);
 
   const invitationCodeRef = useRef<HTMLInputElement>(null);
 
@@ -45,6 +48,18 @@ export const FriendRequest = () => {
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(invitationCode || '');
+    setShowPopupCopy(true);
+    setTimeout(() => {
+      setShowPopupCopy(false);
+    }, 3000);
+  }
+
+  const handleSendFriendRequest = async (invitationCode: string | undefined) => {
+    await sendFriendRequest(invitationCode);
+    setShowPopupSend(true);
+    setTimeout(() => {
+      setShowPopupSend(false);
+    }, 3000);
   }
 
 
@@ -58,9 +73,9 @@ export const FriendRequest = () => {
           id="invitationCode"
           type="text"
         />
-        <Button onClick={() => sendFriendRequest(invitationCodeRef.current?.value)}>Envoyer la demande</Button>
+        <Button onClick={() => handleSendFriendRequest(invitationCodeRef.current?.value)}>Envoyer la demande</Button>
 
-        <span>Mon code : <span className="text-glp-green font-bold">{invitationCode}</span><ClipboardDocumentIcon className="ml-2 inline-block h-4 text-glp-green" onClick={() => copyToClipboard()}/></span>
+        <span>Mon code : <span className="text-glp-green font-bold">{invitationCode}</span><ClipboardDocumentIcon className="cursor-pointer ml-2 inline-block h-4 text-glp-green" onClick={() => copyToClipboard()}/></span>
       </Card>
       <h2 className="text-primary text-xl font-bold px-2 py-4">Demandes d&apos;amis</h2>
       <ul className="flex gap-3"></ul>
@@ -75,7 +90,9 @@ export const FriendRequest = () => {
             <p>Vous n&apos;avez pas de demandes d&apos;amis</p>
           </div>
         )}
+          {showPopupCopy && <Popup message={"Code copié !"} duration={3000} />}
       </div>
+      
     );
     }
 

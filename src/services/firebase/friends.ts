@@ -36,7 +36,7 @@ export const getAllFriends = async () => {
 
 export const sendFriendRequest = async (invitationCode: string | undefined) => {
     if (!invitationCode) {
-      return alert("Veuillez renseigner un code d'invitation");
+      return "Code d'invitation non fourni";
     }
 
     const usersCollectionRef = collection(db, "users");

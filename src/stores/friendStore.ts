@@ -21,4 +21,5 @@ export const useFriendRequestStore = create((set: any) => ({
     const friendRequests = await getFriendRequests();
     set({ friendRequests });
     },
+    removeFriendRequest: (friendRequest: any) => set((state: any) => ({ friendRequests: state.friendRequests.filter((f: any) => f !== friendRequest) })),
 }));

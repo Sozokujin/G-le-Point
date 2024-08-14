@@ -105,17 +105,65 @@ export const acceptFriendRequest = async (from: string) => {
   });
 
   const usersCollectionRef = collection(db, "users");
-  const currentUserDocRef = doc(usersCollectionRef, currentUser.uid);
-  const friendUserDocRef = doc(usersCollectionRef, from);
 
+  // Requête pour trouver le document de l'utilisateur actuel par son UID
+  const currentUserQuery = query(usersCollectionRef, where("uid", "==", currentUser.uid));
+  const currentUserSnapshot = await getDocs(currentUserQuery);
+  
+  let currentUserDocRef;
+  if (!currentUserSnapshot.empty) {
+      currentUserDocRef = doc(usersCollectionRef, currentUserSnapshot.docs[0].id);
+  } else {
+      console.error("Aucun document trouvé pour l'utilisateur actuel.");
+      return;
+  }
+  
+  const friendUserQuery = query(usersCollectionRef, where("uid", "==", from));
+  const friendUserSnapshot = await getDocs(friendUserQuery);
+  
+  let friendUserDocRef;
+  if (!friendUserSnapshot.empty) {
+      friendUserDocRef = doc(usersCollectionRef, friendUserSnapshot.docs[0].id);
+  } else {
+      console.error("Aucun document trouvé pour l'ami.");
+      return;
+  };
+  
   await updateDoc(currentUserDocRef, {
-    friends: arrayUnion(from),
+      friends: arrayUnion(from),
   });
-
+  
   await updateDoc(friendUserDocRef, {
-    friends: arrayUnion(currentUser.uid),
+      friends: arrayUnion(currentUser.uid),
   });
 };
+
+export const declineFriendRequest = async (from: string) => {
+  const currentUser = useAuthStore.getState().user;
+
+  if (!currentUser?.uid) {
+    return;
+  }
+
+  const friendRequestsCollectionRef = collection(db, "friendRequests");
+  const q = query(
+    friendRequestsCollectionRef,
+    where("from", "==", from),
+    where("to", "==", currentUser.uid),
+    where("status", "==", "pending")
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) {
+    return alert("Demande introuvable");
+  }
+
+  const docId = querySnapshot.docs[0].id;
+
+  await updateDoc(doc(friendRequestsCollectionRef, docId), {
+    status: "declined",
+  });
+}
 
 
 export const getInvitationCode = async () => {

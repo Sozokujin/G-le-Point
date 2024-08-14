@@ -2,7 +2,7 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { sendFriendRequest, getInvitationCode, acceptFriendRequest } from "@/services/firebase/friends";
+import { sendFriendRequest, getInvitationCode, acceptFriendRequest, declineFriendRequest } from "@/services/firebase/friends";
 import { useEffect, useRef, useState } from "react";
 import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { useFriendRequestStore } from "@/stores/friendStore";
@@ -36,8 +36,7 @@ export const FriendRequest = () => {
     };
 
     const fetchFriendRequests = async () => {
-      const friendRequests = await getFriendRequests();
-      console.log(friendRequests);
+      await getFriendRequests();
     };
     
     fetchFriendRequests();
@@ -47,6 +46,7 @@ export const FriendRequest = () => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(invitationCode || '');
   }
+
 
     return (
       <div>
@@ -80,10 +80,25 @@ export const FriendRequest = () => {
     }
 
 const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
+
+  const { removeFriendRequest, getFriendRequests } = useFriendRequestStore();
+
+  const handleAcceptFriendRequest = async (uid: string) => {
+    await acceptFriendRequest(uid);
+    removeFriendRequest(friendRequest);
+  }
+
+  const handleDeclineFriendRequest = async (uid: string) => {
+    await declineFriendRequest(uid);
+    await getFriendRequests();
+    removeFriendRequest(friendRequest);
+  }
+
   return (
     <li className="h-24 w-full border-primary border-y-2 p-2 rounded-sm">
       <span className="text-primary font-semibold">{friendRequest.displayName}</span>
-      <Button onClick={() => acceptFriendRequest(friendRequest.uid)} className="bg-glp-green text-white">Accepter</Button>
+      <Button onClick={() => handleAcceptFriendRequest(friendRequest.uid)} className="bg-glp-green text-white">Accepter</Button>
+      <Button onClick={() => handleDeclineFriendRequest(friendRequest.uid)} className="bg-red-500 text-white">Refuser</Button>
     </li>
   );
 }

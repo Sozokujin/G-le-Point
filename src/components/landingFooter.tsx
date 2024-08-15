@@ -5,10 +5,10 @@ import Link from "next/link";
 export default function LandingFooter() {
   const footerNavigation = {
     solutions: [
-      { name: "Présentation", href: "#presentation" },
-      { name: "Fonctionnalités", href: "#fonctionnalites" },
-      { name: "Plan tarifaires", href: "#tarifs" },
-      { name: "Contact", href: "#contact" },
+      { name: "Présentation", href: "/#presentation" },
+      { name: "Fonctionnalités", href: "/#fonctionnalites" },
+      { name: "Plan tarifaires", href: "/#tarifs" },
+      { name: "Contact", href: "/#contact" },
     ],
     legal: [
       { name: "Mentions légales", href: "/mentions-legales" },

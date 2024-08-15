@@ -9,10 +9,10 @@ import { useState } from "react";
 
 export default function LandingNavbar() {
   const navigation = [
-    { name: "Présentation", href: "#presentation" },
-    { name: "Fonctionnalités", href: "#fonctionnalites" },
-    { name: "Plan tarifaires", href: "#tarifs" },
-    { name: "Contact", href: "#contact" },
+    { name: "Présentation", href: "/#presentation" },
+    { name: "Fonctionnalités", href: "/#fonctionnalites" },
+    { name: "Plan tarifaires", href: "/#tarifs" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

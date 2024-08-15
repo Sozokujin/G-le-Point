@@ -32,7 +32,7 @@ export default function Team() {
     <main className="isolate">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-          <h1>Présentation de l'équipe</h1>
+          <h1 className="text-center mb-8">Présentation de l'équipe</h1>
           <div className="flex flex-col md:flex-row justify-between items-center mt-24 -mb-24 md:mb-0">
             {team.map((member) => (
               <div

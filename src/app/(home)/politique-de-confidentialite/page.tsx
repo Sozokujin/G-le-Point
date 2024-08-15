@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 export default function Privacy() {
   return (
-    <main className="isolate mx-[20%]">
+    <main className="isolate mx-[25%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-          <h1>Politique de confidentialité</h1>
+          <h1 className="text-center mb-8">Politique de confidentialité</h1>
           <p>
             La présente politique de confidentialité décrit les pratiques de
             G'Le Point concernant la collecte, l'utilisation et la protection

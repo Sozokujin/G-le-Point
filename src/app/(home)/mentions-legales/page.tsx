@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 export default function Legal() {
   return (
-    <main className="isolate mx-[20%]">
+    <main className="isolate mx-[25%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-          <h1>Mentions légales</h1>
+          <h1 className="text-center mb-8">Mentions légales</h1>
           <h2>Éditeur du Site :</h2>
           <p>G'Le Point</p>
           <p>

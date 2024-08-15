@@ -183,17 +183,19 @@ const Login = () => {
   ];
 
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full h-[100svh] lg:grid lg:grid-cols-2">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <Image
-              src={"/images/main-logo-green.png"}
-              alt="Logo G'Le Point"
-              width={128}
-              height={128}
-              className="mx-auto"
-            />
+            <Link href="/">
+              <Image
+                src={"/images/main-logo-green.png"}
+                alt="Logo G'Le Point"
+                width={128}
+                height={128}
+                className="mx-auto"
+              />
+            </Link>
             <h1 className="text-3xl font-bold">
               Commencez à explorer de nouveaux horizons
             </h1>

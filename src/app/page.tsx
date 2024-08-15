@@ -77,7 +77,7 @@ const tiers = [
     href: "#",
     priceYearly: "40€",
     description:
-      "Le choix optimal pour les entreprises et les professionnels cherchant à maximiser leur visibilité.",
+      "Le choix optimal pour les professionnels cherchant à maximiser leur visibilité.",
     features: [
       "Toutes les fonctionnalités du plan Découvreur",
       "Mise en avant de vos lieux partagés",
@@ -138,7 +138,7 @@ export default function Page() {
                     href="#fonctionnalites"
                     className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
                   >
-                    En savoir plus <span aria-hidden="true">→</span>
+                    En savoir plus <span aria-hidden="true">↓</span>
                   </Link>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function Page() {
           className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8"
         >
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-semibold leading-7 text-primary">
+            <h2 className="text-2xl font-semibold leading-7 text-primary">
               Explorons ensemble
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -281,7 +281,7 @@ export default function Page() {
         <div id="tarifs" className="mt-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-              <h2 className="text-base font-semibold leading-7 text-primary">
+              <h2 className="text-2xl font-semibold leading-7 text-primary">
                 Nos Plans
               </h2>
               <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -328,8 +328,8 @@ export default function Page() {
                         {tier.priceYearly}
                       </span>
                       {tier.priceYearly !== "Gratuit" && (
-                        <span className="text-sm font-semibold leading-6 text-gray-600">
-                          /an
+                        <span className="text-xs font-semibold leading-6 text-gray-600">
+                          Valable pendant 1 an
                         </span>
                       )}
                     </p>

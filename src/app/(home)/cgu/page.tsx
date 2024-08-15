@@ -1,10 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 export default function Cgu() {
   return (
-    <main className="isolate mx-[20%]">
+    <main className="isolate mx-[25%]">
       <div className="pt-24 sm:pt-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-          <h1>Conditions Générales d'Utilisation</h1>
+          <h1 className="text-center mb-8">
+            Conditions Générales d'Utilisation
+          </h1>
           <div className="flex flex-col gap-4">
             <p>
               L'utilisation du site G'Le Point implique l'acceptation pleine et

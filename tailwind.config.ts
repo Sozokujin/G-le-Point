@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        xs: '480px',
+      },
       colors: {
         "glp-green": {
           DEFAULT: "#00a661",

@@ -1,5 +1,6 @@
 "use client";
-import ModalCreateMarker from "@/components/modalCreateMarker";
+
+// import ModalCreateMarker from "@/components/modalCreateMarker";
 import ModalMarker from "@/components/modalMarker";
 import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
@@ -48,7 +49,7 @@ export default function Home() {
       <Map
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v12"
-        style={{ width: "100%", height: "90%" }}
+        style={{ width: "100%", height: "100%" }}
         initialViewState={{
           latitude: 45.75208233358573,
           longitude: 4.839489220284681,
@@ -89,7 +90,7 @@ export default function Home() {
           }
           className="absolute top-4 right-4 z-10"
         />
-        <ModalCreateMarker />
+        {/* <ModalCreateMarker /> */}
         {modalMarker && (
           <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />
         )}

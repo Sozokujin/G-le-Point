@@ -143,7 +143,7 @@ export default function Page() {
                 </div>
               </div>
               <div className="mt-16 flow-root sm:mt-24">
-                <div className="relative -m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <div className="relative overflow-hidden -m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                   <Image
                     src="/images/wallpaper.jpg"
                     alt="App screenshot"
@@ -326,12 +326,12 @@ export default function Page() {
                     <p className="mt-6 flex items-baseline gap-x-1">
                       <span className="text-4xl font-bold tracking-tight text-gray-900">
                         {tier.priceYearly}
+                        {tier.priceYearly !== "Gratuit" && (
+                          <span className="align-top text-lg leading-6 text-gray-600">
+                            *
+                          </span>
+                        )}
                       </span>
-                      {tier.priceYearly !== "Gratuit" && (
-                        <span className="text-xs font-semibold leading-6 text-gray-600">
-                          Valable pendant 1 an
-                        </span>
-                      )}
                     </p>
                     <ul
                       role="list"
@@ -357,7 +357,7 @@ export default function Page() {
                         tier.mostPopular
                           ? "bg-primary text-white shadow-sm hover:bg-glp-green-800"
                           : "text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300",
-                        "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        "mb-6 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                       )}
                     >
                       Commencer maintenant
@@ -375,6 +375,13 @@ export default function Page() {
                     >
                       Acheter maintenant
                     </a>
+                  )}
+                  {tier.priceYearly !== "Gratuit" && (
+                    <div className="h-6">
+                      <span className="text-xs italic leading-6 text-gray-600">
+                        * Valable pendant 1 an
+                      </span>
+                    </div>
                   )}
                 </div>
               ))}

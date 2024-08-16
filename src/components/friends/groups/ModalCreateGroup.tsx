@@ -76,7 +76,7 @@ export const ModalCreateGroup = () => {
                                 />
                             ))
                         ) : (
-                            <p>Vous n'avez pas d'amis.</p>
+                            <p>Vous n&apos;avez pas encore d&apos;amis</p>
                         )}
                     </ul>
 

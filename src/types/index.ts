@@ -34,3 +34,10 @@ export interface FriendRequest {
   to: string;
   status: "pending" | "accepted" | "rejected";
 }
+
+export interface Group {
+  id: string;
+  name: string;
+  groupOwner: string;
+  members: string[];
+}

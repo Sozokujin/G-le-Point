@@ -241,7 +241,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block">
+      <div className="h-full hidden bg-muted lg:block">
         <Image
           src="/images/wallpaper.jpg"
           alt="Image"

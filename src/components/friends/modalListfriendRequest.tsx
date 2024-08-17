@@ -42,7 +42,7 @@ export const ModalListFriendRequest = () => {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Badge className="bg-glp-green text-white absolute right-8 top-4 cursor-pointer">Demandes d'amis {friendRequests.length}</Badge>
+          <Badge className="bg-glp-green text-white absolute right-8 top-4 cursor-pointer">Demandes d&apos;amis {friendRequests.length}</Badge>
         </DialogTrigger>
         <DialogContent>
         <ul className="flex gap-3"></ul>
@@ -50,7 +50,7 @@ export const ModalListFriendRequest = () => {
             friendRequests.map((friendRequest, key) => {
               return (
                 <>
-                <h2 className="text-primary text-xl font-bold">Vos demandes d'amis</h2>
+                <h2 className="text-primary text-xl font-bold">Vos demandes d&apos;amis</h2>
                 <FriendRequestLine key={key} friendRequest={friendRequest} />
                 </>
               );

@@ -16,6 +16,7 @@ import {
   UserIcon as SolidUserIcon
 } from "@heroicons/react/24/solid";
 import classes from "@/styles/navbar.module.css";
+import ModalCreateMarker from "./modalCreateMarker";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -36,9 +37,7 @@ const Navbar = () => {
           }
         </Link>
         <div className="-mt-7 sm:-mt-9 rounded-full">
-          <Link href="/map" className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full">
-            <PlusIcon className={classes.icon + ' !text-white'} />
-          </Link>
+          <ModalCreateMarker />
         </div>
         <Link href="/friends">
           {pathname === '/friends'

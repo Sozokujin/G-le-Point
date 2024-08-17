@@ -14,6 +14,7 @@ import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import Link from "next/link";
 
 const ModalCreateMarker = () => {
   const pointNameRef = useRef<HTMLInputElement>(null);
@@ -98,9 +99,9 @@ const ModalCreateMarker = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="absolute left-1/2 transform -translate-x-1/2 bottom-2 h-14 w-14 bg-primary rounded-full flex items-center justify-center shadow-md">
+        <Link href="/map" className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full">
           <PlusIcon className="h-8 w-8 text-white" />
-        </button>
+        </Link>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

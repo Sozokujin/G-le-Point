@@ -2,6 +2,7 @@
 
 // import ModalCreateMarker from "@/components/modalCreateMarker";
 import ModalMarker from "@/components/modalMarker";
+import  ModalCreateMarker from "@/components/modalCreateMarker";
 import { Switch } from "@/components/ui/switch";
 import { redirectTo } from "@/lib/actions";
 import { useAuthStore } from "@/stores/authStore";
@@ -90,8 +91,7 @@ export default function Home() {
           }
           className="absolute top-4 right-4 z-10"
         />
-        {/* <ModalCreateMarker /> */}
-        {modalMarker && (
+         {modalMarker && (
           <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />
         )}
       </Map>

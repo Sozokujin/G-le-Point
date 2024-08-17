@@ -1,24 +1,76 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-unescaped-entities */
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LandingNavbar() {
   const navigation = [
-    { name: "Présentation", href: "/#presentation" },
-    { name: "Fonctionnalités", href: "/#fonctionnalites" },
-    { name: "Plan tarifaires", href: "/#tarifs" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Présentation", href: "/#presentation", id: "presentation" },
+    {
+      name: "Fonctionnalités",
+      href: "/#fonctionnalites",
+      id: "fonctionnalites",
+    },
+    { name: "Plan tarifaires", href: "/#tarifs", id: "tarifs" },
+    { name: "Contact", href: "/#contact", id: "contact" },
   ];
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector("header");
+      if (header) {
+        let y = window.scrollY / 200;
+        y = y > 0.7 ? 0.7 : y;
+        header.style.backdropFilter = y > 0 ? `blur(${y * 10}px)` : "none";
+        header.style.backgroundColor = `rgba(255, 255, 255, ${y})`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.6,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, options);
+
+    navigation.forEach((section) => {
+      const target = document.getElementById(section.id);
+      if (target) {
+        observer.observe(target);
+      }
+    });
+
+    return () => {
+      navigation.forEach((section) => {
+        const target = document.getElementById(section.id);
+        if (target) {
+          observer.unobserve(target);
+        }
+      });
+    };
+  }, [navigation]);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header className="sticky top-0 w-full z-10">
       <nav
         className="flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
@@ -49,7 +101,9 @@ export default function LandingNavbar() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900 hover:scale-125 duration-300"
+              className={`text-sm font-semibold leading-6 hover:text-primary duration-150 ${
+                activeSection === item.id ? "text-green-500" : "text-gray-900"
+              }`}
             >
               {item.name}
             </Link>
@@ -97,7 +151,12 @@ export default function LandingNavbar() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 hover:text-primary duration-150 ${
+                      activeSection === item.id
+                        ? "text-green-500"
+                        : "text-gray-900"
+                    }`}
                   >
                     {item.name}
                   </Link>
@@ -108,7 +167,7 @@ export default function LandingNavbar() {
                   href="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 hover:text-primary duration-150"
                 >
-                  Se connecter
+                  Se connecter <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
             </div>

@@ -99,7 +99,6 @@ export default function Page() {
       <LandingNavbar />
 
       <main className="isolate">
-        {/* Hero section */}
         <div className="relative pt-14">
           <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -113,52 +112,50 @@ export default function Page() {
               }}
             />
           </div>
-          <div id="presentation" className="pt-24 sm:pt-32">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
-              <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                  Découvrez et partagez des lieux cachés avec le monde
-                </h1>
-                <p className="mt-6 text-lg leading-8 text-gray-600">
-                  Rejoignez notre communauté de découvreurs et enrichissez votre
-                  expérience de voyage en explorant des trésors cachés, des
-                  panoramas époustouflants et des lieux culturels uniques grâce
-                  à notre plateforme collaborative de cartographie.
-                </p>
-                <div className="mt-10 flex items-center justify-center gap-x-6">
-                  <Link href="/login">
-                    <PulsatingButton
-                      className="bg-primary"
-                      pulseColor="#00a661"
-                    >
-                      Débutez maintenant
-                    </PulsatingButton>
-                  </Link>
-                  <Link
-                    href="#fonctionnalites"
-                    className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
-                  >
-                    En savoir plus <span aria-hidden="true">↓</span>
-                  </Link>
-                </div>
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <h1
+                id="presentation"
+                className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
+              >
+                Découvrez et partagez des lieux cachés avec le monde
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Rejoignez notre communauté de découvreurs et enrichissez votre
+                expérience de voyage en explorant des trésors cachés, des
+                panoramas époustouflants et des lieux culturels uniques grâce à
+                notre plateforme collaborative de cartographie.
+              </p>
+              <div className="mt-10 flex flex-col md:flex-row gap-4 items-center justify-center gap-x-6">
+                <Link href="/login">
+                  <PulsatingButton className="bg-primary" pulseColor="#00a661">
+                    Débutez maintenant
+                  </PulsatingButton>
+                </Link>
+                <Link
+                  href="#fonctionnalites"
+                  className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
+                >
+                  En savoir plus <span aria-hidden="true">↓</span>
+                </Link>
               </div>
-              <div className="mt-16 flow-root sm:mt-24">
-                <div className="relative overflow-hidden -m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                  <Image
-                    src="/images/wallpaper.jpg"
-                    alt="App screenshot"
-                    width={2432}
-                    height={1442}
-                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
-                  />
-                  <BorderBeam
-                    size={800}
-                    duration={12}
-                    delay={9}
-                    colorFrom="#9FCF6D"
-                    colorTo="#7CC772"
-                  />
-                </div>
+            </div>
+            <div className="mt-16 flow-root sm:mt-24">
+              <div className="relative overflow-hidden -m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Image
+                  src="/images/wallpaper.jpg"
+                  alt="App screenshot"
+                  width={2432}
+                  height={1442}
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                />
+                <BorderBeam
+                  size={800}
+                  duration={12}
+                  delay={9}
+                  colorFrom="#9FCF6D"
+                  colorTo="#7CC772"
+                />
               </div>
             </div>
           </div>
@@ -176,12 +173,12 @@ export default function Page() {
           </div>
         </div>
 
-        <div
-          id="fonctionnalites"
-          className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8"
-        >
+        <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-56 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-2xl font-semibold leading-7 text-primary">
+            <h2
+              id="fonctionnalites"
+              className="text-2xl font-semibold leading-7 text-primary"
+            >
               Explorons ensemble
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -278,10 +275,13 @@ export default function Page() {
           </div>
         </div>
 
-        <div id="tarifs" className="mt-32">
+        <div className="mt-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-              <h2 className="text-2xl font-semibold leading-7 text-primary">
+              <h2
+                id="tarifs"
+                className="text-2xl font-semibold leading-7 text-primary"
+              >
                 Nos Plans
               </h2>
               <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -402,8 +402,11 @@ export default function Page() {
               }}
             />
           </div>
-          <div id="contact" className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2
+              id="contact"
+              className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+            >
               Boostez votre curiosité.
               <br />
               Commencer à explorer avec notre app aujourd'hui.
@@ -413,7 +416,7 @@ export default function Page() {
               des lieux uniques et cachés. Votre prochaine grande découverte
               vous attend.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex flex-col md:flex-row gap-4 items-center justify-center gap-x-6">
               <Link href="/login">
                 <PulsatingButton className="bg-primary" pulseColor="#00a661">
                   Commencer maintenant

@@ -32,7 +32,7 @@ export default function LandingFooter() {
   const actualYear = new Date().getFullYear();
 
   return (
-    <div className="mx-auto mt-32 max-w-7xl px-6 lg:px-8">
+    <div className="mx-auto mt-12 max-w-7xl px-6 lg:px-8">
       <footer
         aria-labelledby="footer-heading"
         className="relative border-t border-gray-900/10 py-4"
@@ -40,14 +40,14 @@ export default function LandingFooter() {
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
-        <div className="xl:flex xl:flex-row justify-between xl:gap-8">
+        <div className="md:flex md:flex-row justify-between md:gap-8">
           <div>
-            <h3 className="text-sm font-semibold leading-6 text-gray-900">
+            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
               À propos
             </h3>
-            <ul role="list" className="mt-6 space-y-4">
+            <ul role="list" className="mt-6 space-y-4 ">
               {footerNavigation.about.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="text-center md:text-left ">
                   <Link
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900"
@@ -58,13 +58,13 @@ export default function LandingFooter() {
               ))}
             </ul>
           </div>
-          <div>
-            <h3 className="text-sm font-semibold leading-6 text-gray-900">
+          <div className="mt-10 md:mt-0">
+            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
               Navigation
             </h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.solutions.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="text-center md:text-left ">
                   <Link
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900"
@@ -77,12 +77,12 @@ export default function LandingFooter() {
           </div>
 
           <div className="mt-10 md:mt-0">
-            <h3 className="text-sm font-semibold leading-6 text-gray-900">
+            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
               Liens utiles
             </h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.legal.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="text-center md:text-left ">
                   <Link
                     href={item.href}
                     className="text-sm leading-6 text-gray-600 hover:text-gray-900"
@@ -94,7 +94,7 @@ export default function LandingFooter() {
             </ul>
           </div>
         </div>
-        <div className=" flex flex-row justify-between text-center border-t border-gray-900/10 mt-4 py-4">
+        <div className="flex flex-col justify-center items-center  gap-4 md:gap-0 md:flex-row md:justify-between text-center border-t border-gray-900/10 mt-4 py-4">
           <Link href={"/"}>
             <Image
               width={64}

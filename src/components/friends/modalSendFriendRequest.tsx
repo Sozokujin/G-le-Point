@@ -5,16 +5,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { sendFriendRequest } from "@/services/firebase/friends";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Toaster } from "../ui/sonner";
 
 export const ModalSendFriendRequest = () => {
-  const [showPopupCopy, setShowPopupCopy] = useState(false);
-  const [showPopupSend, setShowPopupSend] = useState(false);
-
   const invitationCodeRef = useRef<HTMLInputElement>(null);
 
   const handleSendFriendRequest = async (

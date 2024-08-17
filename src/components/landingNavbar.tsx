@@ -44,6 +44,15 @@ export default function LandingNavbar() {
       threshold: 0.6,
     };
 
+    const toggleSectionObservation = (isObserving: boolean) => {
+      navigation.forEach((section) => {
+        const target = document.getElementById(section.id);
+        if (target) {
+          isObserving ? observer.observe(target) : observer.unobserve(target);
+        }
+      });
+    };
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -52,20 +61,10 @@ export default function LandingNavbar() {
       });
     }, options);
 
-    navigation.forEach((section) => {
-      const target = document.getElementById(section.id);
-      if (target) {
-        observer.observe(target);
-      }
-    });
+    toggleSectionObservation(true);
 
     return () => {
-      navigation.forEach((section) => {
-        const target = document.getElementById(section.id);
-        if (target) {
-          observer.unobserve(target);
-        }
-      });
+      toggleSectionObservation(false);
     };
   }, [navigation]);
 

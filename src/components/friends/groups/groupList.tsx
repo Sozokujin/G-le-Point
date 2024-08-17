@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import { useGroupStore } from "@/stores/groupStore";
-import { useFriendStore } from "@/stores/friendStore";
-import { ModalCreateGroup } from "./ModalCreateGroup";
+import { ModalCreateGroup } from "./modalCreateGroup";
+import { Card } from "@/components/ui/card";
 
 export const GroupList = () => {
 
 const { groups, getGroups } = useGroupStore();
-const { friends, getFriends } = useFriendStore();
 
 useEffect(() => {
     if(groups.length === 0) {
@@ -16,13 +15,13 @@ useEffect(() => {
 , [getGroups]);
 
   return (
-    <div>
-        <h2 className="text-primary text-xl font-bold px-2 py-4">Vos groupes</h2>
+    <Card className="md:w-1/4 p-5 flex flex-col gap-4">
+        <h2 className="text-primary text-xl font-bold">Vos groupes</h2>
         <ModalCreateGroup/>
       {groups.map((group) => (
         <GroupLine key={group.id} group={group} />
       ))}
-    </div>
+    </Card>
   );
 };
 

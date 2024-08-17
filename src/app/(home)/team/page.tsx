@@ -30,54 +30,52 @@ export default function Team() {
   ];
   return (
     <main className="isolate">
-      <div className="pt-24 sm:pt-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-          <h1 className="text-center mb-8">Présentation de l'équipe</h1>
-          <div className="flex flex-col md:flex-row justify-between items-center mt-24 -mb-24 md:mb-0">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="flex flex-col items-center mb-20 md:mb-0"
-              >
-                <Image
-                  className="rounded-full shadow-sm"
-                  src={member.image}
-                  alt={member.name}
-                  width={192}
-                  height={192}
-                />
-                <h2 className="mt-4">{member.name}</h2>
-                <div className="flex gap-4 mt-2">
-                  <a
-                    className="text-primary underline"
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      src="/images/linkedin-icon.svg"
-                      width={32}
-                      height={32}
-                      alt="Logo LinkedIn"
-                    />
-                  </a>
-                  <a
-                    className="text-primary underline"
-                    href={member.github}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Image
-                      src="/images/github-icon.svg"
-                      width={32}
-                      height={32}
-                      alt="Logo Github"
-                    />
-                  </a>
-                </div>
+      <div className="my-20 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
+        <h1 className="text-center mb-8">L'équipe G'Le Point</h1>
+        <div className="flex flex-col md:flex-row justify-between items-center mt-24 -mb-24 md:mb-0">
+          {team.map((member) => (
+            <div
+              key={member.name}
+              className="flex flex-col items-center mb-20 md:mb-0"
+            >
+              <Image
+                className="rounded-full shadow-sm"
+                src={member.image}
+                alt={member.name}
+                width={192}
+                height={192}
+              />
+              <h2 className="mt-4">{member.name}</h2>
+              <div className="flex gap-4 mt-2">
+                <a
+                  className="text-primary underline"
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    src="/images/linkedin-icon.svg"
+                    width={32}
+                    height={32}
+                    alt="Logo LinkedIn"
+                  />
+                </a>
+                <a
+                  className="text-primary underline"
+                  href={member.github}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    src="/images/github-icon.svg"
+                    width={32}
+                    height={32}
+                    alt="Logo Github"
+                  />
+                </a>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </main>

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useGroupStore } from "@/stores/groupStore";
 import { useEffect } from "react";
-import { ModalCreateGroup } from "./modalCreateGroup";
+import { ModalCreateGroup } from "./ModalCreateGroup";
 
 export const GroupList = () => {
   const { groups, getGroups } = useGroupStore();

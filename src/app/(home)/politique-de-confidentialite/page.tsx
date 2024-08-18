@@ -1,10 +1,26 @@
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - Politique de confidentialité",
+  description:
+    "Prenez connaissance de notre Politique de Confidentialité pour comprendre comment G'Le Point collecte, utilise et protège vos données personnelles. Votre vie privée est notre priorité.",
+};
+
 export default function Privacy() {
   return (
     <main className="isolate md:mx-[25%]">
-      <div className="my-20 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
+      <div className="mt-10 mb-16 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
         <h1 className="text-center mb-8">Politique de confidentialité</h1>
         <div className="flex flex-col gap-4">
+          <p className="mb-4">
+            Pour l’Editeur, la protection des Données à caractère personnel est
+            une priorité. L’Editeur traite les Données à caractère personnel de
+            ses Utilisateurs en conformité aux dispositions légales, et plus
+            particulièrement celles issues du Règlement européen 2016/679
+            relatif à la protection des Données à caractère personnel du 27
+            avril 2016 (ci-après le « RGPD ») et la Loi du 6 janvier 1978 dite «
+            Informatique & Libertés ».
+          </p>
           <p className="mb-4">
             <strong>G'Le Point</strong> accorde une grande importance à la
             protection de vos données personnelles. Cette politique de
@@ -26,24 +42,13 @@ export default function Privacy() {
 
           <h2>2. À qui s’adresse cette politique ?</h2>
           <p>
-            Cette politique s’adresse à toute personne de plus de 15 ans, quels
-            que soient son lieu de résidence et son rôle (utilisateur de G'Le
-            Point, partenaire, ou visiteur du site{" "}
+            Cette politique s’adresse à toute personne, quels que soient son
+            lieu de résidence et son rôle (utilisateur de G'Le Point,
+            partenaire, ou visiteur du site{" "}
             <a className="underline" href="https://glepoint.fr">
               glepoint.fr
             </a>
             ).
-          </p>
-          <p>
-            Les utilisateurs de moins de 15 ans ne peuvent accéder à nos
-            services sans le consentement de leurs parents ou tuteurs légaux. Si
-            vous suspectez que nous possédons des informations sur un enfant de
-            moins de 15 ans sans autorisation, vous pouvez nous contacter pour
-            demander leur suppression à l’adresse{" "}
-            <a className="underline" href="mailto:team.glepoint@gmail.com">
-              team.glepoint@gmail.com
-            </a>
-            .
           </p>
 
           <h2>3. Pourquoi traitons-nous vos données ?</h2>

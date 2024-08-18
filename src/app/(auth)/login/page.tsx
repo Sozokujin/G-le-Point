@@ -226,7 +226,9 @@ const Login = () => {
                 key={app.name}
                 variant="outline"
                 className={`w-full flex justify-center items-center gap-4 ${
-                  app.active ? "" : "opacity-50 cursor-not-allowed"
+                  app.active
+                    ? ""
+                    : "opacity-50 cursor-not-allowed text-gray-600 border-gray-600 hover:bg-gray-600 hover:text-white"
                 }`}
                 onClick={app.action}
               >

@@ -71,7 +71,7 @@ export default function LandingNavbar() {
   return (
     <header className="sticky top-0 w-full z-10">
       <nav
-        className="flex items-center justify-between p-6 lg:px-8"
+        className="flex items-center justify-between h-14 px-6 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
@@ -123,7 +123,7 @@ export default function LandingNavbar() {
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-50" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white/90 backdrop-blur-sm px-6 py-3 xs:max-w-xs xs:ring-1 xs:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">G'Le Point</span>
@@ -151,7 +151,7 @@ export default function LandingNavbar() {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 hover:text-primary duration-150 ${
+                    className={`block rounded-lg px-3 py-6 text-base font-semibold leading-7 hover:bg-gray-50 hover:text-primary duration-150 ${
                       activeSection === item.id
                         ? "text-green-500"
                         : "text-gray-900"

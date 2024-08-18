@@ -1,8 +1,16 @@
+import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - CGU",
+  description:
+    "Consultez les Conditions Générales d'Utilisation de G'Le Point. Apprenez-en plus sur les règles d'utilisation de notre plateforme, vos droits et responsabilités en tant qu'utilisateur.",
+};
+
 export default function Cgu() {
   return (
-    <main className="isolate md:mx-[25%]">
-      <div className="my-20 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
+    <main className="isolate md:mx-[20%]">
+      <div className="mt-10 mb-16 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
         <h1 className="text-center mb-8">Conditions Générales d'Utilisation</h1>
         <div className="flex flex-col gap-4">
           <p className="mb-4">
@@ -13,16 +21,20 @@ export default function Cgu() {
               glepoint.fr
             </a>
             . En accédant et en utilisant notre site, vous acceptez de vous
-            conformer à ces conditions. Si vous n'acceptez pas ces conditions,
-            veuillez ne pas utiliser notre site.
+            conformer à ces conditions. En cas de non-acceptation des CGU
+            stipulées dans le présent contrat, l'Utilisateur se doit de renoncer
+            à l'accès aux Services proposés par le Site.
           </p>
 
           <h2>1. Introduction</h2>
           <p>
             Nous fournissons une plateforme de cartographie interactive où les
             utilisateurs peuvent partager et découvrir des lieux d'intérêt moins
-            connus. En utilisant notre site, vous acceptez ces CGU et notre
-            Politique de Confidentialité.
+            connus. En utilisant notre site, vous acceptez ces CGU et notre{" "}
+            <Link className="underline" href="/politique-de-confidentialite">
+              Politique de Confidentialité
+            </Link>
+            .
           </p>
 
           <h2>2. Accès au Service</h2>
@@ -70,7 +82,7 @@ export default function Cgu() {
 
           <h2>6. Limitation de Responsabilité</h2>
           <p>
-            Nous ne garantissons pas que notre plateforme sera disponible en
+            Nous ne garantissons pas que notre plateforme sera accessible en
             permanence ou sans interruption. Nous ne sommes pas responsables des
             dommages résultant de l'utilisation ou de l'incapacité d'utiliser
             notre service, sauf en cas de négligence grave ou de faute
@@ -147,9 +159,12 @@ export default function Cgu() {
           <h2>14. Confidentialité</h2>
           <p>
             La collecte et le traitement de vos données personnelles sont régis
-            par notre Politique de Confidentialité. Vous devez lire cette
-            politique pour comprendre comment nous collectons, utilisons et
-            protégeons vos informations.
+            par notre{" "}
+            <Link className="underline" href="/politique-de-confidentialite">
+              Politique de Confidentialité
+            </Link>
+            . Vous devez lire cette politique pour comprendre comment nous
+            collectons, utilisons et protégeons vos informations.
           </p>
 
           <h2>15. Sécurité</h2>

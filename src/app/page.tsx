@@ -48,7 +48,7 @@ const tiers = [
     description:
       "Pour les aventuriers passionnés souhaitant une visibilité accrue.",
     features: [
-      "Toutes les fonctionnalités du plan Découvreur",
+      "Toutes les fonctionnalités du plan Explorateur",
       "Mise en avant de vos lieux partagés",
       "Fonctionnalités avancées de cartographie",
       "Promotion prioritaire dans les résultats de recherche",
@@ -57,7 +57,7 @@ const tiers = [
     mostPopular: false,
   },
   {
-    name: "Découvreur",
+    name: "Explorateur",
     id: "tier-free",
     href: "#",
     priceYearly: "Gratuit",
@@ -79,7 +79,7 @@ const tiers = [
     description:
       "Le choix optimal pour les professionnels cherchant à maximiser leur visibilité.",
     features: [
-      "Toutes les fonctionnalités du plan Découvreur",
+      "Toutes les fonctionnalités du plan Explorateur",
       "Mise en avant de vos lieux partagés",
       "Fonctionnalités avancées de cartographie",
       "Promotion prioritaire dans les résultats de recherche",
@@ -121,7 +121,7 @@ export default function Page() {
                 Découvrez et partagez des lieux cachés avec le monde
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
-                Rejoignez notre communauté de découvreurs et enrichissez votre
+                Rejoignez notre communauté d'explorateurs et enrichissez votre
                 expérience de voyage en explorant des trésors cachés, des
                 panoramas époustouflants et des lieux culturels uniques grâce à
                 notre plateforme collaborative de cartographie.
@@ -309,13 +309,13 @@ export default function Page() {
                         id={tier.id}
                         className={classNames(
                           tier.mostPopular ? "text-primary" : "text-gray-900",
-                          "text-lg font-semibold leading-8"
+                          "text-2xl font-semibold leading-8"
                         )}
                       >
                         {tier.name}
                       </h3>
                       {tier.mostPopular ? (
-                        <p className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold leading-5 text-primary">
+                        <p className="rounded-full bg-primary/10 px-2.5 py-1 font-semibold leading-5 text-primary">
                           Lancez-vous gratuitement
                         </p>
                       ) : null}

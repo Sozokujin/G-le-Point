@@ -1,15 +1,14 @@
+import { auth } from "@/services/firebase/config";
+import { AuthStore, FirebaseUser } from "@/types/index";
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
+  OAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { create } from "zustand";
-import { auth } from "@/services/firebase/config";
-import { FirebaseUser, AuthStore
- } from "@/types/index";
-
 
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
@@ -37,6 +36,16 @@ const faceBookSignIn = () => {
   return signInWithPopup(auth, provider);
 };
 
+const microsoftSignIn = () => {
+  const provider = new OAuthProvider("microsoft.com");
+  return signInWithPopup(auth, provider);
+};
+
+const xSignIn = () => {
+  const provider = new OAuthProvider("twitter.com");
+  return signInWithPopup(auth, provider);
+};
+
 onAuthStateChanged(auth, (firebaseUser) => {
   if (firebaseUser) {
     useAuthStore.getState().login({
@@ -50,4 +59,11 @@ onAuthStateChanged(auth, (firebaseUser) => {
   }
 });
 
-export { faceBookSignIn, googleSignIn, logOut, useAuthStore };
+export {
+  faceBookSignIn,
+  googleSignIn,
+  logOut,
+  microsoftSignIn,
+  useAuthStore,
+  xSignIn,
+};

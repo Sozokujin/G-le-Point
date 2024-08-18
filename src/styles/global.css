@@ -96,3 +96,23 @@ li {
 .mapboxgl-marker svg {
   display: none;
 }
+
+h1 {
+  @apply scroll-m-20 text-4xl font-extrabold tracking-tight my-4 lg:text-5xl;
+}
+
+h2 {
+  @apply scroll-m-20  text-3xl font-semibold tracking-tight my-2 first:mt-0;
+}
+
+h3 {
+  @apply scroll-m-20 text-2xl font-semibold tracking-tight my-2;
+}
+
+h4 {
+  @apply scroll-m-20 text-xl font-semibold tracking-tight my-2;
+}
+
+p {
+  @apply leading-7;
+}

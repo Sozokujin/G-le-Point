@@ -81,10 +81,21 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "border-beam": {
+          "100%": {
+            "offset-distance": "100%",
+          },
+        },
+        pulse: {
+          "0%, 100%": { boxShadow: "0 0 0 0 var(--pulse-color)" },
+          "50%": { boxShadow: "0 0 0 8px var(--pulse-color)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
+        pulse: "pulse var(--duration) ease-out infinite",
       },
     },
   },

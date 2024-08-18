@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Legal() {
   return (
     <main className="isolate md:mx-[25%]">
-      <div className="my-20 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
+      <div className="mt-10 mb-16 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
         <h1 className="text-center mb-8">Mentions légales</h1>
         <div className="flex flex-col gap-4">
           <h2>1. Informations Générales</h2>
@@ -37,7 +37,21 @@ export default function Legal() {
           <p>Le directeur de la publication du Site est : G'Le Point.</p>
 
           <h2>3. Hébergeur du Site</h2>
-          <p>Le Site est hébergé par : Vercel</p>
+          <ul className="list-disc list-inside">
+            <li>
+              <strong>Le Site est hébergé par : </strong>Vercel Inc.
+            </li>
+            <li>
+              <strong>Siège Social de l'hébergeur (EEE) : </strong>Avenue Huart
+              Hamoir 71, 1030 Brussels, Belgium
+            </li>
+            <li>
+              <strong>Email de l'hébergeur : </strong>
+              <a href="mailto:support@vercel.com" className="underline">
+                support@vercel.com
+              </a>
+            </li>
+          </ul>
 
           <h2>4. Propriété Intellectuelle</h2>
           <p>

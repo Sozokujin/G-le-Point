@@ -402,7 +402,7 @@ export default function Page() {
               }}
             />
           </div>
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-2xl text-center my-36">
             <h2
               id="contact"
               className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"

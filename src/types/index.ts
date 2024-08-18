@@ -7,7 +7,6 @@ export interface AuthStore {
   logout: () => void;
 }
 
-
 export interface Marker {
     name: string;
     description: string | null;
@@ -26,4 +25,19 @@ export interface FirebaseUser {
   displayName: string | null;
   email: string | null;
   photoURL: string | null | undefined;
+}
+
+
+export interface FriendRequest {
+  uid: string;
+  from: string;
+  to: string;
+  status: "pending" | "accepted" | "rejected";
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  groupOwner: string;
+  members: string[];
 }

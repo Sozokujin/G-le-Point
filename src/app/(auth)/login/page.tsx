@@ -60,7 +60,12 @@ const Login = () => {
     try {
       await setPersistence(auth, browserLocalPersistence);
       const authUser = await googleSignIn();
-      if (authUser && authUser.user) {
+      if (
+        authUser &&
+        authUser.user.displayName &&
+        authUser.user.email &&
+        authUser.user.photoURL
+      ) {
         const firebaseUser: FirebaseUser = {
           uid: authUser.user.uid,
           displayName: authUser.user.displayName,

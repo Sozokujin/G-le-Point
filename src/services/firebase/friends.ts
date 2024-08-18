@@ -4,7 +4,7 @@ import {
   useAuthStore,
 } from "@/stores/authStore";
 
-import {  collection, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
+import {  collection, getDocs, query, where, addDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 export const getAllFriends = async () => {
     try {
@@ -26,6 +26,7 @@ export const getAllFriends = async () => {
       const querySnapshot2 = await getDocs(q2);
       
       const friends = querySnapshot2.docs.map((doc) => doc.data());
+      console.log(friends);
       return friends;
     } catch (error) {
       console.error('Error fetching friends:', error);
@@ -35,7 +36,7 @@ export const getAllFriends = async () => {
 
 export const sendFriendRequest = async (invitationCode: string | undefined) => {
     if (!invitationCode) {
-      return alert("Veuillez renseigner un code d'invitation");
+      return "Code d'invitation non fourni";
     }
 
     const usersCollectionRef = collection(db, "users");
@@ -50,18 +51,134 @@ export const sendFriendRequest = async (invitationCode: string | undefined) => {
     }
 
     const currentUser = useAuthStore.getState().user;
-    const userDocRef = doc(db, "users", querySnapshot.docs[0].id);
 
-    const friends = querySnapshot.docs[0].data().friends
-      ? querySnapshot.docs[0].data().friends
-      : [];
-    if (!friends.includes(currentUser?.uid)) {
-      friends.push(currentUser?.uid);
-      await updateDoc(userDocRef, {
-        friends: friends,
-      });
-    }
+    const friendRequest = collection(db, "friendRequests");
+    await addDoc(friendRequest, {
+      from: currentUser?.uid,
+      to: querySnapshot.docs[0].data().uid,
+      status: "pending",
+    });
   };
+
+export const getFriendRequests = async () => {
+    const currentUser = useAuthStore.getState().user;
+    const friendRequestsCollectionRef = collection(db, "friendRequests");
+    const q = query(friendRequestsCollectionRef, where("to", "==", currentUser?.uid), where("status", "==", "pending"));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      return [];
+    }
+
+    const q2 = query(collection(db, "users"), where("uid", "in", querySnapshot.docs.map((doc) => doc.data().from)));
+
+    const querySnapshot2 = await getDocs(q2);
+
+    return querySnapshot2.docs.map((doc) => doc.data());
+};
+
+export const acceptFriendRequest = async (from: string) => {
+  const currentUser = useAuthStore.getState().user;
+
+  if (!currentUser?.uid) {
+    return alert("Utilisateur non authentifié");
+  }
+
+  const friendRequestsCollectionRef = collection(db, "friendRequests");
+  const q = query(
+    friendRequestsCollectionRef,
+    where("from", "==", from),
+    where("to", "==", currentUser.uid),
+    where("status", "==", "pending")
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) {
+    return alert("Demande introuvable");
+  }
+
+  const docId = querySnapshot.docs[0].id;
+
+
+  await updateDoc(doc(friendRequestsCollectionRef, docId), {
+    status: "accepted",
+  });
+
+  const usersCollectionRef = collection(db, "users");
+
+  // Requête pour trouver le document de l'utilisateur actuel par son UID
+  const currentUserQuery = query(usersCollectionRef, where("uid", "==", currentUser.uid));
+  const currentUserSnapshot = await getDocs(currentUserQuery);
+  
+  let currentUserDocRef;
+  if (!currentUserSnapshot.empty) {
+      currentUserDocRef = doc(usersCollectionRef, currentUserSnapshot.docs[0].id);
+  } else {
+      console.error("Aucun document trouvé pour l'utilisateur actuel.");
+      return;
+  }
+  
+  const friendUserQuery = query(usersCollectionRef, where("uid", "==", from));
+  const friendUserSnapshot = await getDocs(friendUserQuery);
+  
+  let friendUserDocRef;
+  if (!friendUserSnapshot.empty) {
+      friendUserDocRef = doc(usersCollectionRef, friendUserSnapshot.docs[0].id);
+  } else {
+      console.error("Aucun document trouvé pour l'ami.");
+      return;
+  };
+  
+  await updateDoc(currentUserDocRef, {
+      friends: arrayUnion(from),
+  });
+  
+  await updateDoc(friendUserDocRef, {
+      friends: arrayUnion(currentUser.uid),
+  });
+};
+
+export const declineFriendRequest = async (from: string) => {
+  const currentUser = useAuthStore.getState().user;
+
+  if (!currentUser?.uid) {
+    return;
+  }
+
+  const friendRequestsCollectionRef = collection(db, "friendRequests");
+  const q = query(
+    friendRequestsCollectionRef,
+    where("from", "==", from),
+    where("to", "==", currentUser.uid),
+    where("status", "==", "pending")
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) {
+    return alert("Demande introuvable");
+  }
+
+  const docId = querySnapshot.docs[0].id;
+
+  await updateDoc(doc(friendRequestsCollectionRef, docId), {
+    status: "declined",
+  });
+}
+
+
+export const getInvitationCode = async () => {
+    const currentUser = useAuthStore.getState().user;
+    const usersCollectionRef = collection(db, "users");
+    const q = query(usersCollectionRef, where("uid", "==", currentUser?.uid));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      return alert("Utilisateur introuvable");
+    }
+
+    return querySnapshot.docs[0].data().invitationCode;
+  };
+
 
 
 

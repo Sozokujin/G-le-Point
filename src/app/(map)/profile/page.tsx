@@ -11,6 +11,7 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logOut();
+      localStorage.clear();
       logout();
     } catch (error) {
       console.log(error);

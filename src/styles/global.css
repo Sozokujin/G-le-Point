@@ -89,6 +89,10 @@ ul.reset ul li {
   list-style-type: 0;
 }
 
+li {
+  list-style-type: none;
+}
+
 .mapboxgl-marker svg {
   display: none;
 }

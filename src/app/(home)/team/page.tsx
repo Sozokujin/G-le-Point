@@ -1,6 +1,13 @@
 import Image from "next/image";
 
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - Team",
+  description:
+    "Rencontrez l'équipe passionnée derrière G'Le Point. Découvrez les talents et les experts qui rendent cette plateforme collaborative possible et innovante.",
+};
+
 export default function Team() {
   const team = [
     {

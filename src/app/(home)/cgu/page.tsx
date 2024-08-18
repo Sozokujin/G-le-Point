@@ -1,6 +1,12 @@
 import Link from "next/link";
-
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - CGU",
+  description:
+    "Consultez les Conditions Générales d'Utilisation de G'Le Point. Apprenez-en plus sur les règles d'utilisation de notre plateforme, vos droits et responsabilités en tant qu'utilisateur.",
+};
+
 export default function Cgu() {
   return (
     <main className="isolate md:mx-[20%]">

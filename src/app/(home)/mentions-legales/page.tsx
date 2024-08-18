@@ -1,6 +1,12 @@
 import Link from "next/link";
-
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - Mentions légales",
+  description:
+    "Découvrez les informations légales relatives à G'Le Point, incluant les détails sur l'éditeur, l'hébergeur, et les moyens de contact. Transparence et conformité au service de votre sécurité.",
+};
+
 export default function Legal() {
   return (
     <main className="isolate md:mx-[25%]">

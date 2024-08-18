@@ -1,4 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - Politique de confidentialité",
+  description:
+    "Prenez connaissance de notre Politique de Confidentialité pour comprendre comment G'Le Point collecte, utilise et protège vos données personnelles. Votre vie privée est notre priorité.",
+};
+
 export default function Privacy() {
   return (
     <main className="isolate md:mx-[25%]">

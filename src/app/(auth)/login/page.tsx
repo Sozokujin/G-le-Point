@@ -45,7 +45,7 @@ const Login = () => {
       addDoc(usersCollectionRef, {
         ...user,
         friends: [],
-        invitationCode: Math.random().toString(36).substr(2, 9),
+        invitationCode: Math.random().toString(36).substring(2, 9),
       });
     }
   };

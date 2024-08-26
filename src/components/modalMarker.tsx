@@ -1,11 +1,9 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useAuthStore } from "@/stores/authStore";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "./ui/button";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
   const { user } = useAuthStore();
-
-  console.log(user);
 
   const closeModal = () => {
     setModalMarker(null);

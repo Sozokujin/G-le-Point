@@ -10,11 +10,11 @@ import {
 import { useAuthStore } from "@/stores/authStore";
 import useMarkerStore from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import Link from "next/link";
 
 const ModalCreateMarker = () => {
   const pointNameRef = useRef<HTMLInputElement>(null);
@@ -37,6 +37,7 @@ const ModalCreateMarker = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       if (user?.uid && user?.displayName) {
         addMarker({
+          id: Math.random().toString(36).substring(2, 9),
           name: pointNameRef.current?.value || "Point",
           description: pointDescriptionRef.current?.value || "",
           tags: [],
@@ -58,6 +59,7 @@ const ModalCreateMarker = () => {
     }
     if (user?.uid && user?.displayName) {
       addMarker({
+        id: Math.random().toString(36).substring(2, 9),
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
         tags: [],
@@ -82,6 +84,7 @@ const ModalCreateMarker = () => {
     }
     if (user?.uid && user?.displayName) {
       addMarker({
+        id: Math.random().toString(36).substring(2, 9),
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
         tags: [],
@@ -99,7 +102,10 @@ const ModalCreateMarker = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Link href="/map" className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full">
+        <Link
+          href="/map"
+          className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full"
+        >
           <PlusIcon className="h-8 w-8 text-white" />
         </Link>
       </DialogTrigger>

@@ -8,17 +8,18 @@ export interface AuthStore {
 }
 
 export interface Marker {
-    name: string;
-    description: string | null;
-    tags: string[];
-    address: string | null;
-    latitude: number;
-    longitude: number;
-    user: {
-      uid: string | null;
-      displayName: string | null;
-    };
-  }
+  id: string;
+  name: string;
+  description: string | null;
+  tags: string[];
+  address: string | null;
+  latitude: number;
+  longitude: number;
+  user: {
+    uid: string | null;
+    displayName: string | null;
+  };
+}
 
 export interface FirebaseUser {
   uid: string;
@@ -26,7 +27,6 @@ export interface FirebaseUser {
   email: string | null;
   photoURL: string | null | undefined;
 }
-
 
 export interface FriendRequest {
   uid: string;

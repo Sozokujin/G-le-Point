@@ -9,19 +9,17 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import type { FeatureCollection } from "geojson";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
-import type { CircleLayer, SymbolLayer } from "react-map-gl";
+import type { CircleLayer, MapRef, SymbolLayer } from "react-map-gl";
 import Map, { GeolocateControl, Layer, Source } from "react-map-gl";
 import classes from "../../Page.module.css";
 
 export default function Home() {
-  const [displayFriendsMarkers, setDisplayFriendsMarkers] =
-    useState<boolean>(false);
   const [modalMarker, setModalMarker] = useState<any>(null);
 
   const { isAuthenticated, user, isAuthChecking } = useAuthStore();
   const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
 
-  const map = useRef(null);
+  const map = useRef<MapRef | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -32,15 +30,23 @@ export default function Home() {
   useEffect(() => {
     if (!isAuthChecking && user?.uid) {
       getMarkers(user.uid);
-      displayFriendsMarkers ? getFriendsMarkers(user.uid) : null;
     }
-  }, [
-    user,
-    getFriendsMarkers,
-    getMarkers,
-    isAuthChecking,
-    displayFriendsMarkers,
-  ]);
+  }, [user, getFriendsMarkers, getMarkers, isAuthChecking]);
+
+  if (map.current) {
+    const currentMap = map.current.getMap();
+    currentMap.on("load", () => {
+      currentMap.loadImage(
+        "images/logo-glepoint-secondaire.png",
+        (error: any, image: any) => {
+          if (error) throw error;
+          if (!currentMap.hasImage("custom-marker")) {
+            currentMap.addImage("custom-marker", image);
+          }
+        }
+      );
+    });
+  }
 
   const geoJsonMarker: FeatureCollection = {
     type: "FeatureCollection",
@@ -88,16 +94,15 @@ export default function Home() {
     },
   };
 
-  const unclusteredPointLayer: CircleLayer = {
+  const unclusteredPointLayer: SymbolLayer = {
     id: "unclustered-point",
-    type: "circle",
+    type: "symbol",
     source: "my-data",
     filter: ["!", ["has", "point_count"]],
-    paint: {
-      "circle-color": "#11b4da",
-      "circle-radius": 8,
-      "circle-stroke-width": 1,
-      "circle-stroke-color": "#fff",
+    layout: {
+      "icon-image": "custom-marker",
+      "icon-size": 0.5,
+      "icon-allow-overlap": true,
     },
   };
 

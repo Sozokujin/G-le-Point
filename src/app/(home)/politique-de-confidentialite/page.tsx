@@ -199,9 +199,45 @@ export default function Privacy() {
             les prestataires avec lesquels nous travaillons respectent les
             garanties appropriées pour protéger vos données.
           </p>
-
+          <h2>9. Cookies strictement nécessaires</h2>
+          <p>
+            Ces cookies sont essentiels au bon fonctionnement de notre
+            application et ne peuvent pas être désactivés dans nos systèmes. Ils
+            sont généralement installés uniquement en réponse à des actions
+            effectuées par vous, telles que la connexion à votre compte, la
+            gestion de vos préférences de confidentialité, ou le remplissage de
+            formulaires. Sans ces cookies, certaines parties de notre site ou
+            application ne fonctionneraient pas correctement.
+          </p>
+          <p>
+            Voici les principaux cookies strictement nécessaires que nous
+            utilisons :
+          </p>
+          <ul className="list-disc list-inside">
+            <li>
+              <strong>Cookies d'authentification Google :</strong> Utilisés pour
+              permettre une connexion sécurisée via Google.
+            </li>
+            <li>
+              <strong>Cookies d'authentification Facebook :</strong> Utilisés
+              pour permettre une connexion sécurisée via Facebook.
+            </li>
+            <li>
+              <strong>Cookies d'authentification Microsoft :</strong> Utilisés
+              pour permettre une connexion sécurisée via Microsoft.
+            </li>
+            <li>
+              <strong>Cookies d'authentification X :</strong> Utilisés pour
+              permettre une connexion sécurisée via X.
+            </li>
+          </ul>
+          <p>
+            Ces cookies ne peuvent pas être désactivés, car ils sont
+            indispensables pour la sécurité et le bon fonctionnement de notre
+            application.
+          </p>
           <h2>
-            9. Qui pouvez-vous contacter pour obtenir plus d’informations ?
+            10. Qui pouvez-vous contacter pour obtenir plus d’informations ?
           </h2>
           <p>
             Pour toute question relative à la manière dont nous traitons vos
@@ -212,7 +248,7 @@ export default function Privacy() {
             .
           </p>
 
-          <h2>10. Comment pouvez-vous contacter la CNIL ?</h2>
+          <h2>11. Comment pouvez-vous contacter la CNIL ?</h2>
           <p>
             Vous pouvez contacter la Commission nationale de l’informatique et
             des libertés (CNIL) pour toute question relative à la protection des
@@ -221,7 +257,7 @@ export default function Privacy() {
             téléphone au 01.53.73.22.22.
           </p>
 
-          <h2>11. La politique peut-elle être modifiée ?</h2>
+          <h2>12. La politique peut-elle être modifiée ?</h2>
           <p>
             Nous pouvons modifier notre politique de confidentialité pour
             l'adapter aux nouvelles exigences légales ou à des changements dans
@@ -230,7 +266,7 @@ export default function Privacy() {
             publication.
           </p>
           <p className="italic text-lg mt-8">
-            Date de mise à jour : 18 Août 2024
+            Date de mise à jour : 25 Août 2024
           </p>
         </div>
       </div>

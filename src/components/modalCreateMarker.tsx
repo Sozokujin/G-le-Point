@@ -15,6 +15,13 @@ import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const ModalCreateMarker = () => {
   const pointNameRef = useRef<HTMLInputElement>(null);
@@ -23,10 +30,16 @@ const ModalCreateMarker = () => {
   const pointGpsRef = useRef<HTMLInputElement>(null);
 
   const [display, setDisplay] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<string>("");
 
   const { addMarker } = useMarkerStore();
 
   const { user } = useAuthStore();
+
+  const handleSelectTag = (value: string) => {
+    console.log(value);
+    setSelectedTag(value);
+  };
 
   const addMarkerWithCurrentLocation = () => {
     const geo = navigator.geolocation;
@@ -40,7 +53,7 @@ const ModalCreateMarker = () => {
           id: Math.random().toString(36).substring(2, 9),
           name: pointNameRef.current?.value || "Point",
           description: pointDescriptionRef.current?.value || "",
-          tags: [],
+          tags: selectedTag,
           address: "",
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -57,12 +70,13 @@ const ModalCreateMarker = () => {
     if (!pointAddressRef.current?.value) {
       return alert("Veuillez renseigner une adresse");
     }
+
     if (user?.uid && user?.displayName) {
       addMarker({
         id: Math.random().toString(36).substring(2, 9),
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
-        tags: [],
+        tags: selectedTag,
         address: pointAddressRef.current?.value || "",
         latitude: 0,
         longitude: 0,
@@ -87,7 +101,7 @@ const ModalCreateMarker = () => {
         id: Math.random().toString(36).substring(2, 9),
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
-        tags: [],
+        tags: selectedTag,
         address: "",
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
@@ -120,7 +134,16 @@ const ModalCreateMarker = () => {
         <Input ref={pointNameRef} id="name" type="text" />
         <Label htmlFor="description">Description</Label>
         <Input ref={pointDescriptionRef} id="description" type="text" />
-
+        <Select onValueChange={handleSelectTag}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Tag" />
+          </SelectTrigger>
+          <SelectContent id="test">
+            <SelectItem value="commerce">Commerce</SelectItem>
+            <SelectItem value="point-de-vue">Point de vue</SelectItem>
+            <SelectItem value="autre">Autre</SelectItem>
+          </SelectContent>
+        </Select>
         <div>
           <div className="w-full h-8 flex flex-row border mb-4 text-xs">
             <div

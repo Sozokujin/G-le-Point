@@ -11,7 +11,7 @@ export interface Marker {
   id: string;
   name: string;
   description: string | null;
-  tags: string[];
+  tags: string;
   address: string | null;
   latitude: number;
   longitude: number;

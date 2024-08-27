@@ -7,9 +7,10 @@ import { useAuthStore } from "@/stores/authStore";
 import useMarkerStore from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import type { FeatureCollection } from "geojson";
+import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { CircleLayer, MapRef, SymbolLayer } from "react-map-gl";
+import type { MapRef } from "react-map-gl";
 import Map, { GeolocateControl, Layer, Source } from "react-map-gl";
 import classes from "../../Page.module.css";
 
@@ -79,7 +80,7 @@ export default function Home() {
     })),
   };
 
-  const clusterLayer: CircleLayer = {
+  const clusterLayer: CircleLayerSpecification = {
     id: "cluster",
     type: "circle",
     source: "my-data",
@@ -98,7 +99,7 @@ export default function Home() {
     },
   };
 
-  const clusterCountLayer: SymbolLayer = {
+  const clusterCountLayer: SymbolLayerSpecification = {
     id: "cluster-count",
     type: "symbol",
     source: "my-data",
@@ -110,7 +111,7 @@ export default function Home() {
     },
   };
 
-  const unclusteredPointLayer: SymbolLayer = {
+  const unclusteredPointLayer: SymbolLayerSpecification = {
     id: "unclustered-point",
     type: "symbol",
     source: "my-data",

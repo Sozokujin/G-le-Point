@@ -199,43 +199,388 @@ export default function Privacy() {
             les prestataires avec lesquels nous travaillons respectent les
             garanties appropriées pour protéger vos données.
           </p>
-          <h2>9. Cookies strictement nécessaires</h2>
+          <h2>9. Politique de cookies</h2>
+
+          <h3>1. Qu’est-ce qu’un cookie ?</h3>
           <p>
-            Ces cookies sont essentiels au bon fonctionnement de notre
-            application et ne peuvent pas être désactivés dans nos systèmes. Ils
-            sont généralement installés uniquement en réponse à des actions
-            effectuées par vous, telles que la connexion à votre compte, la
-            gestion de vos préférences de confidentialité, ou le remplissage de
-            formulaires. Sans ces cookies, certaines parties de notre site ou
-            application ne fonctionneraient pas correctement.
+            Selon la définition de la CNIL, un cookie est un petit fichier
+            stocké par un serveur dans le terminal (ordinateur, téléphone, etc.)
+            d’un utilisateur et associé à un domaine web (c’est-à-dire dans la
+            majorité des cas à l’ensemble des pages d’un même site web). Ce
+            fichier est automatiquement renvoyé lors de contacts ultérieurs avec
+            le même domaine.
           </p>
           <p>
-            Voici les principaux cookies strictement nécessaires que nous
-            utilisons :
+            Les cookies ont de multiples usages. Certains de ces usages sont
+            strictement nécessaires aux fonctionnalités expressément demandées
+            par l’Utilisateur ou bien à l’établissement de la communication et
+            donc exemptés de consentement. D’autres, qui ne correspondent pas à
+            ces critères, nécessitent un consentement de l’Utilisateur avant
+            lecture ou écriture.
+          </p>
+          <p>
+            En conservant ces informations, l’Utilisateur n’a pas besoin de
+            renseigner ses préférences de navigation à chaque utilisation.
+          </p>
+
+          <h3>
+            2. Les cookies déposés lorsque l’Utilisateur navigue sur le Site
+          </h3>
+          <p>
+            Lors de la première visite sur le Site, un bandeau informe
+            l’Utilisateur de la présence de cookies et l’invite à indiquer son
+            choix. Les cookies nécessitant un consentement conformément à la
+            réglementation ne sont déposés que si l’Utilisateur les accepte.
+            L’utilisateur peut à tout moment s’informer et paramétrer les
+            cookies pour les accepter ou les refuser en cliquant sur “Gérer les
+            cookies” en bas de chaque page du Site.
+          </p>
+
+          <h3>3. Les données traitées à travers les cookies</h3>
+          <p>
+            Peuvent être collectés, via les cookies, toutes les données qui se
+            rapportent à un terminal à un instant donné, notamment :
           </p>
           <ul className="list-disc list-inside">
             <li>
-              <strong>Cookies d'authentification Google :</strong> Utilisés pour
-              permettre une connexion sécurisée via Google.
+              Un ou plusieurs identifiant(s) technique(s) permettant
+              d’identifier votre box internet;
             </li>
             <li>
-              <strong>Cookies d'authentification Facebook :</strong> Utilisés
-              pour permettre une connexion sécurisée via Facebook.
+              La date, l’heure et la durée de connexion d’un terminal à un site
+              internet;
             </li>
             <li>
-              <strong>Cookies d'authentification Microsoft :</strong> Utilisés
-              pour permettre une connexion sécurisée via Microsoft.
+              L’adresse Internet de la page de provenance du terminal accédant
+              au site internet;
             </li>
             <li>
-              <strong>Cookies d'authentification X :</strong> Utilisés pour
-              permettre une connexion sécurisée via X.
+              Le type de système d’exploitation du terminal (ex : Windows,
+              MacOS, Linux, Unix, etc.);
             </li>
+            <li>
+              Le type et la version du logiciel de navigation utilisé par le
+              terminal (Internet Explorer, Firefox, Safari, Chrome, Opera,
+              etc.);
+            </li>
+            <li>La marque et le modèle du terminal mobile ou tablette;</li>
+            <li>
+              La langue d’utilisation du logiciel de navigation utilisé par le
+              terminal;
+            </li>
+            <li>Les caractéristiques des contenus consultés et partagés.</li>
           </ul>
+
+          <h3>4. Les finalités des cookies collectés</h3>
           <p>
-            Ces cookies ne peuvent pas être désactivés, car ils sont
-            indispensables pour la sécurité et le bon fonctionnement de notre
-            application.
+            Sur le Site, différents types de cookies sont déposés pour plusieurs
+            finalités :
           </p>
+
+          <h4>Les cookies nécessaires</h4>
+          <p>
+            Ils permettent à l’Utilisateur d’utiliser les principales
+            fonctionnalités du Site et notamment d’enregistrer des identifiants
+            de connexion de session. Ils ne requièrent pas le consentement
+            préalable de l’Utilisateur. Ces cookies sont indispensables au bon
+            fonctionnement du Site.
+          </p>
+          <table className="border-collapse border border-slate-500 shadow-sm">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="border border-slate-600 text-center">Nom</th>
+                <th className="border border-slate-600 text-center">Domaine</th>
+                <th className="border border-slate-600 text-center">
+                  Expiration
+                </th>
+                <th className="border border-slate-600 text-center">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-slate-600 text-center">AEC</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">6 mois</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour assurer la sécurité de l'utilisateur en prévenant
+                  les attaques de cross-site scripting.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">APISID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour mémoriser les préférences de l'utilisateur et
+                  d'autres informations.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">HSID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur, notamment pour
+                  prévenir les attaques de connexion frauduleuses.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">NID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">6 mois</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour mémoriser les préférences de l'utilisateur sur
+                  les sites Google.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">SAPISID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour profiler les intérêts des utilisateurs et
+                  afficher des publicités Google pertinentes.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">SID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur en prévenant
+                  l'utilisation frauduleuse des informations de connexion.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">SIDCC</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">1 an</td>
+                <td className="border border-slate-600 text-center">
+                  Cookie de sécurité pour protéger les données de l'utilisateur
+                  contre l'accès non autorisé.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">SSID</td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour mémoriser les préférences de l'utilisateur et
+                  d'autres informations.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Les cookies d'analyse</h4>
+          <p>
+            Ces cookies permettent de connaître l’utilisation et les
+            performances d’audience du Site et d’en améliorer le fonctionnement
+            pour les Utilisateurs, par exemple, établir des statistiques et
+            volumes de fréquentation et d’utilisation des divers éléments
+            composant le Site (rubriques et contenus visités, parcours), afin
+            d’améliorer l’intérêt et l’ergonomie du Site.
+          </p>
+          <table className="border-collapse border border-slate-500 shadow-sm">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="border border-slate-600 text-center">Nom</th>
+                <th className="border border-slate-600 text-center">Domaine</th>
+                <th className="border border-slate-600 text-center">
+                  Expiration
+                </th>
+                <th className="border border-slate-600 text-center">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-slate-600 text-center">_vcn</td>
+                <td className="border border-slate-600 text-center">
+                  vercel.live
+                </td>
+                <td className="border border-slate-600 text-center">6 mois</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour mesurer les performances et le comportement
+                  utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">_vcnn</td>
+                <td className="border border-slate-600 text-center">
+                  vercel.live
+                </td>
+                <td className="border border-slate-600 text-center">6 mois</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour collecter des statistiques anonymes à des fins
+                  d'analyse.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-1PAPISID
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur en prévenant les
+                  attaques de cross-site scripting.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-1PSID
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur en prévenant les
+                  attaques de cross-site scripting.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-1PSIDCC
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur en prévenant les
+                  attaques de cross-site scripting.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-1PSIDTS
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour la sécurité de l'utilisateur en prévenant les
+                  attaques de cross-site scripting.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-3PAPISID
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour cibler la publicité sur le réseau Google en
+                  fonction des centres d'intérêt de l'utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-3PSID
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour cibler la publicité sur le réseau Google en
+                  fonction des centres d'intérêt de l'utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-3PSIDCC
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour cibler la publicité sur le réseau Google en
+                  fonction des centres d'intérêt de l'utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-3PSIDTS
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Utilisé pour cibler la publicité sur le réseau Google en
+                  fonction des centres d'intérêt de l'utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center">
+                  __Secure-ENID
+                </td>
+                <td className="border border-slate-600 text-center">
+                  .google.com
+                </td>
+                <td className="border border-slate-600 text-center">2 ans</td>
+                <td className="border border-slate-600 text-center">
+                  Cookie de sécurité pour empêcher les attaques de cross-site
+                  scripting.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>5. Cookies tiers</h3>
+          <p>
+            L’Editeur est susceptible d’inclure sur le Site des solutions
+            informatiques émanant de tiers qui permettent notamment d’accéder à
+            certaines fonctionnalités du Site. L’Editeur n’a aucun contrôle sur
+            le processus employé par ces sites tiers pour collecter et traiter
+            des informations relatives à la navigation sur le Site. L’Editeur
+            invite, en conséquence, l’Utilisateur à consulter les politiques de
+            confidentialité de ces tiers afin de prendre connaissance des
+            finalités d’utilisation de leurs données. Ces politiques de
+            confidentialité doivent notamment permettre l’exercice de droit
+            auprès de ces tiers.
+          </p>
+
+          <h3>6. Gestion du consentement au dépôt des cookies</h3>
+          <p>
+            Le dépôt d’un cookie à des fins d’analyse nécessite le consentement
+            préalable de l’Utilisateur. Ce consentement est demandé à travers le
+            bandeau qui s’affiche lors de la première navigation sur le Site.
+            L’Utilisateur peut choisir d’accepter le dépôt des cookies pour
+            toutes les finalités listées (“En route”), les refuser (“Les cookies
+            nécessaires”) ou personnaliser votre choix (“Laissez-moi choisir”).
+            L’Utilisateur peut à tout moment retirer son consentement en
+            cliquant sur “Gérer les cookies” en bas de chaque page du Site.
+          </p>
+
           <h2>
             10. Qui pouvez-vous contacter pour obtenir plus d’informations ?
           </h2>

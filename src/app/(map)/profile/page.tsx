@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
+import { Textarea } from "@/components/ui/textarea";
 import { redirectTo } from "@/lib/actions";
 import { updateUser } from "@/services/firebase/profil";
 import { logOut, useAuthStore } from "@/stores/authStore";
@@ -38,8 +39,8 @@ const Profile = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
-      bio: "",
+      username: user?.username || user?.displayName || "",
+      bio: user?.bio || "",
     },
   });
 
@@ -76,21 +77,6 @@ const Profile = () => {
     }
   }, [isAuthenticated]);
 
-  const InitialLetters = () => {
-    if (user?.displayName) {
-      const [firstName, lastName] = user?.displayName.split(" ");
-      return (
-        <div className="flex justify-center items-center w-16 h-16 bg-primary text-white rounded-full shadow-md">
-          <span className="text-xl">
-            {firstName?.charAt(0)}
-            {lastName?.charAt(0)}
-          </span>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div className="flex justify-center items-center flex-col mt-12 md:mx-[25%]">
       <h1>Mon compte</h1>
@@ -104,7 +90,9 @@ const Profile = () => {
           className="rounded-full shadow-md"
         />
       ) : (
-        <InitialLetters />
+        <div className="flex justify-center items-center w-16 h-16 bg-primary text-white rounded-full shadow-md">
+          <span className="text-xl">{user?.displayName?.charAt(0)}</span>
+        </div>
       )}
       <Form {...form}>
         <form
@@ -118,10 +106,7 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Nom d'utilisateur</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={user?.username ?? user?.displayName ?? ""}
-                    {...field}
-                  />
+                  <Input placeholder="Nom d'utilisateur" {...field} />
                 </FormControl>
                 <FormDescription>
                   Il s'agit de votre nom d'affichage public.
@@ -137,7 +122,7 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Biographie</FormLabel>
                 <FormControl>
-                  <Input placeholder={user?.bio ?? ""} {...field} />
+                  <Textarea placeholder="Type your message here." {...field} />
                 </FormControl>
                 <FormDescription>
                   Il s'agit de votre biographie public.

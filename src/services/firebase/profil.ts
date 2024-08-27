@@ -1,7 +1,16 @@
-import { db } from "@/services/firebase/config";
+import { auth, db } from "@/services/firebase/config";
+import { useAuthStore } from "@/stores/authStore";
 import { FirebaseUser } from "@/types";
 import {
+  deleteUser,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  OAuthProvider,
+  reauthenticateWithPopup,
+} from "firebase/auth";
+import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -61,4 +70,92 @@ export const getUsername = async (user: string): Promise<string> => {
     return username;
   }
   return "";
+};
+
+export const deleteAccount = async () => {
+  try {
+    const { user, logout } = useAuthStore.getState();
+
+    if (!user || !user.uid) {
+      console.error("Utilisateur non valide ou non authentifié.");
+      return;
+    }
+
+    let provider;
+    const currentProviderId = auth.currentUser?.providerData[0]?.providerId;
+
+    try {
+      switch (currentProviderId) {
+        case "google.com":
+          provider = new GoogleAuthProvider();
+          break;
+        case "facebook.com":
+          provider = new FacebookAuthProvider();
+          break;
+        case "microsoft.com":
+          provider = new OAuthProvider("microsoft.com");
+          break;
+        case "twitter.com":
+          provider = new OAuthProvider("twitter.com");
+          break;
+        default:
+          console.error(
+            "Fournisseur non supporté ou utilisateur non authentifié via un fournisseur SSO reconnu."
+          );
+          return;
+      }
+
+      await reauthenticateWithPopup(auth.currentUser!, provider);
+      console.log("Utilisateur réauthentifié.");
+    } catch (error) {
+      console.error("Erreur lors de la réauthentification :", error);
+      return;
+    }
+
+    try {
+      // Suppression - Firestore
+      const userCollectionRef = collection(db, "users");
+      const currentUserQuery = query(
+        userCollectionRef,
+        where("uid", "==", user.uid)
+      );
+
+      const currentUserSnapshot = await getDocs(currentUserQuery);
+
+      if (!currentUserSnapshot.empty) {
+        const currentUserDocRef = doc(
+          userCollectionRef,
+          currentUserSnapshot.docs[0].id
+        );
+        await deleteDoc(currentUserDocRef);
+        console.log("Document utilisateur supprimé de Firestore.");
+      } else {
+        console.error("Aucun document trouvé pour l'utilisateur actuel.");
+        return;
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la suppression du document Firestore :",
+        error
+      );
+      return;
+    }
+
+    try {
+      // Suppression - Firebase Authentication
+      await deleteUser(auth.currentUser!);
+      console.log("Utilisateur supprimé de Firebase Authentication.");
+    } catch (error) {
+      console.error(
+        "Erreur lors de la suppression de l'utilisateur Firebase Authentication :",
+        error
+      );
+      return;
+    }
+
+    logout();
+    console.log("Utilisateur déconnecté.");
+  } catch (error) {
+    console.error("Erreur lors de la suppression du compte :", error);
+  }
 };

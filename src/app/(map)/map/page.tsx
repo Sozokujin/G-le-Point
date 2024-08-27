@@ -8,7 +8,7 @@ import useMarkerStore from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import type { FeatureCollection } from "geojson";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { CircleLayer, MapRef, SymbolLayer } from "react-map-gl";
 import Map, { GeolocateControl, Layer, Source } from "react-map-gl";
 import classes from "../../Page.module.css";
@@ -32,6 +32,22 @@ export default function Home() {
       getMarkers(user.uid);
     }
   }, [user, getFriendsMarkers, getMarkers, isAuthChecking]);
+
+  const handleClickUnclusteredPoint = useCallback((e: any) => {
+    const features = e.features[0];
+    if (features && features.properties) {
+      const properties = features.properties;
+      setModalMarker(markers.find((marker) => marker.id === properties.id));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (map.current) {
+      const currentMap = map.current.getMap();
+
+      currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
+    }
+  }, [handleClickUnclusteredPoint]);
 
   if (map.current) {
     const currentMap = map.current.getMap();

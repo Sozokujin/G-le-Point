@@ -1,4 +1,5 @@
 import { auth } from "@/services/firebase/config";
+import { getBio, getUsername } from "@/services/firebase/profil";
 import { AuthStore, FirebaseUser } from "@/types/index";
 import {
   FacebookAuthProvider,
@@ -46,13 +47,15 @@ const xSignIn = () => {
   return signInWithPopup(auth, provider);
 };
 
-onAuthStateChanged(auth, (firebaseUser) => {
+onAuthStateChanged(auth, async (firebaseUser) => {
   if (firebaseUser) {
     useAuthStore.getState().login({
       uid: firebaseUser.uid,
       displayName: firebaseUser.displayName,
       email: firebaseUser.email,
       photoURL: firebaseUser.photoURL,
+      username: await getUsername(firebaseUser.uid),
+      bio: await getBio(firebaseUser.uid),
     });
   } else {
     useAuthStore.getState().logout();

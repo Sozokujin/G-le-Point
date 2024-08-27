@@ -45,11 +45,8 @@ const Profile = () => {
 
   // Fonction de soumission du formulaire
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    console.log(user);
-
     if (user && data.username) {
-      user.displayName = data.username;
+      user.username = data.username;
     }
 
     if (user && data.bio) {
@@ -121,7 +118,10 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Nom d'utilisateur</FormLabel>
                 <FormControl>
-                  <Input placeholder={user?.displayName ?? ""} {...field} />
+                  <Input
+                    placeholder={user?.username ?? user?.displayName ?? ""}
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   Il s'agit de votre nom d'affichage public.
@@ -137,7 +137,7 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Biographie</FormLabel>
                 <FormControl>
-                  <Input placeholder={"BIO ICI"} {...field} />
+                  <Input placeholder={user?.bio ?? ""} {...field} />
                 </FormControl>
                 <FormDescription>
                   Il s'agit de votre biographie public.

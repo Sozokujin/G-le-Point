@@ -25,6 +25,8 @@ export interface FirebaseUser {
   displayName: string | null;
   email: string | null;
   photoURL: string | null | undefined;
+  bio: string | null;
+  username: string | null;
 }
 
 export interface FriendRequest {

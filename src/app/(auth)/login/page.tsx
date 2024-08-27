@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { redirectTo } from "@/lib/actions";
 import { auth, db } from "@/services/firebase/config";
+import { getBio, getUsername } from "@/services/firebase/profil";
 import {
   faceBookSignIn,
   googleSignIn,
@@ -16,6 +17,8 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+// IL FAUT REGARDER POURQUOI A LA CREATION DU COMPTE ON A PAS DE USERNAME
 
 const Login = () => {
   const { isAuthenticated, login } = useAuthStore();
@@ -46,6 +49,8 @@ const Login = () => {
         ...user,
         friends: [],
         invitationCode: Math.random().toString(36).substr(2, 9),
+        username: user.displayName,
+        bio: "",
       });
     }
   };
@@ -60,6 +65,8 @@ const Login = () => {
           displayName: authUser.user.displayName,
           email: authUser.user.email,
           photoURL: authUser.user.photoURL,
+          username: await getUsername(authUser.user.uid),
+          bio: await getBio(authUser.user.uid),
         };
         login(firebaseUser);
         addToDbIfNewUser(firebaseUser);
@@ -89,6 +96,8 @@ const Login = () => {
           displayName: authUser.user.displayName,
           email: authUser.user.email,
           photoURL: authUser.user.photoURL,
+          username: await getUsername(authUser.user.uid),
+          bio: await getBio(authUser.user.uid),
         };
         login(firebaseUser);
         addToDbIfNewUser(firebaseUser);
@@ -114,6 +123,8 @@ const Login = () => {
           displayName: authUser.user.displayName,
           email: authUser.user.email,
           photoURL: authUser.user.photoURL,
+          username: await getUsername(authUser.user.uid),
+          bio: await getBio(authUser.user.uid),
         };
         login(firebaseUser);
         addToDbIfNewUser(firebaseUser);
@@ -138,6 +149,8 @@ const Login = () => {
           displayName: authUser.user.displayName,
           email: authUser.user.email,
           photoURL: authUser.user.photoURL,
+          username: await getUsername(authUser.user.uid),
+          bio: await getBio(authUser.user.uid),
         };
         login(firebaseUser);
         addToDbIfNewUser(firebaseUser);

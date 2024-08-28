@@ -268,7 +268,7 @@ const Profile = () => {
       <div className="relative overflow-hidden mb-32 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
         <h2>Statistiques</h2>
         <div className=" flex flex-col items-center justify-center lg:grid lg:grid-cols-2 gap-4 mt-8">
-          <div className="text-center">
+          <div className="text-center lg:h-24">
             <p className="text-lg">Nombre de points posés</p>
             <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
               {markers.length !== 0 ? (
@@ -278,7 +278,7 @@ const Profile = () => {
               )}
             </span>
           </div>
-          <div className="text-center">
+          <div className="text-center lg:h-24">
             <p className="text-lg">Supers points restant // TODO</p>
             <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
               {markers.length !== 0 ? (
@@ -301,7 +301,7 @@ const Profile = () => {
               </div>
             </a>
           </div>
-          <div className="text-center">
+          <div className="text-center lg:h-24">
             <p className="text-lg">Nombre de boussoles // TODO</p>
             <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
               {markers.length !== 0 ? (
@@ -311,7 +311,7 @@ const Profile = () => {
               )}
             </span>
           </div>
-          <div className="text-center">
+          <div className="text-center lg:h-24">
             <p className="text-lg">Nombre de likes sur tes points // TODO</p>
             <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
               {markers.length !== 0 ? (

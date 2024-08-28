@@ -1,6 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-
+import AnimatedGradientText from "@/components/magicui/animated-gradient-text";
+import { BorderBeam } from "@/components/magicui/border-beam";
+import NumberTicker from "@/components/magicui/number-ticker";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,9 +27,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Toaster } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { redirectTo } from "@/lib/actions";
+import { cn } from "@/lib/utils";
 import { deleteAccount, updateUser } from "@/services/firebase/profil";
 import { logOut, useAuthStore } from "@/stores/authStore";
+import useMarkerStore from "@/stores/markerStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -37,7 +47,7 @@ import { z } from "zod";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Le nom d'utilisateur doit comporter au moins 2 caractères.",
   }),
   bio: z.string().optional(),
 });
@@ -95,16 +105,19 @@ const Profile = () => {
     }
   }, [isAuthenticated]);
 
+  const markers = useMarkerStore((state) => state.markers);
+
+  console.log(markers.length);
+
   return (
-    <div className="flex justify-center items-center flex-col mt-12 md:mx-[25%] p-6 bg-white border border-gray-200 rounded-lg shadow">
-      <h1>Mon compte</h1>
-      <div className="w-full flex flex-col justify-center items-center">
+    <div className="flex justify-center items-center flex-col mt-0 lg:mt-12 lg:mx-[25%]">
+      <div className="relative overflow-hidden w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
         {user?.photoURL ? (
           <Image
             src={user?.photoURL ?? ""}
             alt={"Photo de profil de " + user?.displayName ?? "l'utilisateur"}
-            width={64}
-            height={64}
+            width={96}
+            height={96}
             className="rounded-full shadow-md"
           />
         ) : (
@@ -112,11 +125,36 @@ const Profile = () => {
             <span className="text-xl">{user?.displayName?.charAt(0)}</span>
           </div>
         )}
+        <h1 className="text-2xl">Mon compte</h1>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-2/3 space-y-6"
+            className="w-full lg:w-2/3 space-y-6"
           >
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <FormField
+                      name="email"
+                      disabled
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>E-mail</FormLabel>
+                          <FormControl>
+                            <Input placeholder={user?.email ?? ""} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Vous ne pouvez pas modifier votre e-mail.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <FormField
               control={form.control}
               name="username"
@@ -141,27 +179,11 @@ const Profile = () => {
                   <FormLabel>Biographie</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Type your message here."
+                      className="resize-none"
+                      placeholder="Amoureux(se) de découvertes, je partage ici mes lieux secrets et pépites cachées pour les passionnés d'exploration."
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Il s'agit de votre biographie public.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="email"
-              disabled
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl>
-                    <Input placeholder={user?.email ?? ""} {...field} />
-                  </FormControl>
-                  <FormDescription>Il s'agit de votre e-mail.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -178,7 +200,7 @@ const Profile = () => {
           <Button
             onClick={handleLogout}
             variant="destructive"
-            className="bg-destructive text-white hover:bg-red-600 p-4 rounded-full"
+            className="bg-slate-500 text-white hover:bg-slate-600 p-4 rounded-full"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -194,10 +216,10 @@ const Profile = () => {
                 d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
               />
             </svg>
-            <span>Se déconnecter</span>
+            <span className="text-sm px-1">Se déconnecter</span>
           </Button>
           <AlertDialog>
-            <AlertDialogTrigger className="bg-destructive text-white hover:bg-red-600 p-4 rounded-full">
+            <AlertDialogTrigger className="bg-destructive text-white hover:bg-red-600 p-3 rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -234,8 +256,80 @@ const Profile = () => {
             </AlertDialogContent>
           </AlertDialog>
         </div>
+        <Toaster position="top-right" />
+        <BorderBeam
+          size={800}
+          duration={12}
+          delay={18}
+          colorFrom="#9FCF6D"
+          colorTo="#7CC772"
+        />
       </div>
-      <Toaster position="top-right" />
+      <div className="relative overflow-hidden mb-32 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
+        <h2>Statistiques</h2>
+        <div className=" flex flex-col items-center justify-center lg:grid lg:grid-cols-2 gap-4 mt-8">
+          <div className="text-center">
+            <p className="text-lg">Nombre de points posés</p>
+            <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
+              {markers.length !== 0 ? (
+                <NumberTicker value={markers.length} />
+              ) : (
+                0
+              )}
+            </span>
+          </div>
+          <div className="text-center">
+            <p className="text-lg">Supers points restant // TODO</p>
+            <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
+              {markers.length !== 0 ? (
+                <NumberTicker value={markers.length} />
+              ) : (
+                0
+              )}
+            </span>
+            <a href="/">
+              <div className="z-10 flex items-center justify-center">
+                <AnimatedGradientText>
+                  🚀 <hr className="mx-2 h-4 w-[1px] shrink-0 bg-gray-300" />{" "}
+                  <span
+                    className={cn(`inline animate-gradient bg-gradient-to-r from-[#00a661] via-[#00ffb3] to-[#00994d] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent
+`)}
+                  >
+                    Acheter des super points
+                  </span>
+                </AnimatedGradientText>
+              </div>
+            </a>
+          </div>
+          <div className="text-center">
+            <p className="text-lg">Nombre de boussoles // TODO</p>
+            <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
+              {markers.length !== 0 ? (
+                <NumberTicker value={markers.length} />
+              ) : (
+                0
+              )}
+            </span>
+          </div>
+          <div className="text-center">
+            <p className="text-lg">Nombre de likes sur tes points // TODO</p>
+            <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
+              {markers.length !== 0 ? (
+                <NumberTicker value={markers.length} />
+              ) : (
+                0
+              )}
+            </span>
+          </div>
+        </div>
+        <BorderBeam
+          size={800}
+          duration={12}
+          delay={36}
+          colorFrom="#9FCF6D"
+          colorTo="#7CC772"
+        />
+      </div>
     </div>
   );
 };

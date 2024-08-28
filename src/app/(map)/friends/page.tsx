@@ -18,10 +18,14 @@ const Friends = () => {
 
 
   return (
-    <>
-    <GroupList/>
-    <FriendList />
-    </>
+    <div className="w-full h-full flex">
+      <section className="md:w-5/12 w-full h-full bg-blue-400">
+        <FriendList />
+      </section>
+      <section className="md:w-7/12 h-full bg-red-400">
+
+      </section>
+    </div>
   );
 };
 

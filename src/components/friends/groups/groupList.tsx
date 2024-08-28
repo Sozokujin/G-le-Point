@@ -13,7 +13,7 @@ export const GroupList = () => {
   }, [getGroups]);
 
   return (
-    <Card className="md:w-1/4 p-5 flex flex-col gap-4">
+    <Card className="p-5 flex flex-col gap-4">
       <h2 className="text-primary text-xl font-bold">Vos groupes</h2>
       <ModalCreateGroup />
       {groups.map((group) => (

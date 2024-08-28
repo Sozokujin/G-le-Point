@@ -15,6 +15,7 @@ export interface Marker {
   address: string | null;
   latitude: number;
   longitude: number;
+  isPublic: boolean;
   user: {
     uid: string | null;
     displayName: string | null;

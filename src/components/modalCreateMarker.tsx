@@ -100,7 +100,7 @@ const ModalCreateMarker = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Link href="/map" className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full">
-          <PlusIcon className="h-8 w-8 text-white" />
+          <PlusIcon className="h-5 w-5 xs:h-6 xs:w-6 sm:h-8 sm:w-8 text-white" />
         </Link>
       </DialogTrigger>
       <DialogContent>

@@ -1,10 +1,18 @@
 //Store types
+
+// TODO : replace all useAuthStore usage by useUserStore
 export interface AuthStore {
   user: FirebaseUser | null;
   isAuthenticated: boolean;
   isAuthChecking: boolean;
   login: (user: FirebaseUser) => void;
   logout: () => void;
+}
+
+export interface UserStore {
+  user: FirebaseUser | null;
+  setUser: (user: FirebaseUser) => void;
+  clearUser: () => void;
 }
 
 export interface Marker {

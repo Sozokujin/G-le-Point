@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { create } from "zustand";
 
+// TODO : replace all useAuthStore usage by useUserStore
 const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   isAuthenticated: false,

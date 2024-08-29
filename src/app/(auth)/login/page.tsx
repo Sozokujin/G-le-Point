@@ -1,31 +1,25 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { Button } from "@/components/ui/button";
-import { redirectTo } from "@/lib/actions";
-import { auth, db } from "@/services/firebase/config";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
-  faceBookSignIn,
-  googleSignIn,
-  microsoftSignIn,
-  useAuthStore,
-  xSignIn,
-} from "@/stores/authStore";
-import { FirebaseUser } from "@/types/index";
-import { browserLocalPersistence, setPersistence } from "firebase/auth";
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithPopup
+} from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from "@/services/firebase/config";
+import { Button } from "@/components/ui/button";
+import { FirebaseUser } from "@/types/index";
+import useUserStore from "@/stores/userStore";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const Login = () => {
-  const { isAuthenticated, login } = useAuthStore();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      redirectTo("/map");
-    }
-  }, [isAuthenticated]);
-
+  const router = useRouter();
+  const { setUser } = useUserStore();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,150 +33,86 @@ const Login = () => {
 
   const addToDbIfNewUser = async (user: any) => {
     const usersCollectionRef = collection(db, "users");
-    const querry = query(usersCollectionRef, where("uid", "==", user.uid));
-    const querySnapshot = await getDocs(querry);
+    const _query = query(usersCollectionRef, where("uid", "==", user.uid));
+    const querySnapshot = await getDocs(_query);
     if (querySnapshot.empty) {
       addDoc(usersCollectionRef, {
         ...user,
         friends: [],
+        // TODO : switch substr because it's deprecated
         invitationCode: Math.random().toString(36).substr(2, 9),
       });
     }
   };
 
-  const handleSignInFacebook = async () => {
+  const signInWithProvider = async (provider: any | null) => {
+    if (!provider) return;
+
     try {
-      await setPersistence(auth, browserLocalPersistence);
-      const authUser = await faceBookSignIn();
-      if (authUser && authUser.user) {
+      // try to replace by signInWithRedirect to avoid popup blocking and cookie issues
+      const result = await signInWithPopup(auth, provider);
+
+      if (result && result.user) {
+        const idToken = await result.user.getIdToken();
         const firebaseUser: FirebaseUser = {
-          uid: authUser.user.uid,
-          displayName: authUser.user.displayName,
-          email: authUser.user.email,
-          photoURL: authUser.user.photoURL,
+          uid: result.user.uid,
+          displayName: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
         };
-        login(firebaseUser);
+        
         addToDbIfNewUser(firebaseUser);
-        redirectTo("/map");
+        setUser(firebaseUser);
+        
+        await fetch("/api/login", {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        const url = new URL(window.location.href);
+        router.push(url.searchParams.get("redirect") ?? "/map");
       }
     } catch (error: Error | any) {
       if (error.code === "auth/account-exists-with-different-credential") {
         setErrorMessage(
           "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
         );
+      } else {
+        console.error("Error during sign-in:", error);
       }
     }
   };
-
-  const handleSignInGoogle = async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      const authUser = await googleSignIn();
-      if (
-        authUser &&
-        authUser.user.displayName &&
-        authUser.user.email &&
-        authUser.user.photoURL
-      ) {
-        const firebaseUser: FirebaseUser = {
-          uid: authUser.user.uid,
-          displayName: authUser.user.displayName,
-          email: authUser.user.email,
-          photoURL: authUser.user.photoURL,
-        };
-        login(firebaseUser);
-        addToDbIfNewUser(firebaseUser);
-        redirectTo("/map");
-      }
-    } catch (error: Error | any) {
-      if (error.code === "auth/account-exists-with-different-credential") {
-        setErrorMessage(
-          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
-        );
-      }
-    }
-  };
-
-  const handleSignInMicrosoft = async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      const authUser = await microsoftSignIn();
-      console.log(authUser);
-      if (authUser && authUser.user) {
-        const firebaseUser: FirebaseUser = {
-          uid: authUser.user.uid,
-          displayName: authUser.user.displayName,
-          email: authUser.user.email,
-          photoURL: authUser.user.photoURL,
-        };
-        login(firebaseUser);
-        addToDbIfNewUser(firebaseUser);
-        redirectTo("/map");
-      }
-    } catch (error: Error | any) {
-      if (error.code === "auth/account-exists-with-different-credential") {
-        setErrorMessage(
-          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
-        );
-      }
-    }
-  };
-
-  const handleSignInX = async () => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      const authUser = await xSignIn();
-      if (authUser && authUser.user) {
-        const firebaseUser: FirebaseUser = {
-          uid: authUser.user.uid,
-          displayName: authUser.user.displayName,
-          email: authUser.user.email,
-          photoURL: authUser.user.photoURL,
-        };
-        login(firebaseUser);
-        addToDbIfNewUser(firebaseUser);
-        redirectTo("/map");
-      }
-    } catch (error: Error | any) {
-      if (error.code === "auth/account-exists-with-different-credential") {
-        setErrorMessage(
-          "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
-        );
-      }
-    }
-  };
-
-  const handleSignInApple = async () => {};
 
   const tierceApps = [
     {
       name: "Google",
       icon: "/images/google-icon.svg",
-      action: handleSignInGoogle,
+      provider: new GoogleAuthProvider,
       active: true,
     },
     {
       name: "Facebook",
       icon: "/images/facebook-icon.svg",
-      action: handleSignInFacebook,
+      provider: new FacebookAuthProvider,
       active: true,
     },
     {
       name: "Microsoft",
       icon: "/images/microsoft-icon.svg",
-      action: handleSignInMicrosoft,
+      provider: new OAuthProvider("microsoft.com"),
       active: true,
     },
     {
       name: "X",
       icon: "/images/x-icon.svg",
-      action: handleSignInX,
+      provider: new OAuthProvider("twitter.com"),
       active: true,
     },
     {
       name: "Apple",
       icon: "/images/apple-icon.svg",
-      action: handleSignInApple,
+      provider: null,
       active: false,
     },
   ];
@@ -230,7 +160,7 @@ const Login = () => {
                     ? ""
                     : "opacity-50 cursor-not-allowed text-gray-600 border-gray-600 hover:bg-gray-600 hover:text-white"
                 }`}
-                onClick={app.action}
+                onClick={() => signInWithProvider(app.provider)}
               >
                 <Image src={app.icon} alt="" width={16} height={16} />
                 Se connecter avec {app.name}

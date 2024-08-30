@@ -7,11 +7,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { addMarkerGroup } from "@/services/firebase/markers";
 import { useAuthStore } from "@/stores/authStore";
+import { useGroupStore } from "@/stores/groupStore";
 import useMarkerStore from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { SelectableGroupLine } from "./friends/groups/groupList";
 import AutocompleteMapbox from "./map/autocompleteMapbox";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -37,9 +40,27 @@ const ModalCreateMarker = () => {
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
+  const [selectedGroups, setSelectedGroups] = useState<any[]>([]);
 
   const { addMarker } = useMarkerStore();
   const { user } = useAuthStore();
+  const { groups, getGroups } = useGroupStore();
+
+  useEffect(() => {
+    if (groups.length === 0) {
+      getGroups();
+    }
+  }, [getGroups]);
+
+  const toggleGroupSelection = (group: any) => {
+    setSelectedGroups((prevSelected) => {
+      if (prevSelected.includes(group)) {
+        return prevSelected.filter((selected) => selected !== group);
+      } else {
+        return [...prevSelected, group];
+      }
+    });
+  };
 
   const handleSelectTag = (value: string) => setSelectedTag(value);
 
@@ -53,9 +74,10 @@ const ModalCreateMarker = () => {
 
   const addMarkerCommon = useCallback(
     (latitude: number, longitude: number, address = "") => {
+      const idMarker = Math.random().toString(36).substring(2, 9);
       if (user?.uid && user?.displayName) {
         addMarker({
-          id: Math.random().toString(36).substring(2, 9),
+          id: idMarker,
           name: pointNameRef.current?.value || "Point",
           description: pointDescriptionRef.current?.value || "",
           tags: selectedTag,
@@ -69,7 +91,13 @@ const ModalCreateMarker = () => {
           },
         });
       }
+      if (selectedGroups.length > 0) {
+        if (user?.uid) {
+          addMarkerGroup(idMarker, selectedGroups, user.uid);
+        }
+      }
     },
+
     [user, selectedTag, isPublic, addMarker]
   );
 
@@ -141,6 +169,22 @@ const ModalCreateMarker = () => {
             <SelectItem value="autre">Autre</SelectItem>
           </SelectContent>
         </Select>
+        {!isPublic && (
+          <>
+            <span>Partager le point avec vos groupes</span>
+            <div className="overflow-y-auto max-h-28">
+              {groups.map((group) => (
+                <SelectableGroupLine
+                  key={group.id}
+                  group={group}
+                  selected={selectedGroups.includes(group)}
+                  onSelect={() => toggleGroupSelection(group)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         <div className="w-full h-8 flex flex-row border mb-4 text-xs">
           {["address", "gps", "position"].map((mode) => (
             <div

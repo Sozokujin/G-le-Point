@@ -41,4 +41,8 @@ export interface Group {
   name: string;
   groupOwner: string;
   members: string[];
+  markers: {
+    idMarker: string;
+    idUser: string;
+  };
 }

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { BorderBeam } from "@/components/magicui/border-beam";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -22,22 +21,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Toaster } from "@/components/ui/sonner";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { Textarea } from "@/components/ui/textarea";
+import { BorderBeam } from "@/components/magicui/border-beam";
 import { deleteAccount, updateUser } from "@/services/firebase/profil";
-import { logOut, useAuthStore } from "@/stores/authStore";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { auth } from "@/services/firebase/config";
+import useUserStore from "@/stores/userStore";
+import { signOut } from "firebase/auth";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -47,7 +52,8 @@ const FormSchema = z.object({
 });
 
 export const ProfileCard = () => {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const router = useRouter();
+  const { user, clearUser } = useUserStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -58,25 +64,21 @@ export const ProfileCard = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (user && data.username) {
-      user.username = data.username;
-    }
+    if (!user) return;
 
-    if (user && data.bio) {
-      user.bio = data.bio;
-    }
+    if (data.username) user.username = data.username;
+    if (data.bio) user.bio = data.bio;
 
-    if (user) {
-      updateUser(user);
-      toast("Vous avez mis à jour votre profil avec succès.");
-    }
+    updateUser(user);
+    toast("Vous avez mis à jour votre profil avec succès.");
   }
 
   const handleLogout = async () => {
     try {
-      await logOut();
-      localStorage.clear();
-      logout();
+      await signOut(auth);
+      clearUser();
+      await fetch("/api/logout");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }

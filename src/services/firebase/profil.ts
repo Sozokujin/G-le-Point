@@ -1,5 +1,5 @@
 import { auth, db } from "@/services/firebase/config";
-import { useAuthStore } from "@/stores/authStore";
+import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
 import {
   deleteUser,
@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   reauthenticateWithPopup,
+  signOut
 } from "firebase/auth";
 import {
   collection,
@@ -74,7 +75,7 @@ export const getUsername = async (user: string): Promise<string> => {
 
 export const deleteAccount = async () => {
   try {
-    const { user, logout } = useAuthStore.getState();
+    const { user, clearUser } = useUserStore.getState();
 
     if (!user || !user.uid) {
       console.error("Utilisateur non valide ou non authentifié.");
@@ -153,7 +154,9 @@ export const deleteAccount = async () => {
       return;
     }
 
-    logout();
+    await signOut(auth);
+    clearUser();
+    await fetch("/api/logout");
     console.log("Utilisateur déconnecté.");
   } catch (error) {
     console.error("Erreur lors de la suppression du compte :", error);

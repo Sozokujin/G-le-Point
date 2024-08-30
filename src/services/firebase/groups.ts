@@ -1,17 +1,12 @@
 import { db } from "@/services/firebase/config";
+import useUserStore from "@/stores/userStore";
 
-import {
-    useAuthStore,
-  } from "@/stores/authStore";
-
-  import {  collection, getDocs, query, where, addDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+  import {  collection, getDocs, query, where, addDoc } from "firebase/firestore";
 
   export const getAllGroups = async () => {
-    const currentUser = useAuthStore.getState().user;
+    const currentUser = useUserStore.getState().user;
     
-    if (!currentUser?.uid) {
-        return [];
-    }
+    if (!currentUser?.uid) return [];
 
     const groupsCollectionRef = collection(db, "groups");
 
@@ -36,7 +31,7 @@ import {
 };
 
 export const createGroup = async (name: string, members: string[]) => {
-    const currentUser = useAuthStore.getState().user;
+    const currentUser = useUserStore.getState().user;
 
     if (!currentUser?.uid) {
         return;

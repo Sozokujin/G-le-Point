@@ -1,3 +1,6 @@
+
+import { useRef, useState } from "react";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import {
   Dialog,
   DialogClose,
@@ -7,26 +10,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAuthStore } from "@/stores/authStore";
-import useMarkerStore from "@/stores/markerStore";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import Link from "next/link";
+import useUserStore from "@/stores/userStore";
+import useMarkerStore from "@/stores/markerStore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const ModalCreateMarker = () => {
+  const { user } = useUserStore();
+  const { addMarker } = useMarkerStore();
+
   const pointNameRef = useRef<HTMLInputElement>(null);
   const pointDescriptionRef = useRef<HTMLInputElement>(null);
   const pointAddressRef = useRef<HTMLInputElement>(null);
   const pointGpsRef = useRef<HTMLInputElement>(null);
 
   const [display, setDisplay] = useState<string>("");
-
-  const { addMarker } = useMarkerStore();
-
-  const { user } = useAuthStore();
 
   const addMarkerWithCurrentLocation = () => {
     const geo = navigator.geolocation;
@@ -100,7 +100,7 @@ const ModalCreateMarker = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Link href="/map" className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full">
-          <PlusIcon className="h-8 w-8 text-white" />
+          <PlusIcon className="h-5 w-5 xs:h-6 xs:w-6 sm:h-8 sm:w-8 text-white" />
         </Link>
       </DialogTrigger>
       <DialogContent>

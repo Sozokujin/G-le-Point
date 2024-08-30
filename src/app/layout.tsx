@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "G'Le Point",
   description:
-    "G'Le Point est une plateforme collaborative de cartographie interactive qui vous permet de découvrir et partager des lieux cachés et des expériences uniques. Explorez des paysages inédits, soutenez vos spots favoris, et connectez-vous facilement via Facebook, Google, X ou Microsoft. Rejoignez une communauté passionnée et transformez votre façon d'explorer le monde.",
+    "G'Le Point est une plateforme collaborative pour découvrir et partager des lieux cachés. Rejoignez une communauté passionnée et explorez des expériences uniques",
   icons: [
     { rel: "apple-touch-icon", sizes: "180x180", url: "/apple-touch-icon.png" },
     {

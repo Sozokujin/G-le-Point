@@ -1,10 +1,8 @@
 //Store types
-export interface AuthStore {
+export interface UserStore {
   user: FirebaseUser | null;
-  isAuthenticated: boolean;
-  isAuthChecking: boolean;
-  login: (user: FirebaseUser) => void;
-  logout: () => void;
+  setUser: (user: FirebaseUser) => void;
+  clearUser: () => void;
 }
 
 export interface Marker {

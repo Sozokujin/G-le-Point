@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addMarkerGroup } from "@/services/firebase/markers";
-import { useAuthStore } from "@/stores/authStore";
+import useUserStore from "@/stores/userStore";
 import { useGroupStore } from "@/stores/groupStore";
 import useMarkerStore from "@/stores/markerStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
@@ -29,27 +29,23 @@ import {
 import { Switch } from "./ui/switch";
 
 const ModalCreateMarker = () => {
+  const { user } = useUserStore();
+  const { addMarker } = useMarkerStore();
+  const { groups, getGroups } = useGroupStore();
+
   const pointNameRef = useRef<HTMLInputElement>(null);
   const pointDescriptionRef = useRef<HTMLInputElement>(null);
   const pointAddressRef = useRef<HTMLInputElement>(null);
   const pointGpsRef = useRef<HTMLInputElement>(null);
 
-  const [display, setDisplay] = useState<"address" | "gps" | "position" | "">(
-    ""
-  );
+  const [display, setDisplay] = useState<"address" | "gps" | "position" | "">("");
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<any[]>([]);
 
-  const { addMarker } = useMarkerStore();
-  const { user } = useAuthStore();
-  const { groups, getGroups } = useGroupStore();
-
   useEffect(() => {
-    if (groups.length === 0) {
-      getGroups();
-    }
+    if (groups.length === 0) getGroups();
   }, [getGroups]);
 
   const toggleGroupSelection = (group: any) => {
@@ -91,10 +87,8 @@ const ModalCreateMarker = () => {
           },
         });
       }
-      if (selectedGroups.length > 0) {
-        if (user?.uid) {
-          addMarkerGroup(idMarker, selectedGroups, user.uid);
-        }
+      if (selectedGroups.length > 0 && user?.uid) {
+        addMarkerGroup(idMarker, selectedGroups, user.uid);
       }
     },
 
@@ -140,7 +134,7 @@ const ModalCreateMarker = () => {
           href="/map"
           className="block bg-[#37b978] p-2.5 sm:p-3 rounded-full"
         >
-          <PlusIcon className="h-8 w-8 text-white" />
+          <PlusIcon className="h-5 w-5 xs:h-6 xs:w-6 sm:h-8 sm:w-8 text-white" />
         </Link>
       </DialogTrigger>
       <DialogContent>

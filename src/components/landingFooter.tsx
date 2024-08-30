@@ -12,11 +12,11 @@ export default function LandingFooter() {
     ],
     legal: [
       { name: "Mentions légales", href: "/mentions-legales" },
-      { name: "Condition générales d'utilisation", href: "/cgu" },
       {
         name: "Politique de confidentialité",
         href: "/politique-de-confidentialite",
       },
+      { name: "Conditions Générales d'Utilisation", href: "/cgu" },
       { name: "🍪 Gérer les cookies", href: "#" },
     ],
     about: [
@@ -42,15 +42,15 @@ export default function LandingFooter() {
         </h2>
         <div className="md:flex md:flex-row justify-between md:gap-8">
           <div>
-            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
+            <h3 className="text-lg text-center md:text-left font-semibold leading-6 text-gray-900">
               À propos
             </h3>
             <ul role="list" className="mt-6 space-y-4 ">
               {footerNavigation.about.map((item) => (
-                <li key={item.name} className="text-center md:text-left ">
+                <li key={item.name} className="text-center md:text-left">
                   <Link
                     href={item.href}
-                    className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                    className="text-sm leading-6 text-gray-600 hover:text-black"
                   >
                     {item.name}
                   </Link>
@@ -59,7 +59,7 @@ export default function LandingFooter() {
             </ul>
           </div>
           <div className="mt-10 md:mt-0">
-            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
+            <h3 className="text-lg text-center md:text-left font-semibold leading-6 text-gray-900">
               Navigation
             </h3>
             <ul role="list" className="mt-6 space-y-4">
@@ -67,7 +67,7 @@ export default function LandingFooter() {
                 <li key={item.name} className="text-center md:text-left ">
                   <Link
                     href={item.href}
-                    className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                    className="text-sm leading-6 text-gray-600 hover:text-black"
                   >
                     {item.name}
                   </Link>
@@ -77,7 +77,7 @@ export default function LandingFooter() {
           </div>
 
           <div className="mt-10 md:mt-0">
-            <h3 className="text-center md:text-left text-sm font-semibold leading-6 text-gray-900">
+            <h3 className="text-lg text-center md:text-left font-semibold leading-6 text-gray-900">
               Liens utiles
             </h3>
             <ul role="list" className="mt-6 space-y-4">
@@ -85,7 +85,7 @@ export default function LandingFooter() {
                 <li key={item.name} className="text-center md:text-left ">
                   <Link
                     href={item.href}
-                    className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                    className="text-sm leading-6 text-gray-600 hover:text-black"
                   >
                     {item.name}
                   </Link>

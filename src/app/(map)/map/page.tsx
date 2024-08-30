@@ -1,27 +1,26 @@
 "use client";
 
-import Filter from "@/components/map/filter";
-import { ModalListMarkers } from "@/components/map/modalListMarkers";
-import ModalMarker from "@/components/modalMarker";
-import { redirectTo } from "@/lib/actions";
-import { getGroupsMarkers } from "@/services/firebase/markers";
-import { useAuthStore } from "@/stores/authStore";
-import useMarkerStore from "@/stores/markerStore";
-import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import type { Feature, FeatureCollection, Point } from "geojson";
-import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { MapRef } from "react-map-gl";
-import Map, { GeolocateControl, Layer, Source } from "react-map-gl";
+import Map, { GeolocateControl, Layer, Source, MapRef } from "react-map-gl";
+import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
+import type { Feature, FeatureCollection, Point } from "geojson";
+import { getGroupsMarkers } from "@/services/firebase/markers";
+import { ModalListMarkers } from "@/components/map/modalListMarkers";
+import Filter from "@/components/map/filter";
+import ModalMarker from "@/components/modalMarker";
+import useMarkerStore from "@/stores/markerStore";
+import useUserStore from "@/stores/userStore";
 import classes from "../../Page.module.css";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 export default function Home() {
+  const { user } = useUserStore();
+
   const [modalMarker, setModalMarker] = useState<any>(null);
   const [showFriends, setShowFriends] = useState(true);
   const [showGroups, setShowGroups] = useState(true);
 
-  const { isAuthenticated, user, isAuthChecking } = useAuthStore();
   const {
     userMarkers,
     friendsMarkers,
@@ -33,18 +32,12 @@ export default function Home() {
   const map = useRef<MapRef | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      redirectTo("/login");
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (!isAuthChecking && user?.uid) {
+    if (user && user.uid) {
       getMarkers(user.uid);
       getFriendsMarkers(user.uid);
       getGroupsMarkers(user.uid);
     }
-  }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers, isAuthChecking]);
+  }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
   const handleClickUnclusteredPoint = useCallback((e: any) => {
     const features = e.features[0];

@@ -1,6 +1,13 @@
 import Image from "next/image";
 
 /* eslint-disable react/no-unescaped-entities */
+
+export const metadata = {
+  title: "G'Le Point - Team",
+  description:
+    "Rencontrez l'équipe passionnée derrière G'Le Point. Découvrez les talents et les experts qui rendent cette plateforme collaborative possible et innovante.",
+};
+
 export default function Team() {
   const team = [
     {
@@ -29,14 +36,22 @@ export default function Team() {
     },
   ];
   return (
-    <main className="isolate">
-      <div className="my-20 mx-auto max-w-7xl px-6 lg:px-8 leading-8">
-        <h1 className="text-center mb-8">L'équipe G'Le Point</h1>
-        <div className="flex flex-col md:flex-row justify-between items-center mt-24 -mb-24 md:mb-0">
+    <main className="isolate flex justify-center items-center min-h-[100svh] w-full lg:-mt-14">
+      <div className="w-full mx-auto max-w-7xl px-6 lg:px-8 leading-8">
+        <h1 className="text-center mb-12">L'équipe G'Le Point</h1>
+        <p className="text-center max-w-5xl mx-auto text-gray-700">
+          Notre équipe de quatre étudiants passionnés a uni ses forces pour
+          développer une solution innovante dans le cadre de notre projet de fin
+          d'études. Ensemble, nous avons mis en commun nos compétences pour
+          créer une application web qui vise à enrichir l'expérience de chacun
+          en permettant une exploration plus approfondie et collaborative de
+          notre environnement.
+        </p>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-16 -mb-12 lg:mb-0">
           {team.map((member) => (
             <div
               key={member.name}
-              className="flex flex-col items-center mb-20 md:mb-0"
+              className="flex flex-col items-center mb-20 lg:mb-0"
             >
               <Image
                 className="rounded-full shadow-sm"

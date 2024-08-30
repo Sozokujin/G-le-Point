@@ -1,18 +1,25 @@
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator"
+import {
+  ClipboardDocumentIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { getInvitationCode } from "@/services/firebase/friends";
 import { useFriendStore } from "@/stores/friendStore";
-import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { Card } from "../ui/card";
 import { ModalListFriendRequest } from "./modalListfriendRequest";
 import { ModalSendFriendRequest } from "./modalSendFriendRequest";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FirebaseUser } from "@/types";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export const FriendList = () => {
   const { friends, getFriends } = useFriendStore();
-
   const [showPopupCopy, setShowPopupCopy] = useState(false);
-  const [showPopupSend, setShowPopupSend] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchInvitationCode = async () => {
@@ -44,77 +51,91 @@ export const FriendList = () => {
     }, 3000);
   };
 
+  const selectFriend = (friend: FirebaseUser) => {
+    setSelectedFriend(friend);
+  };
+
   return (
-    <Card className="relative p-5 flex flex-col gap-4">
-      <h2 className="text-primary text-xl font-bold">Vos amis</h2>
-      <div>
-        Mon code :{" "}
-        <span className="text-glp-green font-bold">{invitationCode}</span>
-        <ClipboardDocumentIcon
-          className="cursor-pointer ml-2 inline-block h-4 text-glp-green"
-          onClick={() => copyToClipboard()}
+    <section className="relative p-5 flex flex-col gap-4 h-full">
+      <div className="w-full flex justify-between">
+        <p className="text-primary text-3xl font-bold">Mes amis</p>
+        <ModalSendFriendRequest />
+      </div>
+      <div className="flex flex-col-reverse justify-between gap-2 lg:items-center lg:flex-row">
+        <div>
+          Mon code :{" "}
+          <span className="text-glp-green font-bold">{invitationCode}</span>
+          <ClipboardDocumentIcon
+            className="cursor-pointer ml-2 inline-block h-4 text-glp-green"
+            onClick={() => copyToClipboard()}
+          />
+        </div>
+        <ModalListFriendRequest />
+      </div>
+      <Separator />
+      <div className="relative w-full">
+        <MagnifyingGlassIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="search"
+          placeholder="Rechercher..."
+          className="w-full rounded-lg bg-background pl-8"
         />
       </div>
-      <ModalListFriendRequest />
-      <ModalSendFriendRequest />
-      <ul className="flex flex-col gap-3">
-        {friends.length !== 0 ? (
-          friends.map((friend, key) => {
-            return <FriendLine key={key} friend={friend} selected />;
-          })
-        ) : (
-          <div>
-            <p>Vous n&apos;avez pas encore d&apos;amis</p>
-          </div>
-        )}
+      <ul className="flex flex-col gap-1">
+        <ScrollArea className="h-36">
+          {friends.length !== 0 ? (
+            friends.map((friend, key) => {
+              return (
+                <FriendLine
+                  key={key}
+                  friend={friend}
+                  selected={selectedFriend?.uid === friend.uid}
+                  onSelect={() => selectFriend(friend)}
+                />
+              );
+            })
+          ) : (
+            <div>
+              <p>Vous n&apos;avez pas encore d&apos;amis</p>
+            </div>
+          )}
+        </ScrollArea>
       </ul>
-    </Card>
+    </section>
   );
 };
 
 export const FriendLine = ({
   friend,
-  selected = null,
-}: {
-  friend: any;
-  selected: boolean | null;
-}) => {
-  return (
-    <div className="flex items-center gap-4">
-      <Avatar className="hidden h-9 w-9 sm:flex">
-        <AvatarImage
-          src={friend.photoURL}
-          alt={`${friend.displayName}'s avatar`}
-        />
-        <AvatarFallback>
-          {friend.displayName.slice(0, 2).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-      <div className="grid gap-1">
-        <p className="text-sm font-medium leading-none">{friend.displayName}</p>
-        <p className="text-sm text-muted-foreground">{friend.email}</p>
-      </div>
-    </div>
-  );
-};
-
-export const SelectableFriendLine = ({
-  friend,
   selected,
   onSelect,
 }: {
-  friend: any;
-  selected: boolean;
-  onSelect: () => void;
+  friend: FirebaseUser;
+  selected: boolean | null;
+  onSelect?: () => void;
 }) => {
   return (
-    <li
-      className={`h-24 w-full border-primary border-y-2 p-2 rounded-sm cursor-pointer ${
-        selected ? "bg-blue-200" : "bg-white"
+    <div
+      className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent hover:bg-slate-200 ${
+        selected ? "bg-slate-100" : ""
       }`}
       onClick={onSelect}
     >
-      <span className="text-primary font-semibold">{friend.displayName}</span>
-    </li>
+      <Avatar className="h-9 w-9 flex">
+        <AvatarImage
+          src={friend.photoURL!}
+          alt={`${friend.displayName}'s avatar`}
+        />
+        <AvatarFallback>
+          {friend.displayName?.slice(0, 2).toUpperCase() || "??"}
+        </AvatarFallback>
+      </Avatar>
+      <div className="grid gap-1">
+        <p className="text-sm font-medium leading-none truncate">
+          {friend.displayName}
+        </p>
+        <p className="text-sm text-muted-foreground truncate">{friend.email}</p>
+      </div>
+    </div>
   );
 };

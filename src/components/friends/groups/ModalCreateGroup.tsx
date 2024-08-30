@@ -12,7 +12,7 @@ import { useFriendStore } from "@/stores/friendStore";
 import { FirebaseUser } from "@/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { SelectableFriendLine } from "../friendList";
+import { FriendLine } from "../friendList";
 
 export const ModalCreateGroup = () => {
   const { friends, getFriends } = useFriendStore();
@@ -72,7 +72,7 @@ export const ModalCreateGroup = () => {
             <ul>
               {friends.length !== 0 ? (
                 friends.map((friend, index) => (
-                  <SelectableFriendLine
+                  <FriendLine
                     key={index}
                     friend={friend}
                     selected={selectedFriends.includes(friend)}

@@ -35,12 +35,12 @@ const Login = () => {
     const usersCollectionRef = collection(db, "users");
     const _query = query(usersCollectionRef, where("uid", "==", user.uid));
     const querySnapshot = await getDocs(_query);
+
     if (querySnapshot.empty) {
       addDoc(usersCollectionRef, {
         ...user,
         friends: [],
-        // TODO : switch substr because it's deprecated
-        invitationCode: Math.random().toString(36).substr(2, 9),
+        invitationCode: new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7),
       });
     }
   };
@@ -49,7 +49,6 @@ const Login = () => {
     if (!provider) return;
 
     try {
-      // try to replace by signInWithRedirect to avoid popup blocking and cookie issues
       const result = await signInWithPopup(auth, provider);
 
       if (result && result.user) {

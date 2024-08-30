@@ -8,7 +8,7 @@ import {
 import useMarkerStore from "@/stores/markerStore";
 
 export const ModalListMarkers = () => {
-  const markers = useMarkerStore((state) => state.markers);
+  const UserMarkers = useMarkerStore((state) => state.userMarkers);
 
   return (
     <Dialog>
@@ -19,11 +19,11 @@ export const ModalListMarkers = () => {
       </DialogTrigger>
       <DialogContent>
         <h2 className="text-primary text-xl font-bold">Liste des marqueurs</h2>
-        {markers.length > 0 ? (
+        {UserMarkers.length > 0 ? (
           <ul>
-            {markers.map((marker) => (
-              <li key={marker.name}>
-                <p>{marker.name}</p>
+            {UserMarkers.map((userMarker) => (
+              <li key={userMarker.name}>
+                <p>{userMarker.name}</p>
               </li>
             ))}
           </ul>

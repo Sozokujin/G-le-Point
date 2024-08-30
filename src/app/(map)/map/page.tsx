@@ -1,12 +1,14 @@
 "use client";
 
+import Filter from "@/components/map/filter";
 import { ModalListMarkers } from "@/components/map/modalListMarkers";
 import ModalMarker from "@/components/modalMarker";
 import { redirectTo } from "@/lib/actions";
+import { getGroupsMarkers } from "@/services/firebase/markers";
 import { useAuthStore } from "@/stores/authStore";
 import useMarkerStore from "@/stores/markerStore";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import type { FeatureCollection } from "geojson";
+import type { Feature, FeatureCollection, Point } from "geojson";
 import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,9 +18,17 @@ import classes from "../../Page.module.css";
 
 export default function Home() {
   const [modalMarker, setModalMarker] = useState<any>(null);
+  const [showFriends, setShowFriends] = useState(true);
+  const [showGroups, setShowGroups] = useState(true);
 
   const { isAuthenticated, user, isAuthChecking } = useAuthStore();
-  const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
+  const {
+    userMarkers,
+    friendsMarkers,
+    groupsMarkers,
+    getMarkers,
+    getFriendsMarkers,
+  } = useMarkerStore();
 
   const map = useRef<MapRef | null>(null);
 
@@ -31,14 +41,22 @@ export default function Home() {
   useEffect(() => {
     if (!isAuthChecking && user?.uid) {
       getMarkers(user.uid);
+      getFriendsMarkers(user.uid);
+      getGroupsMarkers(user.uid);
     }
-  }, [user, getFriendsMarkers, getMarkers, isAuthChecking]);
+  }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers, isAuthChecking]);
 
   const handleClickUnclusteredPoint = useCallback((e: any) => {
     const features = e.features[0];
     if (features && features.properties) {
       const properties = features.properties;
-      setModalMarker(markers.find((marker) => marker.id === properties.id));
+      setModalMarker(
+        userMarkers.find((userMarker) => userMarker.id === properties.id) ||
+          friendsMarkers.find(
+            (userMarker) => userMarker.id === properties.id
+          ) ||
+          groupsMarkers.find((userMarker) => userMarker.id === properties.id)
+      );
     }
   }, []);
 
@@ -65,19 +83,51 @@ export default function Home() {
     });
   }
 
-  const geoJsonMarker: FeatureCollection = {
+  const combinedMarkers: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: markers.map((marker) => ({
-      type: "Feature",
-      properties: {
-        name: marker.name,
-        description: marker.description,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [marker.longitude, marker.latitude],
-      },
-    })),
+    features: [
+      ...userMarkers.map<Feature<Point>>((marker) => ({
+        type: "Feature",
+        properties: {
+          id: marker.id,
+          name: marker.name,
+          description: marker.description,
+          type: "user",
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [marker.longitude, marker.latitude],
+        },
+      })),
+      ...(showFriends
+        ? friendsMarkers.map<Feature<Point>>((marker) => ({
+            type: "Feature",
+            properties: {
+              id: marker.id,
+              name: marker.name,
+              description: marker.description,
+              type: "friend",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [marker.longitude, marker.latitude],
+            },
+          }))
+        : []),
+      ...groupsMarkers.map<Feature<Point>>((marker) => ({
+        type: "Feature",
+        properties: {
+          id: marker.id,
+          name: marker.name,
+          description: marker.description,
+          type: "group",
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [marker.longitude, marker.latitude],
+        },
+      })),
+    ],
   };
 
   const clusterLayer: CircleLayerSpecification = {
@@ -127,6 +177,12 @@ export default function Home() {
 
   return (
     <main className={classes.mainStyle}>
+      <Filter
+        showFriends={showFriends}
+        setShowFriends={setShowFriends}
+        showGroups={showGroups}
+        setShowGroups={setShowGroups}
+      />
       <Map
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/mapbox/streets-v12"
@@ -143,10 +199,10 @@ export default function Home() {
         <Source
           id="my-data"
           type="geojson"
-          data={geoJsonMarker}
+          data={combinedMarkers}
           cluster={true}
-          clusterMaxZoom={10} // Max zoom to cluster points on
-          clusterRadius={100} // Radius of each cluster when clustering points
+          clusterMaxZoom={10}
+          clusterRadius={100}
         >
           <Layer {...clusterLayer} />
           <Layer {...clusterCountLayer} />

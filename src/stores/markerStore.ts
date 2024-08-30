@@ -1,25 +1,45 @@
-import { create } from 'zustand';
-import { addMarker, getMarkers, getFriendsMarkers } from '@/services/firebase/markers';
-import { Marker } from '@/types/index';
+import {
+  addMarker,
+  getFriendsMarkers,
+  getMarkers,
+} from "@/services/firebase/markers";
+import { Marker } from "@/types/index";
+import { create } from "zustand";
 
 const useMarkerStore = create((set: any) => ({
-  markers: [] as Marker[],
+  userMarkers: [] as Marker[],
+  friendsMarkers: [] as Marker[],
+  groupsMarkers: [] as Marker[],
+
   addMarker: async (marker: Marker) => {
     await addMarker(marker);
-    set((state: any) => ({ markers: [...state.markers, marker] }));
+    set((state: any) => ({ userMarkers: [...state.userMarkers, marker] }));
   },
+
   removeMarker: (marker: Marker) =>
     set((state: any) => ({
-      markers: state.markers.filter((m: Marker) => m !== marker),
+      userMarkers: state.userMarkers.filter((m: Marker) => m.id !== marker.id),
     })),
-  clearMarkers: () => set({ markers: [] }),
+
+  clearMarkers: () => set({ userMarkers: [] }),
+
   getMarkers: async (userUid: any) => {
     const markersData = await getMarkers(userUid);
-    set({ markers: markersData });
+    set({ userMarkers: markersData });
   },
+
   getFriendsMarkers: async (userUid: any) => {
     const markersData = await getFriendsMarkers(userUid);
-    set((state: any) => ({ markers: [...state.markers, ...markersData] }));
+    set((state: any) => ({
+      friendsMarkers: [...state.friendsMarkers, ...markersData],
+    }));
+  },
+
+  getGroupsMarkers: async (userUid: any) => {
+    // const markersData = await getGroupsMarkers(userUid);
+    // set((state: any) => ({
+    //   groupsMarkers: [...state.groupsMarkers, ...markersData],
+    // }));
   },
 }));
 

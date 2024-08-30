@@ -46,6 +46,22 @@ export const getFriendsMarkers = async (userUid: any) => {
   }));
 };
 
+export const getGroupsMarkers = async (userUid: any) => {
+  // const markersCollectionRef = collection(db, "markers");
+  // const groupCollectionRef = collection(db, "groups");
+  // const groupDocSnapshot = await getDocs(groupCollectionRef);
+  // const groups: [] = groupDocSnapshot.docs
+  //   .map((doc) => doc.data())
+  //   .find((group) => group.users.includes(userUid))?.markers;
+  // if (!groups || groups.length == 0) return [];
+  // const querry = query(markersCollectionRef, where("id", "in", groups));
+  // const querySnapshot = await getDocs(querry);
+  // return querySnapshot.docs.map((doc) => ({
+  //   ...doc.data(),
+  //   id: doc.id,
+  // }));
+};
+
 export const addMarkerGroup = async (
   markerId: string,
   groups: Group[],

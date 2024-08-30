@@ -2,25 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
-import { useAuthStore } from "@/stores/authStore";
 import { Switch } from "@/components/ui/switch";
 import ModalMarker from "@/components/modalMarker";
 import useMarkerStore from "@/stores/markerStore";
+import useUserStore from "@/stores/userStore";
 import classes from "../../Page.module.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 export default function Home() {
+  const { user } = useUserStore();
+  const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
+
   const [displayFriendsMarkers, setDisplayFriendsMarkers] = useState<boolean>(false);
   const [modalMarker, setModalMarker] = useState<any>(null);
-
-  const { user, isAuthChecking } = useAuthStore();
-  const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
 
   const map = useRef(null);
 
   useEffect(() => {
-    if (!isAuthChecking && user?.uid) {
+    if (user && user.uid) {
       getMarkers(user.uid);
       displayFriendsMarkers ? getFriendsMarkers(user.uid) : null;
     }
@@ -28,7 +28,6 @@ export default function Home() {
     user,
     getFriendsMarkers,
     getMarkers,
-    isAuthChecking,
     displayFriendsMarkers,
   ]);
 

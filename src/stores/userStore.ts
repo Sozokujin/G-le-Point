@@ -9,7 +9,6 @@ const useUserStore = create<UserStore>((set) => ({
   clearUser: () => set({ user: null }),
 }));
 
-// TODO : check if it's usefull and if yes, use api/logout and api/login to handle login and logout
 onAuthStateChanged(auth, (firebaseUser) => {
   if (firebaseUser) {
     useUserStore.getState().setUser({

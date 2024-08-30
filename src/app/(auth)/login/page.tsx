@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DotLoader } from "react-spinners";
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
@@ -20,6 +21,7 @@ import Link from "next/link";
 const Login = () => {
   const router = useRouter();
   const { setUser } = useUserStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -46,7 +48,8 @@ const Login = () => {
   };
 
   const signInWithProvider = async (provider: any | null) => {
-    if (!provider) return;
+    if (!provider || isLoading) return;
+    setIsLoading(true);
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -73,6 +76,7 @@ const Login = () => {
         router.push(url.searchParams.get("redirect") ?? "/map");
       }
     } catch (error: Error | any) {
+      setIsLoading(false);
       if (error.code === "auth/account-exists-with-different-credential") {
         setErrorMessage(
           "Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion"
@@ -149,7 +153,12 @@ const Login = () => {
               Veuillez choisir votre méthode de connexion :
             </p>
           </div>
-          <div className="grid gap-4">
+          <div className="grid gap-4 relative">
+            {isLoading && (
+              <div className="absolute h-full w-full flex items-center justify-center z-10">
+                <DotLoader color="#37b978" />
+              </div>
+            )}
             {tierceApps.map((app) => (
               <Button
                 key={app.name}
@@ -158,7 +167,7 @@ const Login = () => {
                   app.active
                     ? ""
                     : "opacity-50 cursor-not-allowed text-gray-600 border-gray-600 hover:bg-gray-600 hover:text-white"
-                }`}
+                } ${isLoading ? "cursor-wait blur" : ""}`}
                 onClick={() => signInWithProvider(app.provider)}
               >
                 <Image src={app.icon} alt="" width={16} height={16} />

@@ -1,28 +1,25 @@
 "use client";
 
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { auth } from "@/services/firebase/config";
+import useUserStore from "@/stores/userStore";
 import { Button } from "@/components/ui/button";
-import { redirectTo } from "@/lib/actions";
-import { logOut, useAuthStore } from "@/stores/authStore";
-import { useEffect } from "react";
 
 const Profile = () => {
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const router = useRouter();
+  const { clearUser } = useUserStore();
 
   const handleLogout = async () => {
     try {
-      await logOut();
-      localStorage.clear();
-      logout();
+      await signOut(auth);
+      clearUser();
+      await fetch("/api/logout");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      redirectTo("/login");
-    }
-  }, [isAuthenticated]);
 
   return (
     <div>

@@ -1,24 +1,22 @@
 //Store types
-export interface AuthStore {
+export interface UserStore {
   user: FirebaseUser | null;
-  isAuthenticated: boolean;
-  isAuthChecking: boolean;
-  login: (user: FirebaseUser) => void;
-  logout: () => void;
+  setUser: (user: FirebaseUser) => void;
+  clearUser: () => void;
 }
 
 export interface Marker {
-    name: string;
-    description: string | null;
-    tags: string[];
-    address: string | null;
-    latitude: number;
-    longitude: number;
-    user: {
-      uid: string | null;
-      displayName: string | null;
-    };
-  }
+  name: string;
+  description: string | null;
+  tags: string[];
+  address: string | null;
+  latitude: number;
+  longitude: number;
+  user: {
+    uid: string | null;
+    displayName: string | null;
+  };
+}
 
 export interface FirebaseUser {
   uid: string;

@@ -1,20 +1,14 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useAuthStore } from "@/stores/authStore";
-import { Button } from "./ui/button";
+import useUserStore from "@/stores/userStore";
+import { Button } from "@/components/ui/button";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
-  const { user } = useAuthStore();
-
-  console.log(user);
-
-  const closeModal = () => {
-    setModalMarker(null);
-  };
+  const { user } = useUserStore();
 
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
       <XMarkIcon
-        onClick={() => closeModal()}
+        onClick={() => setModalMarker(null)}
         className="absolute top-2 right-2 h-6 w-6 cursor-pointer"
       />
       <h1 className="text-xl font-bold">{marker.user.displayName}</h1>

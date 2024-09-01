@@ -1,21 +1,10 @@
 "use client";
 
-import { redirectTo } from "@/lib/actions";
-import { useAuthStore } from "@/stores/authStore";
-import { useEffect, useState } from "react";
 import { FriendList } from "@/components/friends/friendList";
 import { GroupList } from "@/components/friends/groups/groupList";
 import { Card } from "@/components/ui/card";
 
 const Friends = () => {
-  const { isAuthenticated } = useAuthStore();
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      redirectTo("/login");
-    }
-  }, [isAuthenticated]);
-
   return (
     <div className="w-full h-full flex gap-2 p-2 bg-muted">
       <section className="sm:w-5/12 w-full h-full">

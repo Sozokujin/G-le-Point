@@ -1,37 +1,26 @@
 "use client";
 
-// import ModalCreateMarker from "@/components/modalCreateMarker";
-import ModalMarker from "@/components/modalMarker";
-import  ModalCreateMarker from "@/components/modalCreateMarker";
-import { Switch } from "@/components/ui/switch";
-import { redirectTo } from "@/lib/actions";
-import { useAuthStore } from "@/stores/authStore";
-import useMarkerStore from "@/stores/markerStore";
-import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Marker } from "react-map-gl";
+import { Switch } from "@/components/ui/switch";
+import ModalMarker from "@/components/modalMarker";
+import useMarkerStore from "@/stores/markerStore";
+import useUserStore from "@/stores/userStore";
 import classes from "../../Page.module.css";
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 export default function Home() {
-  const [displayFriendsMarkers, setDisplayFriendsMarkers] =
-    useState<boolean>(false);
-  const [modalMarker, setModalMarker] = useState<any>(null);
-
-  const { isAuthenticated, user, isAuthChecking } = useAuthStore();
+  const { user } = useUserStore();
   const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
+
+  const [displayFriendsMarkers, setDisplayFriendsMarkers] = useState<boolean>(false);
+  const [modalMarker, setModalMarker] = useState<any>(null);
 
   const map = useRef(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log("redirecting to login");
-      redirectTo("/login");
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (!isAuthChecking && user?.uid) {
+    if (user && user.uid) {
       getMarkers(user.uid);
       displayFriendsMarkers ? getFriendsMarkers(user.uid) : null;
     }
@@ -39,7 +28,6 @@ export default function Home() {
     user,
     getFriendsMarkers,
     getMarkers,
-    isAuthChecking,
     displayFriendsMarkers,
   ]);
 
@@ -91,7 +79,7 @@ export default function Home() {
           }
           className="absolute top-4 right-4 z-10"
         />
-         {modalMarker && (
+        {modalMarker && (
           <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />
         )}
       </Map>

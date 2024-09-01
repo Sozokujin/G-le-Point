@@ -15,12 +15,15 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card } from "../ui/card";
 
 export const FriendList = () => {
-  const { friends, getFriends } = useFriendStore();
+  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore((state) => ({
+    getFriends: state.getFriends,
+    setSearchQuery: state.setSearchQuery,
+    filteredFriends: state.filteredFriends,
+  }));
+
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
-    null
-  );
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
 
   useEffect(() => {
     const fetchInvitationCode = async () => {
@@ -39,10 +42,14 @@ export const FriendList = () => {
   }, []);
 
   useEffect(() => {
-    if (friends.length === 0) {
+    if (filteredFriends().length === 0) {
       getFriends();
     }
-  }, [getFriends]);
+  }, [getFriends, filteredFriends]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(invitationCode || "");
@@ -80,15 +87,16 @@ export const FriendList = () => {
           type="search"
           placeholder="Rechercher..."
           className="w-full rounded-lg bg-background pl-8"
+          onChange={handleSearchChange}
         />
       </div>
       <ul className="flex flex-col gap-1">
         <ScrollArea className="h-36">
-          {friends.length !== 0 ? (
-            friends.map((friend, key) => {
+          {filteredFriends().length !== 0 ? (
+            filteredFriends().map((friend: FirebaseUser) => {
               return (
                 <FriendLine
-                  key={key}
+                  key={friend.uid}
                   friend={friend}
                   selected={selectedFriend?.uid === friend.uid}
                   onSelect={() => selectFriend(friend)}
@@ -97,7 +105,7 @@ export const FriendList = () => {
             })
           ) : (
             <div>
-              <p>Vous n&apos;avez pas encore d&apos;amis</p>
+              <p>Rien à afficher...</p>
             </div>
           )}
         </ScrollArea>
@@ -128,7 +136,7 @@ export const FriendLine = ({
           alt={`${friend.displayName}'s avatar`}
         />
         <AvatarFallback>
-          {friend.displayName?.slice(0, 2).toUpperCase() || "??"}
+          {friend.displayName?.slice(0, 1) || "??"}
         </AvatarFallback>
       </Avatar>
       <div className="grid gap-1">

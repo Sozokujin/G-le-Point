@@ -12,6 +12,7 @@ import { ModalListFriendRequest } from "./modalListfriendRequest";
 import { ModalSendFriendRequest } from "./modalSendFriendRequest";
 import { FirebaseUser } from "@/types";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { Card } from "../ui/card";
 
 export const FriendList = () => {
   const { friends, getFriends } = useFriendStore();
@@ -56,7 +57,7 @@ export const FriendList = () => {
   };
 
   return (
-    <section className="relative p-5 flex flex-col gap-4 h-full">
+    <Card className="relative p-5 flex flex-col gap-4 h-full">
       <div className="w-full flex justify-between">
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />
@@ -101,7 +102,7 @@ export const FriendList = () => {
           )}
         </ScrollArea>
       </ul>
-    </section>
+    </Card>
   );
 };
 

@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import CheckoutStripe from "@/components/checkoutStripe";
 import LandingFooter from "@/components/landingFooter";
 import LandingNavbar from "@/components/landingNavbar";
 import { BorderBeam } from "@/components/magicui/border-beam";
@@ -443,6 +444,11 @@ export default function Page() {
             />
           </div>
         </div>
+        <CheckoutStripe
+          priceId="price_1PuAYAP4rVLS4DImVQ2x3c25"
+          price="10"
+          description="1 Super point"
+        />
       </main>
       <LandingFooter />
     </div>

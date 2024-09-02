@@ -11,6 +11,7 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  arrayRemove,
   collection,
   deleteDoc,
   doc,
@@ -110,8 +111,69 @@ export const deleteAccount = async () => {
 
       await reauthenticateWithPopup(user, provider);
 
-      // Delete - Firestore
       const db = getFirestore();
+
+      // 1 - Delete friends (request & send)
+      const friendRequestsRef = collection(db, "friendRequests");
+      const sentRequestsQuery = query(
+        friendRequestsRef,
+        where("from", "==", uid)
+      );
+      const receivedRequestsQuery = query(
+        friendRequestsRef,
+        where("to", "==", uid)
+      );
+
+      const sentRequestsSnapshot = await getDocs(sentRequestsQuery);
+      const receivedRequestsSnapshot = await getDocs(receivedRequestsQuery);
+
+      sentRequestsSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      receivedRequestsSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+
+      // 2 - Delete friends groups
+      const groupsRef = collection(db, "groups");
+      const groupsQuery = query(groupsRef, where("groupOwner", "==", uid));
+
+      const groupsSnapshot = await getDocs(groupsQuery);
+
+      groupsSnapshot.forEach(async (groupDoc) => {
+        const groupData = groupDoc.data();
+
+        if (groupData.groupOwner === uid) {
+          await deleteDoc(groupDoc.ref);
+        } else {
+          const markersSubcollectionRef = collection(groupDoc.ref, "markers");
+          const markersQuery = query(
+            markersSubcollectionRef,
+            where("idUser", "==", uid)
+          );
+          const markersSnapshot = await getDocs(markersQuery);
+
+          markersSnapshot.forEach(async (markerDoc) => {
+            await deleteDoc(markerDoc.ref);
+          });
+
+          await updateDoc(groupDoc.ref, {
+            markers: arrayRemove(uid),
+          });
+        }
+      });
+
+      // 3 - Delete markers
+      const markersRef = collection(db, "markers");
+      const markersQuery = query(markersRef, where("user.uid", "==", uid));
+
+      const markersSnapshot = await getDocs(markersQuery);
+
+      markersSnapshot.forEach(async (markerDoc) => {
+        await deleteDoc(markerDoc.ref);
+      });
+
       const userCollectionRef = collection(db, "users");
       const currentUserQuery = query(
         userCollectionRef,

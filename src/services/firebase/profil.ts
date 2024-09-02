@@ -138,8 +138,9 @@ export const deleteAccount = async () => {
       // Logout user
       await signOut(auth);
       clearUser();
+      fetch("/api/logout");
+      window.location.href = "/";
     } catch (error) {
-      console.log(error);
       console.error("Erreur lors de la suppression de l'utilisateur:", error);
       toast("Une erreur s'est produite lors de la suppression du compte.");
     }

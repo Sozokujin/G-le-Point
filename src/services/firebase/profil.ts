@@ -1,23 +1,26 @@
-import { auth, db } from "@/services/firebase/config";
+import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
 import {
   deleteUser,
   FacebookAuthProvider,
+  getAuth,
   GoogleAuthProvider,
   OAuthProvider,
   reauthenticateWithPopup,
-  signOut
+  signOut,
 } from "firebase/auth";
 import {
   collection,
   deleteDoc,
   doc,
   getDocs,
+  getFirestore,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
+import { toast } from "sonner";
 
 export const updateUser = async (user: FirebaseUser) => {
   const userCollectionRef = collection(db, "users");
@@ -74,18 +77,17 @@ export const getUsername = async (user: string): Promise<string> => {
 };
 
 export const deleteAccount = async () => {
-  try {
-    const { user, clearUser } = useUserStore.getState();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const { clearUser } = useUserStore.getState();
 
-    if (!user || !user.uid) {
-      console.error("Utilisateur non valide ou non authentifié.");
-      return;
-    }
-
-    let provider;
-    const currentProviderId = auth.currentUser?.providerData[0]?.providerId;
+  if (user) {
+    const uid = user.uid;
 
     try {
+      let provider;
+      const currentProviderId = user.providerData[0]?.providerId;
+
       switch (currentProviderId) {
         case "google.com":
           provider = new GoogleAuthProvider();
@@ -106,19 +108,14 @@ export const deleteAccount = async () => {
           return;
       }
 
-      await reauthenticateWithPopup(auth.currentUser!, provider);
-      console.log("Utilisateur réauthentifié.");
-    } catch (error) {
-      console.error("Erreur lors de la réauthentification :", error);
-      return;
-    }
+      await reauthenticateWithPopup(user, provider);
 
-    try {
-      // Suppression - Firestore
+      // Delete - Firestore
+      const db = getFirestore();
       const userCollectionRef = collection(db, "users");
       const currentUserQuery = query(
         userCollectionRef,
-        where("uid", "==", user.uid)
+        where("uid", "==", uid)
       );
 
       const currentUserSnapshot = await getDocs(currentUserQuery);
@@ -129,36 +126,24 @@ export const deleteAccount = async () => {
           currentUserSnapshot.docs[0].id
         );
         await deleteDoc(currentUserDocRef);
-        console.log("Document utilisateur supprimé de Firestore.");
       } else {
         console.error("Aucun document trouvé pour l'utilisateur actuel.");
         return;
       }
-    } catch (error) {
-      console.error(
-        "Erreur lors de la suppression du document Firestore :",
-        error
-      );
-      return;
-    }
 
-    try {
-      // Suppression - Firebase Authentication
-      await deleteUser(auth.currentUser!);
-      console.log("Utilisateur supprimé de Firebase Authentication.");
-    } catch (error) {
-      console.error(
-        "Erreur lors de la suppression de l'utilisateur Firebase Authentication :",
-        error
-      );
-      return;
-    }
+      // Delete - Firebase Authentication
+      await deleteUser(user);
+      toast("Votre compte a été supprimé avec succès.");
 
-    await signOut(auth);
-    clearUser();
-    await fetch("/api/logout");
-    console.log("Utilisateur déconnecté.");
-  } catch (error) {
-    console.error("Erreur lors de la suppression du compte :", error);
+      // Logout user
+      await signOut(auth);
+      clearUser();
+    } catch (error) {
+      console.log(error);
+      console.error("Erreur lors de la suppression de l'utilisateur:", error);
+      toast("Une erreur s'est produite lors de la suppression du compte.");
+    }
+  } else {
+    toast("Aucun utilisateur connecté.");
   }
 };

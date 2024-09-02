@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
+import { BorderBeam } from "@/components/magicui/border-beam";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -21,28 +23,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Toaster } from "@/components/ui/sonner";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/sonner";
-import { Textarea } from "@/components/ui/textarea";
-import { BorderBeam } from "@/components/magicui/border-beam";
-import { deleteAccount, updateUser } from "@/services/firebase/profil";
 import { auth } from "@/services/firebase/config";
+import { deleteAccount, updateUser } from "@/services/firebase/profil";
 import useUserStore from "@/stores/userStore";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { signOut } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -94,6 +94,15 @@ export const ProfileCard = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        username: user.username || user.displayName || "",
+        bio: user.bio || "",
+      });
+    }
+  }, [user, form]);
 
   return (
     <div className="relative overflow-hidden w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">

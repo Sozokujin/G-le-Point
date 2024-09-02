@@ -1,18 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import Map, { GeolocateControl, Layer, Source, MapRef } from "react-map-gl";
-import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
-import type { Feature, FeatureCollection, Point } from "geojson";
-import { getGroupsMarkers } from "@/services/firebase/markers";
-import { ModalListMarkers } from "@/components/map/modalListMarkers";
 import Filter from "@/components/map/filter";
+import { ModalListMarkers } from "@/components/map/modalListMarkers";
 import ModalMarker from "@/components/modalMarker";
 import useMarkerStore from "@/stores/markerStore";
 import useUserStore from "@/stores/userStore";
-import classes from "../../Page.module.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import type { Feature, FeatureCollection, Point } from "geojson";
+import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Map, { GeolocateControl, Layer, MapRef, Source } from "react-map-gl";
+import classes from "../../Page.module.css";
 
 export default function Home() {
   const { user } = useUserStore();
@@ -27,6 +26,7 @@ export default function Home() {
     groupsMarkers,
     getMarkers,
     getFriendsMarkers,
+    getGroupsMarkers,
   } = useMarkerStore();
 
   const map = useRef<MapRef | null>(null);
@@ -107,19 +107,21 @@ export default function Home() {
             },
           }))
         : []),
-      ...groupsMarkers.map<Feature<Point>>((marker) => ({
-        type: "Feature",
-        properties: {
-          id: marker.id,
-          name: marker.name,
-          description: marker.description,
-          type: "group",
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [marker.longitude, marker.latitude],
-        },
-      })),
+      ...(showGroups
+        ? groupsMarkers.map<Feature<Point>>((marker) => ({
+            type: "Feature",
+            properties: {
+              id: marker.id,
+              name: marker.name,
+              description: marker.description,
+              type: "group",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [marker.longitude, marker.latitude],
+            },
+          }))
+        : []),
     ],
   };
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 
 interface FilterProps {
   showFriends: boolean;
@@ -14,34 +16,20 @@ const Filter: React.FC<FilterProps> = ({
   setShowGroups,
 }) => {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 50,
-        left: 10,
-        zIndex: 1,
-        background: "#fff",
-        padding: "10px",
-        borderRadius: "4px",
-      }}
-    >
-      <label>
-        <input
-          type="checkbox"
-          checked={showFriends}
-          onChange={(e) => setShowFriends(e.target.checked)}
-        />
-        Afficher les points des amis
-      </label>
-      <br />
-      <label>
-        <input
-          type="checkbox"
-          checked={showGroups}
-          onChange={(e) => setShowGroups(e.target.checked)}
-        />
-        Afficher les points des groupes
-      </label>
+    <div className="absolute top-12 left-3 flex flex-col bg-white p-2 rounded-md z-10 gap-4">
+      <h2 className="text-lg font-bold">Filtres</h2>
+      <Label htmlFor="showFriends">Afficher les points des amis</Label>
+      <Switch
+        id="showFriends"
+        checked={showFriends}
+        onCheckedChange={() => setShowFriends(!showFriends)}
+      />
+      <Label htmlFor="showGroups"> Afficher les points des groupes </Label>
+      <Switch
+        id="showGroups"
+        checked={showGroups}
+        onCheckedChange={() => setShowGroups(!showGroups)}
+      />
     </div>
   );
 };

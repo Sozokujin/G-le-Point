@@ -46,20 +46,46 @@ export const getFriendsMarkers = async (userUid: any) => {
   }));
 };
 
-export const getGroupsMarkers = async (userUid: any) => {
-  // const markersCollectionRef = collection(db, "markers");
-  // const groupCollectionRef = collection(db, "groups");
-  // const groupDocSnapshot = await getDocs(groupCollectionRef);
-  // const groups: [] = groupDocSnapshot.docs
-  //   .map((doc) => doc.data())
-  //   .find((group) => group.users.includes(userUid))?.markers;
-  // if (!groups || groups.length == 0) return [];
-  // const querry = query(markersCollectionRef, where("id", "in", groups));
-  // const querySnapshot = await getDocs(querry);
-  // return querySnapshot.docs.map((doc) => ({
-  //   ...doc.data(),
-  //   id: doc.id,
-  // }));
+export const getGroupsMarkers = async (userUid: string) => {
+  const markersCollectionRef = collection(db, "markers");
+  const groupCollectionRef = collection(db, "groups");
+
+  // Get all groups where the user is a member
+  const groupDocSnapshot = await getDocs(groupCollectionRef);
+
+  // Find all markers from the groups where the user is a member
+  const userGroups = groupDocSnapshot.docs
+    .map((doc) => doc.data())
+    .filter((group) => group.members.includes(userUid))
+    .flatMap((group) => group.markers) // Flatten the array of markers
+    .filter((marker) => marker !== undefined); // Ensure no undefined values
+
+  if (!userGroups || userGroups.length === 0) return [];
+
+  const chunkSize = 10;
+  const markers = [];
+
+  for (let i = 0; i < userGroups.length; i += chunkSize) {
+    const chunk = userGroups
+      .slice(i, i + chunkSize)
+      .map((marker) => marker.idMarker); // Extract idMarker
+    if (chunk.length > 0) {
+      console.log(chunk); // This should print an array of strings (marker IDs)
+      const markersQuery = query(
+        markersCollectionRef,
+        where("id", "in", chunk)
+      );
+      const querySnapshot = await getDocs(markersQuery);
+      markers.push(
+        ...querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    }
+  }
+
+  return markers;
 };
 
 export const addMarkerGroup = async (

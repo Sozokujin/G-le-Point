@@ -1,6 +1,7 @@
 import {
   addMarker,
   getFriendsMarkers,
+  getGroupsMarkers,
   getMarkers,
 } from "@/services/firebase/markers";
 import { Marker } from "@/types/index";
@@ -36,10 +37,11 @@ const useMarkerStore = create((set: any) => ({
   },
 
   getGroupsMarkers: async (userUid: any) => {
-    // const markersData = await getGroupsMarkers(userUid);
-    // set((state: any) => ({
-    //   groupsMarkers: [...state.groupsMarkers, ...markersData],
-    // }));
+    const markersData = await getGroupsMarkers(userUid);
+    console.log(markersData);
+    set((state: any) => ({
+      groupsMarkers: [...state.groupsMarkers, ...markersData],
+    }));
   },
 }));
 

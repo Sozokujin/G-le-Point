@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { toast } from "sonner";
 import { Toaster } from "./ui/sonner";
 
-export default function ToastDeletedAccount() {
+function ToastDeletedAccountComponent() {
   const params = useSearchParams();
 
   useEffect(() => {
@@ -19,4 +19,12 @@ export default function ToastDeletedAccount() {
   }, [params]);
 
   return <Toaster position="top-right" />;
+}
+
+export default function ToastDeletedAccount() {
+  return (
+    <Suspense fallback={null}>
+      <ToastDeletedAccountComponent />
+    </Suspense>
+  );
 }

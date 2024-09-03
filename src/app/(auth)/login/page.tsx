@@ -1,23 +1,25 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { DotLoader } from "react-spinners";
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { auth, db } from "@/services/firebase/config";
+import { getBio, getUsername } from "@/services/firebase/profil";
+import useUserStore from "@/stores/userStore";
+import { FirebaseUser } from "@/types/index";
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
   OAuthProvider,
-  signInWithPopup
+  signInWithPopup,
 } from "firebase/auth";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { auth, db } from "@/services/firebase/config";
-import { getBio, getUsername } from "@/services/firebase/profil";
-import { Button } from "@/components/ui/button";
-import { FirebaseUser } from "@/types/index";
-import useUserStore from "@/stores/userStore";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { DotLoader } from "react-spinners";
+import { toast } from "sonner";
 
 const Login = () => {
   const router = useRouter();
@@ -34,7 +36,9 @@ const Login = () => {
       addDoc(usersCollectionRef, {
         ...user,
         friends: [],
-        invitationCode: new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7),
+        invitationCode:
+          new Date().getTime().toString(36).substring(2, 7) +
+          Math.random().toString(36).substring(2, 7),
         username: user.displayName,
         bio: "",
       });
@@ -80,6 +84,7 @@ const Login = () => {
         );
       } else {
         console.error("Error during sign-in:", error);
+        toast.error("Une erreur s'est produite, veuillez réessayer plus tard.");
       }
     }
   };
@@ -88,13 +93,13 @@ const Login = () => {
     {
       name: "Google",
       icon: "/images/google-icon.svg",
-      provider: new GoogleAuthProvider,
+      provider: new GoogleAuthProvider(),
       active: true,
     },
     {
       name: "Facebook",
       icon: "/images/facebook-icon.svg",
-      provider: new FacebookAuthProvider,
+      provider: new FacebookAuthProvider(),
       active: true,
     },
     {
@@ -146,10 +151,11 @@ const Login = () => {
           <Button
             key={app.name}
             variant="outline"
-            className={`w-full flex justify-center items-center gap-4 ${app.active
+            className={`w-full flex justify-center items-center gap-4 ${
+              app.active
                 ? ""
                 : "opacity-50 cursor-not-allowed text-gray-600 border-gray-600 hover:bg-gray-600 hover:text-white"
-              } ${isLoading ? "cursor-wait blur" : ""}`}
+            } ${isLoading ? "cursor-wait blur" : ""}`}
             onClick={() => signInWithProvider(app.provider)}
           >
             <Image src={app.icon} alt="" width={16} height={16} />
@@ -166,6 +172,7 @@ const Login = () => {
           </div>
         )}
       </div>
+      <Toaster richColors position="top-right" />
     </div>
   );
 };

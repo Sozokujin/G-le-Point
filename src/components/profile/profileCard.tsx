@@ -63,14 +63,20 @@ export const ProfileCard = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!user) return;
 
     if (data.username) user.username = data.username;
-    if (data.bio) user.bio = data.bio;
+    user.bio = data.bio ?? null;
 
-    updateUser(user);
-    toast("Vous avez mis à jour votre profil avec succès.");
+    try {
+      await updateUser(user);
+      toast("Vous avez mis à jour votre profil avec succès.");
+    } catch (error) {
+      toast.error(
+        "Une erreur s'est produite lors de la mise à jour de votre profil."
+      );
+    }
   }
 
   const handleLogout = async () => {
@@ -250,7 +256,7 @@ export const ProfileCard = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <Toaster position="top-right" />
+      <Toaster richColors position="top-right" />
       <BorderBeam
         size={800}
         duration={12}

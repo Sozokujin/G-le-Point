@@ -1,9 +1,7 @@
 "use client";
 
-import AnimatedGradientText from "@/components/magicui/animated-gradient-text";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import NumberTicker from "@/components/magicui/number-ticker";
-import { cn } from "@/lib/utils";
 import useMarkerStore from "@/stores/markerStore";
 import useUserStore from "@/stores/userStore";
 import { useEffect } from "react";
@@ -38,20 +36,6 @@ export const StatsCard = () => {
           <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
             0 // TO DO
           </span>
-          <a href="/">
-            <div className="z-10 flex items-center justify-center">
-              <AnimatedGradientText>
-                🚀 <hr className="mx-2 h-4 w-[1px] shrink-0 bg-gray-300" />{" "}
-                <span
-                  className={cn(
-                    `inline animate-gradient bg-gradient-to-r from-[#00a661] via-[#00ffb3] to-[#00994d] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`
-                  )}
-                >
-                  Acheter des super points
-                </span>
-              </AnimatedGradientText>
-            </div>
-          </a>
         </div>
         <div className="text-center lg:h-24">
           <p className="text-lg">Nombre de boussoles // TODO</p>

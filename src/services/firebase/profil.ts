@@ -22,26 +22,34 @@ import {
 import { toast } from "sonner";
 
 export const updateUser = async (user: FirebaseUser) => {
-  const userCollectionRef = collection(db, "users");
-  const currentUserQuery = query(
-    userCollectionRef,
-    where("uid", "==", user.uid)
-  );
+  try {
+    const userCollectionRef = collection(db, "users");
+    const currentUserQuery = query(
+      userCollectionRef,
+      where("uid", "==", user.uid)
+    );
 
-  const currentUserSnapshot = await getDocs(currentUserQuery);
+    const currentUserSnapshot = await getDocs(currentUserQuery);
 
-  let currentUserDocRef;
-  if (!currentUserSnapshot.empty) {
-    currentUserDocRef = doc(userCollectionRef, currentUserSnapshot.docs[0].id);
-  } else {
-    console.error("Aucun document trouvé pour l'utilisateur actuel.");
-    return;
+    let currentUserDocRef;
+    if (!currentUserSnapshot.empty) {
+      currentUserDocRef = doc(
+        userCollectionRef,
+        currentUserSnapshot.docs[0].id
+      );
+    } else {
+      console.error("Aucun document trouvé pour l'utilisateur actuel.");
+      throw new Error("Échec de la mise à jour de l'utilisateur.");
+    }
+
+    updateDoc(currentUserDocRef, {
+      username: user.username,
+      bio: user.bio,
+    });
+  } catch (error) {
+    console.error("Une erreur s'est produite lors de la mise à jour :", error);
+    throw new Error("Échec de la mise à jour de l'utilisateur.");
   }
-
-  updateDoc(currentUserDocRef, {
-    username: user.username,
-    bio: user.bio,
-  });
 };
 
 export const getBio = async (user: string): Promise<string> => {

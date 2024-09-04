@@ -14,7 +14,12 @@ import { FirebaseUser } from "@/types";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card } from "../ui/card";
 
-export const FriendList = () => {
+interface FriendListProps {
+  onSelectedFriendChange: (friend: FirebaseUser | null) => void;
+}
+
+
+export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }) => {
   const { getFriends, setSearchQuery, filteredFriends } = useFriendStore((state) => ({
     getFriends: state.getFriends,
     setSearchQuery: state.setSearchQuery,
@@ -59,6 +64,10 @@ export const FriendList = () => {
     }, 3000);
   };
 
+  useEffect(() => {
+    onSelectedFriendChange(selectedFriend);
+  }, [selectedFriend, onSelectedFriendChange]);
+
   const selectFriend = (friend: FirebaseUser) => {
     setSelectedFriend(friend);
   };
@@ -69,7 +78,7 @@ export const FriendList = () => {
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />
       </div>
-      <div className="flex flex-col-reverse justify-between gap-2 lg:items-center lg:flex-row">
+      <div className="flex sm:flex-col-reverse justify-between gap-2 lg:items-center lg:flex-row">
         <div>
           Mon code :{" "}
           <span className="text-glp-green font-bold">{invitationCode}</span>

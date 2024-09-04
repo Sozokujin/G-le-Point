@@ -11,6 +11,8 @@ type props = {
 const CheckoutStripe = ({ priceId, price, description }: props) => {
   const user = useUserStore((state) => state.user);
 
+  console.log("User:", user);
+
   const handleSubmit = async () => {
     const stripe = await loadStripe(
       process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
@@ -41,7 +43,7 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
 
       const data = await response.json();
 
-      console.log(data);
+      console.log("l46" + data);
 
       await stripe.redirectToCheckout({
         sessionId: data.result.id,
@@ -52,9 +54,8 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
   };
 
   return (
-    <div>
-      Click Below button to get {description}
-      <button onClick={handleSubmit}>Upgrade in {price}</button>
+    <div className="text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300 mb-6 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+      <button onClick={handleSubmit}>{description}</button>
     </div>
   );
 };

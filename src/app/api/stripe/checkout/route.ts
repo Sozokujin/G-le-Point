@@ -1,18 +1,13 @@
-import { FirebaseUser } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-export async function POST(request: NextRequest, user: FirebaseUser) {
+export async function POST(request: NextRequest) {
   try {
-    if (!user) {
-      console.error("Unauthorized access attempt.");
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
     const data = await request.json();
     const priceId = data.priceId;
+    const user = data.user;
 
     console.log("Received request for priceId:", priceId);
 
@@ -27,7 +22,7 @@ export async function POST(request: NextRequest, user: FirebaseUser) {
         ],
         mode: "payment",
         success_url: `${process.env.NEXT_BASE_URL}/billing`,
-        cancel_url: `${process.env.NEXT_BASE_URL}/billing`,
+        cancel_url: `${process.env.NEXT_BASE_URL}`,
         metadata: {
           userId: user.uid,
           priceId,

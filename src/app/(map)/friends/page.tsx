@@ -4,23 +4,39 @@ import { FriendList } from "@/components/friends/friendList";
 import { GroupList } from "@/components/friends/groups/groupList";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { Marker } from "@/types/index";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
+  DrawerDescription,
+  DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
 import { useState } from "react";
+import { getFriendsMarkers, getMarkers } from "@/services/firebase/markers";
 
 const Friends = () => {
   const isMobile = useIsMobile();
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
-  const handleSelectedFriendChange = (friend: FirebaseUser | null) => {
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
+    null
+  );
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
+
+  const handleSelectedFriendChange = async (friend: FirebaseUser) => {
+    setDisplayMarkers([]);
     setSelectedFriend(friend);
+    setDisplayMarkers(await getMarkers(friend.uid));
+    console.log(displayMarkers);
+    console.log(friend);
+    setDrawerOpen(true);
   };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+  };
+
   return (
     <div className="w-full h-full flex gap-2 p-2 bg-muted">
       <section className="sm:w-5/12 w-full h-full">
@@ -40,12 +56,22 @@ const Friends = () => {
         </Tabs>
       </section>
       {isMobile ? (
-        <Drawer>
-          <DrawerContent className="h-[90%]"></DrawerContent>
+        <Drawer open={drawerOpen} onClose={handleCloseDrawer}>
+            <DrawerTitle></DrawerTitle>
+            <DrawerDescription></DrawerDescription>
+          <DrawerContent className="h-[90%]">
+            {selectedFriend?.displayName}
+            {displayMarkers.map((marker) => (
+              <div key={marker.id}>{marker.name}</div>
+            ))}
+          </DrawerContent>
         </Drawer>
       ) : (
         <section className="sm:w-7/12 sm:block hidden h-full bg-white rounded shadow">
-          LISTE DES POINTS ICI
+          {selectedFriend?.displayName}
+          {displayMarkers.map((marker) => (
+            <div key={marker.id}>{marker.name}</div>
+          ))}
         </section>
       )}
     </div>

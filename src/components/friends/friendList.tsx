@@ -1,34 +1,39 @@
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 import {
   ClipboardDocumentIcon,
   MagnifyingGlassIcon,
+  CheckIcon
 } from "@heroicons/react/24/outline";
 import { getInvitationCode } from "@/services/firebase/friends";
 import { useFriendStore } from "@/stores/friendStore";
 import { ModalListFriendRequest } from "./modalListfriendRequest";
 import { ModalSendFriendRequest } from "./modalSendFriendRequest";
 import { FirebaseUser } from "@/types";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Card } from "../ui/card";
 
 interface FriendListProps {
-  onSelectedFriendChange: (friend: FirebaseUser | null) => void;
+  onSelectedFriendChange?: (friend: FirebaseUser) => void;
 }
 
-
-export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }) => {
-  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore((state) => ({
-    getFriends: state.getFriends,
-    setSearchQuery: state.setSearchQuery,
-    filteredFriends: state.filteredFriends,
-  }));
+export const FriendList: React.FC<FriendListProps> = ({
+  onSelectedFriendChange,
+}) => {
+  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore(
+    (state) => ({
+      getFriends: state.getFriends,
+      setSearchQuery: state.setSearchQuery,
+      filteredFriends: state.filteredFriends,
+    })
+  );
 
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchInvitationCode = async () => {
@@ -64,12 +69,11 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
     }, 3000);
   };
 
-  useEffect(() => {
-    onSelectedFriendChange(selectedFriend);
-  }, [selectedFriend, onSelectedFriendChange]);
-
   const selectFriend = (friend: FirebaseUser) => {
     setSelectedFriend(friend);
+    if (onSelectedFriendChange) {
+      onSelectedFriendChange(friend);
+    }
   };
 
   return (
@@ -82,10 +86,16 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
         <div>
           Mon code :{" "}
           <span className="text-glp-green font-bold">{invitationCode}</span>
-          <ClipboardDocumentIcon
-            className="cursor-pointer ml-2 inline-block h-4 text-glp-green"
-            onClick={() => copyToClipboard()}
-          />
+          {!showPopupCopy ? (
+            <ClipboardDocumentIcon
+              className="cursor-pointer ml-2 inline-block h-4 text-muted-foreground"
+              onClick={() => copyToClipboard()}
+            />
+          ) : (
+            <CheckIcon
+              className="cursor-pointer ml-2 inline-block h-4 text-glp-green"
+            />
+          )}
         </div>
         <ModalListFriendRequest />
       </div>
@@ -100,7 +110,6 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
         />
       </div>
       <ul className="flex flex-col gap-1">
-        <ScrollArea className="h-36">
           {filteredFriends().length !== 0 ? (
             filteredFriends().map((friend: FirebaseUser) => {
               return (
@@ -117,7 +126,6 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
               <p>Rien à afficher...</p>
             </div>
           )}
-        </ScrollArea>
       </ul>
     </Card>
   );

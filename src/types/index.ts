@@ -6,6 +6,7 @@ export interface UserStore {
 }
 
 export interface Marker {
+  id: string;
   name: string;
   description: string | null;
   tags: string[];

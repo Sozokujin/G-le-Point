@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.NEXT_BASE_URL}/billing`,
-        cancel_url: `${process.env.NEXT_BASE_URL}`,
+        success_url: `${process.env.NEXT_BASE_URL}/billing?session_id={CHECKOUT_SESSION_ID}&status=success`,
+        cancel_url: `${process.env.NEXT_BASE_URL}/billing?status=cancel`,
         metadata: {
           userId: user.uid,
           priceId,

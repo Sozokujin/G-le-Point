@@ -14,8 +14,10 @@ import {
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
 import { useState } from "react";
-import { getFriendsMarkers, getMarkers } from "@/services/firebase/markers";
+import { getMarkers } from "@/services/firebase/markers";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { MarkerList } from "@/components/marker/marker-list";
+import { Separator } from "@/components/ui/separator";
 
 const Friends = () => {
   const isMobile = useIsMobile();
@@ -58,27 +60,26 @@ const Friends = () => {
       </section>
       {isMobile ? (
         <Drawer open={drawerOpen} onClose={handleCloseDrawer}>
+          {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SR */}
           <VisuallyHidden.Root>
-            <DrawerTitle>
-              Friends list
-            </DrawerTitle>
-            <DrawerDescription>
-              List of your friends
-            </DrawerDescription>
+            <DrawerTitle>Friends list</DrawerTitle>
+            <DrawerDescription>List of your friends</DrawerDescription>
           </VisuallyHidden.Root>
           <DrawerContent className="h-[90%]">
-            {selectedFriend?.displayName}
-            {displayMarkers.map((marker) => (
-              <div key={marker.id}>{marker.name}</div>
-            ))}
+            <h1 className="text-2xl text-center text-primary">
+              {selectedFriend?.displayName}
+            </h1>
+            <Separator />
+            <MarkerList markers={displayMarkers} />
           </DrawerContent>
         </Drawer>
       ) : (
-        <section className="sm:w-7/12 sm:block hidden h-full bg-white rounded shadow">
-          {selectedFriend?.displayName}
-          {displayMarkers.map((marker) => (
-            <div key={marker.id}>{marker.name}</div>
-          ))}
+        <section className="sm:w-7/12 p-2 sm:flex flex-col hidden h-full bg-white rounded shadow">
+          <h1 className="text-2xl text-center text-primary">
+            {selectedFriend?.displayName}
+          </h1>
+          <Separator />
+          <MarkerList markers={displayMarkers} />
         </section>
       )}
     </div>

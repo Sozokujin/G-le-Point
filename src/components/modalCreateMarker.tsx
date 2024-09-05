@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Switch } from "./ui/switch";
 
 const ModalCreateMarker = () => {
   const { user } = useUserStore();
@@ -42,9 +41,9 @@ const ModalCreateMarker = () => {
     ""
   );
   const [selectedTag, setSelectedTag] = useState<string>("");
-  const [isPublic, setIsPublic] = useState<boolean>(false);
   const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<any[]>([]);
+  const [pointVisibility, setPointVisibility] = useState<string | null>(null);
 
   const mapTags: string[] = [
     "Points de vue",
@@ -64,7 +63,7 @@ const ModalCreateMarker = () => {
   ];
 
   useEffect(() => {
-    if (groups.length === 0) getGroups();
+    getGroups();
   }, [getGroups]);
 
   const toggleGroupSelection = (group: any) => {
@@ -79,13 +78,11 @@ const ModalCreateMarker = () => {
 
   const handleSelectTag = (value: string) => setSelectedTag(value);
 
+  const handleVisibility = (value: string) => setPointVisibility(value);
+
   const handleAddressCoordinates = (coordinates: number[]) => {
     setAddressCoordinates(coordinates);
   };
-
-  const handlePointPrivacy = useCallback(() => {
-    setIsPublic((prev) => !prev);
-  }, []);
 
   const addMarkerCommon = useCallback(
     (latitude: number, longitude: number, address = "") => {
@@ -99,7 +96,7 @@ const ModalCreateMarker = () => {
           address,
           latitude,
           longitude,
-          isPublic,
+          visibiltyStatus: pointVisibility,
           user: {
             uid: user.uid,
             displayName: user.displayName,
@@ -111,7 +108,7 @@ const ModalCreateMarker = () => {
       }
     },
 
-    [user, selectedTag, isPublic, addMarker]
+    [user, selectedTag, pointVisibility, addMarker]
   );
 
   const addMarkerWithCurrentLocation = () => {
@@ -163,11 +160,16 @@ const ModalCreateMarker = () => {
             Ajouter un point pour indiquer un lieu sur la carte
           </DialogDescription>
         </DialogHeader>
-        <div className="flex gap-4">
-          <span>Privé</span>
-          <Switch checked={isPublic} onCheckedChange={handlePointPrivacy} />
-          <span>Public</span>
-        </div>
+        <Select onValueChange={handleVisibility}>
+          <SelectTrigger>
+            <SelectValue placeholder="Visibilité du point" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="public">Public</SelectItem>
+            <SelectItem value="friends">Amis</SelectItem>
+            <SelectItem value="groups">Groupes</SelectItem>
+          </SelectContent>
+        </Select>
         <Label htmlFor="name">Nom du lieu</Label>
         <Input ref={pointNameRef} id="name" type="text" />
         <Label htmlFor="description">Description</Label>
@@ -184,7 +186,7 @@ const ModalCreateMarker = () => {
             ))}
           </SelectContent>
         </Select>
-        {!isPublic && (
+        {pointVisibility == "groups" && (
           <>
             <span>Partager le point avec vos groupes</span>
             <div className="overflow-y-auto max-h-28">

@@ -2,7 +2,8 @@ import {
   addMarker,
   getFriendsMarkers,
   getGroupsMarkers,
-  getMarkers,
+  getPublicMarkers,
+  getUserMarkers,
 } from "@/services/firebase/markers";
 import { Marker } from "@/types/index";
 import { create } from "zustand";
@@ -11,6 +12,7 @@ const useMarkerStore = create((set: any) => ({
   userMarkers: [] as Marker[],
   friendsMarkers: [] as Marker[],
   groupsMarkers: [] as Marker[],
+  publicMarkers: [] as Marker[],
 
   addMarker: async (marker: Marker) => {
     await addMarker(marker);
@@ -27,7 +29,7 @@ const useMarkerStore = create((set: any) => ({
   clearGroupsMarkers: () => set({ groupsMarkers: [] }),
 
   getMarkers: async (userUid: any) => {
-    const markersData = await getMarkers(userUid);
+    const markersData = await getUserMarkers(userUid);
     set({ userMarkers: markersData });
   },
 
@@ -41,6 +43,12 @@ const useMarkerStore = create((set: any) => ({
     set({ groupsMarkers: [] });
     const markersData = await getGroupsMarkers(userUid);
     set({ groupsMarkers: markersData });
+  },
+
+  getPublicMarkers: async () => {
+    set({ publicMarkers: [] });
+    const markersData = await getPublicMarkers();
+    set({ publicMarkers: markersData });
   },
 }));
 

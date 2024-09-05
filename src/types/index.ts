@@ -13,7 +13,7 @@ export interface Marker {
   address: string | null;
   latitude: number;
   longitude: number;
-  isPublic: boolean;
+  visibiltyStatus: string | null; // public / friend / groups
   user: {
     uid: string | null;
     displayName: string | null;

@@ -16,7 +16,7 @@ export const addMarker = async (marker: Marker) => {
   await addDoc(markersCollectionRef, marker);
 };
 
-export const getMarkers = async (userUid: any) => {
+export const getUserMarkers = async (userUid: any) => {
   const markersCollectionRef = collection(db, "markers");
   const querry = query(markersCollectionRef, where("user.uid", "==", userUid));
   const querySnapshot = await getDocs(querry);
@@ -38,7 +38,11 @@ export const getFriendsMarkers = async (userUid: any) => {
 
   if (!friends || friends.length == 0) return [];
 
-  const querry = query(markersCollectionRef, where("user.uid", "in", friends));
+  const querry = query(
+    markersCollectionRef,
+    where("user.uid", "in", friends),
+    where("visibiltyStatus", "==", "friends")
+  );
   const querySnapshot = await getDocs(querry);
   return querySnapshot.docs.map((doc) => ({
     ...doc.data(),
@@ -70,7 +74,8 @@ export const getGroupsMarkers = async (userUid: string) => {
     if (chunk.length > 0) {
       const markersQuery = query(
         markersCollectionRef,
-        where("id", "in", chunk)
+        where("id", "in", chunk),
+        where("visibiltyStatus", "==", "groups")
       );
       const querySnapshot = await getDocs(markersQuery);
       markers.push(
@@ -83,6 +88,19 @@ export const getGroupsMarkers = async (userUid: string) => {
   }
 
   return markers;
+};
+
+export const getPublicMarkers = async () => {
+  const markersCollectionRef = collection(db, "markers");
+  const querry = query(
+    markersCollectionRef,
+    where("visibiltyStatus", "==", "public")
+  );
+  const querySnapshot = await getDocs(querry);
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
 };
 
 export const addMarkerGroup = async (

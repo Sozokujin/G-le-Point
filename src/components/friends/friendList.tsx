@@ -45,7 +45,7 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   }, []);
 
   useEffect(() => {
-    if (filteredFriends().length === 0 && user) {
+    if (user) {
       getFriends();
     }
   }, [getFriends, filteredFriends, user]);

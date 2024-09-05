@@ -72,7 +72,7 @@ const Friends = () => {
           </DrawerContent>
         </Drawer>
       ) : (
-        <section className="sm:w-7/12 p-2 sm:flex flex-col hidden h-full bg-white rounded shadow">
+        <section className="sm:w-7/12 sm:flex flex-col hidden h-full bg-white rounded shadow p-2">
           <h1 className="text-2xl text-center text-primary">
             {selectedFriend?.displayName}
           </h1>

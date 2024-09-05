@@ -7,11 +7,17 @@ export const useFriendStore = create((set: any, get: any) => ({
     friends: [] as FirebaseUser[],
     searchQuery: '',
     getFriends: async () => {
-        const friends = await getAllFriends();
-        set({ friends });
+        const friends = get().friends;
+        if (friends.length > 0) {
+            return friends;
+        }
+        const fetchedFriends = await getAllFriends();
+        set({ friends: fetchedFriends });
+        return fetchedFriends;
     },
-    addFriend: (friend: any) => set((state: any) => ({ friends: [...state.friends, friend] })),
-    removeFriend: (friend: any) => set((state: any) => ({ friends: state.friends.filter((f: any) => f !== friend) })),
+
+    addFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: [...state.friends, friend] })),
+    removeFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: state.friends.filter((f: any) => f !== friend) })),
     clearFriends: () => set({ friends: [] }),
     setSearchQuery: (query: string) => set({ searchQuery: query }),
     filteredFriends: () => {

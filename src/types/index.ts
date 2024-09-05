@@ -41,3 +41,5 @@ export interface Group {
   groupOwner: string;
   members: string[];
 }
+//TODO: ADD TAG TYPES
+export type Tag = ''

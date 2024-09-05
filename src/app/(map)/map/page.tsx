@@ -28,12 +28,12 @@ export default function Home() {
     friendsMarkers,
     groupsMarkers,
     publicMarkers,
-    lastAddedMarker,
+    lastMarker,
     getMarkers,
     getFriendsMarkers,
     getGroupsMarkers,
     getPublicMarkers,
-    clearLastAddedMarker,
+    clearLastMarker,
   } = useMarkerStore();
 
   useEffect(() => {
@@ -69,16 +69,16 @@ export default function Home() {
   }, [handleClickUnclusteredPoint]);
 
   useEffect(() => {
-    if (lastAddedMarker && map.current) {
+    if (lastMarker && map.current) {
       const currentMap = map.current.getMap();
 
       currentMap.flyTo({
-        center: [lastAddedMarker.longitude, lastAddedMarker.latitude],
-        zoom: 13,
+        center: [lastMarker.longitude, lastMarker.latitude],
+        zoom: 15,
       });
-      clearLastAddedMarker();
+      clearLastMarker();
     }
-  }, [lastAddedMarker, clearLastAddedMarker]);
+  }, [lastMarker, clearLastMarker]);
 
   if (map.current) {
     const currentMap = map.current.getMap();

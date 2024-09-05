@@ -11,9 +11,7 @@ import useMarkerStore from "@/stores/markerStore";
 export const ModalListMarkers = () => {
   const UserMarkers = useMarkerStore((state) => state.userMarkers);
 
-  const redirectToPoint = () => {
-    console.log("Redirect to point");
-  };
+  const { addClickedMarker } = useMarkerStore();
 
   return (
     <Dialog>
@@ -27,15 +25,21 @@ export const ModalListMarkers = () => {
           Liste des marqueurs
         </DialogTitle>
         {UserMarkers.length > 0 ? (
-          <ul>
+          <ul className="flex flex-col gap-4 max-h-96 overflow-y-auto">
             {UserMarkers.map((userMarker) => (
-              <li onClick={() => redirectToPoint} key={userMarker.name}>
-                <p>{userMarker.name}</p>
-                <p>
-                  {userMarker.latitude}
-                  {userMarker.longitude}
-                </p>
-              </li>
+              <DialogClose asChild>
+                <li
+                  className="border p-4"
+                  onClick={() => addClickedMarker(userMarker)}
+                  key={userMarker.name}
+                >
+                  <p>{userMarker.name}</p>
+                  <p>
+                    {userMarker.latitude}
+                    {userMarker.longitude}
+                  </p>
+                </li>
+              </DialogClose>
             ))}
           </ul>
         ) : (

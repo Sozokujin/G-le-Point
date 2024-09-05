@@ -38,7 +38,7 @@ export const StatsCard = () => {
   }, [getMarkers, user]);
 
   return (
-    <div className="relative overflow-hidden mb-32 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
+    <div className="relative overflow-hidden mb-20 md:mb-28 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
       <h2>Statistiques</h2>
       <div className=" flex flex-row justify-center items-center gap-6">
         {products.map((product) => (

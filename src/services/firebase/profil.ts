@@ -56,11 +56,9 @@ export const getBio = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let bio = "";
     querySnapshot.forEach((doc) => {
-      console.log(doc.data().bio);
       bio = doc.data().bio;
     });
     return bio;
@@ -72,7 +70,6 @@ export const getUsername = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let username = "";
     querySnapshot.forEach((doc) => {
@@ -81,6 +78,20 @@ export const getUsername = async (user: string): Promise<string> => {
     return username;
   }
   return "";
+};
+
+export const getSuperMarkers = async (user: string): Promise<number> => {
+  const currentUser = collection(db, "users");
+  const currentUserQuery = query(currentUser, where("uid", "==", user));
+  const querySnapshot = await getDocs(currentUserQuery);
+  if (!querySnapshot.empty) {
+    let superMarkers = 0;
+    querySnapshot.forEach((doc) => {
+      superMarkers = doc.data().superMarkers;
+    });
+    return superMarkers;
+  }
+  return 0;
 };
 
 export const deleteAccount = async () => {

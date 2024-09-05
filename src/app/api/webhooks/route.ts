@@ -1,54 +1,7 @@
-import { db } from "@/services/firebase/config";
-import {
-  collection,
-  getDocs,
-  increment,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { incrementSuperMarkersByUid } from "@/services/firebase/stripe";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
-
-// Fonction pour incrémenter superMarkers en fonction de l'UID de l'utilisateur
-export const incrementSuperMarkersByUid = async (userUid: string) => {
-  try {
-    // Référence à la collection "users"
-    const usersCollectionRef = collection(db, "users");
-
-    // Création de la requête pour trouver l'utilisateur par "uid"
-    const q = query(usersCollectionRef, where("uid", "==", userUid));
-
-    // Exécution de la requête
-    const querySnapshot = await getDocs(q);
-
-    // Vérifie si au moins un utilisateur correspond
-    if (querySnapshot.empty) {
-      console.log("No user found with the provided UID:", userUid);
-      return new Response("User not found", { status: 404 });
-    }
-
-    // Récupère le premier document utilisateur trouvé (en supposant qu'il n'y a qu'un utilisateur avec cet UID)
-    const userDoc = querySnapshot.docs[0];
-
-    // Référence au document de l'utilisateur
-    const userRef = userDoc.ref;
-
-    // Incrémente le champ superMarkers
-    await updateDoc(userRef, {
-      superMarkers: increment(1), // Incrémentation de superMarkers
-    });
-
-    console.log("superMarkers incremented for user: " + userUid);
-    return new Response("SuperMarkers incremented", {
-      status: 200,
-    });
-  } catch (error) {
-    console.error("Error updating superMarkers:", error);
-    return new Response("Internal Server Error", { status: 500 });
-  }
-};
 
 type METADATA = {
   userId: string;
@@ -72,19 +25,29 @@ export async function POST(request: NextRequest) {
   const eventType = event.type;
 
   if (eventType == "payment_intent.payment_failed") {
-    return new Response("Paiement échoué", {
+    return new Response("Payment failed", {
       status: 400,
+    });
+  }
+
+  const eventTypeArray: string[] = [
+    "payment_intent.created",
+    "payment_intent.succeeded",
+    "charge.succeeded",
+    "charge.updated",
+  ];
+
+  if (eventTypeArray.includes(eventType)) {
+    return new Response("Event OK", {
+      status: 200,
     });
   }
 
   if (eventType === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    console.log("session l33" + session.payment_status);
-
-    // Vérifie si le paiement est bien "paid"
     if (session.payment_status !== "paid") {
-      return new Response("Paiement non effectué", {
+      return new Response("Payment error", {
         status: 400,
       });
     }
@@ -104,21 +67,18 @@ export async function POST(request: NextRequest) {
       customerDetails,
       amount,
     };
+    const numberPoints = priceId === "price_1PuAYAP4rVLS4DImVQ2x3c25" ? 1 : 5;
     try {
-      console.log("user ID l62 WEBHOOK" + userId);
-      await incrementSuperMarkersByUid(userId);
-      console.log("superMarkers incremented for user: " + userId);
-      return new Response("Subscription added and superMarkers incremented", {
+      await incrementSuperMarkersByUid(userId, numberPoints);
+      return new Response("Payment OK and superMarkers incremented", {
         status: 200,
       });
     } catch (error) {
-      console.log("Erreur lors de l'update Firestore: " + error);
-      return new Response("Server error -> FIN DE ROUTE", {
+      return new Response("Server error", {
         status: 500,
       });
     }
   } else {
-    console.log("Event not handled !!!!");
     return new Response("Event not handled", {
       status: 400,
     });

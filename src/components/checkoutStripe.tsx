@@ -11,8 +11,6 @@ type props = {
 const CheckoutStripe = ({ priceId, price, description }: props) => {
   const user = useUserStore((state) => state.user);
 
-  console.log("User:", user);
-
   const handleSubmit = async () => {
     const stripe = await loadStripe(
       process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
@@ -32,18 +30,12 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
         }),
       });
 
-      console.log("Response:", response);
-
       if (!response.ok) {
         const text = await response.text(); // Essayez de lire le texte en cas d'erreur
         throw new Error(`Error: ${response.statusText}. Details: ${text}`);
       }
 
-      console.log("Response:", response);
-
       const data = await response.json();
-
-      console.log("l46" + data);
 
       await stripe.redirectToCheckout({
         sessionId: data.result.id,

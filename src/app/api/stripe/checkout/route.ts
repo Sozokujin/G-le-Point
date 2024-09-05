@@ -9,8 +9,6 @@ export async function POST(request: NextRequest) {
     const priceId = data.priceId;
     const user = data.user;
 
-    console.log("Received request for priceId:", priceId);
-
     const checkoutSession: Stripe.Checkout.Session =
       await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -21,15 +19,13 @@ export async function POST(request: NextRequest) {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.NEXT_BASE_URL}/billing?session_id={CHECKOUT_SESSION_ID}&status=success`,
-        cancel_url: `${process.env.NEXT_BASE_URL}/billing?status=cancel`,
+        success_url: `${process.env.NEXT_BASE_URL}/checkout?session_id={CHECKOUT_SESSION_ID}&status=success`,
+        cancel_url: `${process.env.NEXT_BASE_URL}/map`,
         metadata: {
           userId: user.uid,
           priceId,
         },
       });
-
-    console.log("Checkout session created successfully:", checkoutSession);
 
     return NextResponse.json({ result: checkoutSession, ok: true });
   } catch (error) {

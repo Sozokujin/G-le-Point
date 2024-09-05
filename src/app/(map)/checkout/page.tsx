@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 type SessionData = {
   amount_total: number;
@@ -16,7 +18,7 @@ type SessionData = {
   }[];
 };
 
-const Billing = () => {
+const Checkout = () => {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
@@ -43,18 +45,43 @@ const Billing = () => {
   }, [sessionId]);
 
   if (loading) {
-    return <p>Chargement des détails du paiement...</p>;
+    return (
+      <div className="min-h-[100svh] flex justify-center items-center">
+        <BeatLoader color="#37b978" />
+      </div>
+    );
   }
 
   if (!sessionData) {
-    return <p>Impossible de récupérer les détails du paiement.</p>;
+    return (
+      <div className="min-h-[100svh] flex flex-col justify-center items-center container p-6">
+        <div className="relative mx-auto w-52 h-52 md:w-96 md:h-96 mb-4">
+          <Image src={"/images/order_error.svg"} fill={true} alt="" />
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Erreur lors du paiement
+        </h1>
+        <p>
+          Impossible de récupérer les détails du paiement. Veuillez nous nous
+          contacter par mail :{" "}
+          <a href="mailto:team.glepoint@gmail.com" className="underline">
+            team.glepoint@gmail.com
+          </a>
+          .
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Merci pour votre achat !</h1>
-
-      <div className="bg-white shadow-md rounded-lg p-6">
+    <div className="min-h-[100svh] flex flex-col justify-start md:justify-center items-center md:items-baseline container p-6">
+      <div className="relative mx-auto w-52 h-52 md:w-96 md:h-96 ">
+        <Image src={"/images/order_success.svg"} fill={true} alt="" />
+      </div>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">
+        Merci pour votre achat !
+      </h1>
+      <div className="w-full bg-white shadow-md rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">
           Détails de votre commande :
         </h2>
@@ -84,11 +111,15 @@ const Billing = () => {
       <div className="mt-6">
         <p className="text-lg font-medium">
           Nous vous remercions pour votre achat. Si vous avez des questions,
-          nhésitez pas à nous contacter.
+          n&apos;hésitez pas à nous contacter par mail :{" "}
+          <a href="mailto:team.glepoint@gmail.com" className="underline">
+            team.glepoint@gmail.com
+          </a>
+          .
         </p>
       </div>
     </div>
   );
 };
 
-export default Billing;
+export default Checkout;

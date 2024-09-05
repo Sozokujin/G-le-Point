@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import CheckoutStripe from "@/components/checkoutStripe";
 import LandingFooter from "@/components/landingFooter";
 import LandingNavbar from "@/components/landingNavbar";
 import { BorderBeam } from "@/components/magicui/border-beam";
@@ -45,9 +44,8 @@ const tiers = [
   {
     name: "1 Super Point",
     id: "tier-premium",
-    href: "#",
+    href: "/login",
     priceYearly: "10€",
-    priceId: "price_1PuAYAP4rVLS4DImVQ2x3c25",
     description:
       "Pour les aventuriers passionnés souhaitant une visibilité accrue.",
     features: [
@@ -62,9 +60,8 @@ const tiers = [
   {
     name: "Explorateur",
     id: "tier-free",
-    href: "#",
+    href: "/login",
     priceYearly: "Gratuit",
-    priceId: "",
     description:
       "Idéal pour les explorateurs désirant partager et découvrir de nouveaux lieux.",
     features: [
@@ -78,9 +75,8 @@ const tiers = [
   {
     name: "5 Super Points",
     id: "tier-professional",
-    href: "#",
+    href: "/login",
     priceYearly: "40€",
-    priceId: "price_1Pv0OTP4rVLS4DIml24noZ3P",
     description:
       "Le choix optimal pour les professionnels cherchant à maximiser leur visibilité.",
     features: [
@@ -368,11 +364,18 @@ export default function Page() {
                       Commencer maintenant
                     </a>
                   ) : (
-                    <CheckoutStripe
-                      priceId={tier.priceId}
-                      price="10"
-                      description="Acheter maintenant"
-                    />
+                    <a
+                      href={tier.href}
+                      aria-describedby={tier.id}
+                      className={classNames(
+                        tier.mostPopular
+                          ? "bg-primary text-white shadow-sm hover:bg-glp-green-800"
+                          : "text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300",
+                        "mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      )}
+                    >
+                      Acheter maintenant
+                    </a>
                   )}
                   {tier.priceYearly !== "Gratuit" && (
                     <div className="h-6">

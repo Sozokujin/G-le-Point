@@ -26,12 +26,11 @@ export const ModalListMarkers = () => {
         </DialogTitle>
         {UserMarkers.length > 0 ? (
           <ul className="flex flex-col gap-4 max-h-96 overflow-y-auto">
-            {UserMarkers.map((userMarker) => (
-              <DialogClose asChild>
+            {UserMarkers.map((userMarker: any, i) => (
+              <DialogClose asChild key={i}>
                 <li
                   className="border p-4"
                   onClick={() => addClickedMarker(userMarker)}
-                  key={userMarker.name}
                 >
                   <p>{userMarker.name}</p>
                   <p>

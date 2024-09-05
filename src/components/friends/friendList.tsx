@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   ClipboardDocumentIcon,
   MagnifyingGlassIcon,
-  CheckIcon
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 import { getInvitationCode } from "@/services/firebase/friends";
 import { useFriendStore } from "@/stores/friendStore";
@@ -77,7 +77,8 @@ export const FriendList: React.FC<FriendListProps> = ({
   };
 
   return (
-    <Card className="relative p-5 flex flex-col gap-4 h-full">
+    <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
+    {/* ^ FIXME: the overflow is broken, find a better solution */}
       <div className="w-full flex justify-between">
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />
@@ -92,9 +93,7 @@ export const FriendList: React.FC<FriendListProps> = ({
               onClick={() => copyToClipboard()}
             />
           ) : (
-            <CheckIcon
-              className="cursor-pointer ml-2 inline-block h-4 text-glp-green"
-            />
+            <CheckIcon className="cursor-pointer ml-2 inline-block h-4 text-glp-green" />
           )}
         </div>
         <ModalListFriendRequest />
@@ -109,7 +108,8 @@ export const FriendList: React.FC<FriendListProps> = ({
           onChange={handleSearchChange}
         />
       </div>
-      <ul className="flex flex-col gap-1">
+      <section className="grow relative block">
+        <ul className="flex flex-col gap-1 max-h-[calc(100%-56px)] overflow-y-auto">
           {filteredFriends().length !== 0 ? (
             filteredFriends().map((friend: FirebaseUser) => {
               return (
@@ -126,7 +126,8 @@ export const FriendList: React.FC<FriendListProps> = ({
               <p>Rien à afficher...</p>
             </div>
           )}
-      </ul>
+        </ul>
+      </section>
     </Card>
   );
 };
@@ -142,7 +143,7 @@ export const FriendLine = ({
 }) => {
   return (
     <div
-      className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent hover:bg-slate-200 ${
+      className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
         selected ? "bg-slate-100" : ""
       }`}
       onClick={onSelect}

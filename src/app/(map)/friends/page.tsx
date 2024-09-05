@@ -15,6 +15,7 @@ import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
 import { useState } from "react";
 import { getFriendsMarkers, getMarkers } from "@/services/firebase/markers";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 const Friends = () => {
   const isMobile = useIsMobile();
@@ -42,7 +43,7 @@ const Friends = () => {
       <section className="sm:w-5/12 w-full h-full">
         <Tabs defaultValue="friends" className="w-full h-full flex flex-col">
           <Card className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-200">
               <TabsTrigger value="friends">Amis</TabsTrigger>
               <TabsTrigger value="groups">Groupes</TabsTrigger>
             </TabsList>
@@ -57,8 +58,14 @@ const Friends = () => {
       </section>
       {isMobile ? (
         <Drawer open={drawerOpen} onClose={handleCloseDrawer}>
-            <DrawerTitle></DrawerTitle>
-            <DrawerDescription></DrawerDescription>
+          <VisuallyHidden.Root>
+            <DrawerTitle>
+              Friends list
+            </DrawerTitle>
+            <DrawerDescription>
+              List of your friends
+            </DrawerDescription>
+          </VisuallyHidden.Root>
           <DrawerContent className="h-[90%]">
             {selectedFriend?.displayName}
             {displayMarkers.map((marker) => (

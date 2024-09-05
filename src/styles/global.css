@@ -71,7 +71,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased w-svw;
+    height: 100svh  !important; /* 100% of the viewport height */
   }
 }
 
@@ -80,9 +81,6 @@
   padding: 0 !important;
 }
 
-body {
-  @apply antialiased w-svw h-svh;
-}
 
 ul.reset,
 ul.reset li,

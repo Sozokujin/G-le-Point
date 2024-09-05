@@ -1,32 +1,14 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { auth } from "@/services/firebase/config";
-import useUserStore from "@/stores/userStore";
-import { Button } from "@/components/ui/button";
+import { ProfileCard } from "@/components/profile/profileCard";
+import { StatsCard } from "@/components/profile/statsCard";
 
 const Profile = () => {
-  const router = useRouter();
-  const { clearUser } = useUserStore();
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      clearUser();
-      await fetch("/api/logout");
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <div>
-      <h1>Profile</h1>
-      <Button onClick={handleLogout} variant="default" size="sm">
-        Logout
-      </Button>
+    <div className="flex justify-center items-center flex-col mt-0 lg:mt-12 lg:mx-[25%]">
+      <ProfileCard />
+      <StatsCard />
     </div>
   );
 };

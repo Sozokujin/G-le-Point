@@ -15,27 +15,18 @@ import { ModalListFriendRequest } from "./modalListfriendRequest";
 import { ModalSendFriendRequest } from "./modalSendFriendRequest";
 import { FirebaseUser } from "@/types";
 import { Card } from "../ui/card";
+import useUserStore from "@/stores/userStore";
 
 interface FriendListProps {
   onSelectedFriendChange?: (friend: FirebaseUser) => void;
 }
 
-export const FriendList: React.FC<FriendListProps> = ({
-  onSelectedFriendChange,
-}) => {
-  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore(
-    (state) => ({
-      getFriends: state.getFriends,
-      setSearchQuery: state.setSearchQuery,
-      filteredFriends: state.filteredFriends,
-    })
-  );
-
+export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) => {
+  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore();
+  const user = useUserStore((state) => state.user);
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
-    null
-  );
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
 
   useEffect(() => {
     const fetchInvitationCode = async () => {
@@ -54,10 +45,10 @@ export const FriendList: React.FC<FriendListProps> = ({
   }, []);
 
   useEffect(() => {
-    if (filteredFriends().length === 0) {
+    if (filteredFriends().length === 0 && user) {
       getFriends();
     }
-  }, [getFriends, filteredFriends]);
+  }, [getFriends, filteredFriends, user]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);

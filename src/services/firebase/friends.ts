@@ -12,8 +12,9 @@ import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 export const getAllFriends = async () => {
   try {
+    console.log('HEY try !!!!!');
     const currentUser = useUserStore.getState().user;
-    if (!currentUser) return [];
+    if (!currentUser) throw new Error("Utilisateur non authentifié");
     const usersCollectionRef = collection(db, "users");
     const q = query(usersCollectionRef, where("uid", "==", currentUser.uid));
 
@@ -24,13 +25,14 @@ export const getAllFriends = async () => {
     }
 
     const friendsUid = querySnapshot.docs[0].data().friends;
-    if (friendsUid.length === 0) return [];
+    if (friendsUid.length === 0)  throw new Error("Aucun ami trouvé");
 
     const q2 = query(usersCollectionRef, where("uid", "in", friendsUid));
     const querySnapshot2 = await getDocs(q2);
 
     const friends = querySnapshot2.docs.map((doc) => doc.data());
     console.log(friends);
+    console.log('HEY passed !!!!!');
     return friends;
   } catch (error) {
     console.error('Error fetching friends:', error);

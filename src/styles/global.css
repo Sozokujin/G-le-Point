@@ -71,7 +71,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased w-svw;
+    @apply bg-background text-foreground antialiased w-full;
     height: 100svh  !important; /* 100% of the viewport height */
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { BorderBeam } from "@/components/magicui/border-beam";
@@ -62,6 +61,10 @@ export const ProfileCard = () => {
       bio: user?.bio || "",
     },
   });
+
+  const isFormUnchanged =
+    form.watch("username") === user?.username &&
+    form.watch("bio") === user?.bio;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!user) return;
@@ -160,12 +163,12 @@ export const ProfileCard = () => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom d'utilisateur</FormLabel>
+                <FormLabel>Nom d&apos;utilisateur</FormLabel>
                 <FormControl>
                   <Input placeholder="Nom d'utilisateur" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Il s'agit de votre nom d'affichage public.
+                  Il s&apos;agit de votre nom d&apos;affichage public.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -189,7 +192,11 @@ export const ProfileCard = () => {
             )}
           />
           <div className="w-full flex justify-center items-center">
-            <Button type="submit" className="w-64 rounded-full">
+            <Button
+              type="submit"
+              className="w-64 rounded-full"
+              disabled={isFormUnchanged}
+            >
               Enregistrer
             </Button>
           </div>

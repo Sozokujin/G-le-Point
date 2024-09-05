@@ -13,12 +13,14 @@ const useMarkerStore = create((set: any) => ({
   friendsMarkers: [] as Marker[],
   groupsMarkers: [] as Marker[],
   publicMarkers: [] as Marker[],
+  lastAddedMarker: null as Marker | null,
 
   addMarker: async (marker: Marker) => {
     await addMarker(marker);
     set((state: any) => ({ userMarkers: [...state.userMarkers, marker] }));
+    set({ lastAddedMarker: marker });
   },
-
+  clearLastAddedMarker: () => set({ lastAddedMarker: null }),
   removeMarker: (marker: Marker) =>
     set((state: any) => ({
       userMarkers: state.userMarkers.filter((m: Marker) => m.id !== marker.id),

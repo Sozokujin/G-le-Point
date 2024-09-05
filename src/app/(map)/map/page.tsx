@@ -26,9 +26,11 @@ export default function Home() {
     userMarkers,
     friendsMarkers,
     groupsMarkers,
+    lastAddedMarker,
     getMarkers,
     getFriendsMarkers,
     getGroupsMarkers,
+    clearLastAddedMarker,
   } = useMarkerStore();
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function Home() {
   }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
   const handleClickUnclusteredPoint = useCallback((e: any) => {
+    console.log("truc");
     const features = e.features[0];
     if (features && features.properties) {
       const properties = features.properties;
@@ -61,15 +64,42 @@ export default function Home() {
     }
   }, [handleClickUnclusteredPoint]);
 
+  useEffect(() => {
+    if (lastAddedMarker && map.current) {
+      const currentMap = map.current.getMap();
+
+      currentMap.flyTo({
+        center: [lastAddedMarker.longitude, lastAddedMarker.latitude],
+        zoom: 13,
+      });
+      clearLastAddedMarker();
+    }
+  }, [lastAddedMarker, clearLastAddedMarker]);
+
   if (map.current) {
     const currentMap = map.current.getMap();
     currentMap.on("load", () => {
+      currentMap.loadImage("images/logo-user.png", (error: any, image: any) => {
+        if (error) throw error;
+        if (!currentMap.hasImage("logo-user")) {
+          currentMap.addImage("logo-user", image);
+        }
+      });
       currentMap.loadImage(
-        "images/logo-glepoint-secondaire.png",
+        "images/logo-friend.png",
         (error: any, image: any) => {
           if (error) throw error;
-          if (!currentMap.hasImage("custom-marker")) {
-            currentMap.addImage("custom-marker", image);
+          if (!currentMap.hasImage("logo-friend")) {
+            currentMap.addImage("logo-friend", image);
+          }
+        }
+      );
+      currentMap.loadImage(
+        "images/logo-group.png",
+        (error: any, image: any) => {
+          if (error) throw error;
+          if (!currentMap.hasImage("logo-group")) {
+            currentMap.addImage("logo-group", image);
           }
         }
       );
@@ -162,9 +192,21 @@ export default function Home() {
     source: "my-data",
     filter: ["!", ["has", "point_count"]],
     layout: {
-      "icon-image": "custom-marker",
+      // Utilisation d'une expression 'match' pour choisir l'icône en fonction du type de marqueur
+      "icon-image": [
+        "match",
+        ["get", "type"],
+        "user",
+        "logo-user", // Icône pour les marqueurs utilisateurs
+        "friend",
+        "logo-friend", // Icône pour les marqueurs amis
+        "group",
+        "logo-group", // Icône pour les marqueurs de groupes
+        "default-marker", // Icône par défaut si aucun type ne correspond
+      ],
       "icon-size": 0.5,
       "icon-allow-overlap": true,
+      "icon-ignore-placement": true,
     },
   };
 

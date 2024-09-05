@@ -9,11 +9,12 @@ export interface Marker {
   id: string;
   name: string;
   description: string | null;
-  tags: string;
+  tags: string | null;
   address: string | null;
   latitude: number;
   longitude: number;
   visibiltyStatus: string | null; // public / friend / groups
+  createdAt: number;
   user: {
     uid: string | null;
     displayName: string | null;

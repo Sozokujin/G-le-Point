@@ -14,6 +14,7 @@ import useUserStore from "@/stores/userStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast, Toaster } from "sonner";
 import { SelectableGroupLine } from "./friends/groups/groupList";
 import AutocompleteMapbox from "./map/autocompleteMapbox";
 import { Button } from "./ui/button";
@@ -40,7 +41,7 @@ const ModalCreateMarker = () => {
   const [display, setDisplay] = useState<"address" | "gps" | "position" | "">(
     ""
   );
-  const [selectedTag, setSelectedTag] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<any[]>([]);
   const [pointVisibility, setPointVisibility] = useState<string | null>(null);
@@ -63,8 +64,10 @@ const ModalCreateMarker = () => {
   ];
 
   useEffect(() => {
-    getGroups();
-  }, [getGroups]);
+    if (groups.length === 0) {
+      getGroups();
+    }
+  }, [pointVisibility]);
 
   const toggleGroupSelection = (group: any) => {
     setSelectedGroups((prevSelected) => {
@@ -97,6 +100,7 @@ const ModalCreateMarker = () => {
           latitude,
           longitude,
           visibiltyStatus: pointVisibility,
+          createdAt: Date.now(),
           user: {
             uid: user.uid,
             displayName: user.displayName,
@@ -106,6 +110,10 @@ const ModalCreateMarker = () => {
       if (selectedGroups.length > 0 && user?.uid) {
         addMarkerGroup(idMarker, selectedGroups, user.uid);
       }
+      setPointVisibility(null);
+      setSelectedTag(null);
+      setSelectedGroups([]);
+      toast("Point ajouté avec succès");
     },
 
     [user, selectedTag, pointVisibility, addMarker]
@@ -255,6 +263,7 @@ const ModalCreateMarker = () => {
           </DialogClose>
         )}
       </DialogContent>
+      <Toaster position="top-right" />
     </Dialog>
   );
 };

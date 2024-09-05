@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { BeatLoader } from "react-spinners";
 
-const Checkout = dynamic(() => import("@/components/checkout"), {
+const Checkout = dynamic(() => import("@/components/stripe/checkout"), {
   suspense: true,
 });
 

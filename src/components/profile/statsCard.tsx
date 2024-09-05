@@ -5,7 +5,7 @@ import NumberTicker from "@/components/magicui/number-ticker";
 import useMarkerStore from "@/stores/markerStore";
 import useUserStore from "@/stores/userStore";
 import { useEffect } from "react";
-import CheckoutStripe from "../checkoutStripe";
+import CheckoutStripe from "../stripe/buttonProducts";
 
 const products = [
   {

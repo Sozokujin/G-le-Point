@@ -31,8 +31,6 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedFriend(friend);
     setDisplayMarkers(await getMarkers(friend.uid));
-    console.log(displayMarkers);
-    console.log(friend);
     setDrawerOpen(true);
   };
 

@@ -21,7 +21,7 @@ export const ModalCreateGroup = () => {
     if (friends.length === 0) {
       getFriends();
     }
-  }, [getFriends]);
+  }, [getFriends, friends.length]);
 
   const [selectedFriends, setSelectedFriends] = useState<FirebaseUser[]>([]); // Gère la sélection des amis
   const [groupName, setGroupName] = useState<string>("");
@@ -37,7 +37,6 @@ export const ModalCreateGroup = () => {
   };
 
   useEffect(() => {
-    console.log("Amis :", selectedFriends);
   }, [selectedFriends]);
 
   const createGroupHandler = async () => {

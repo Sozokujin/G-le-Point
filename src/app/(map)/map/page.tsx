@@ -66,7 +66,6 @@ export default function Home() {
                 cursor: "pointer",
               }}
               onClick={() => {
-                console.log(marker);
                 setModalMarker(marker);
               }}
             />

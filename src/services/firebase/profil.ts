@@ -56,11 +56,9 @@ export const getBio = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let bio = "";
     querySnapshot.forEach((doc) => {
-      console.log(doc.data().bio);
       bio = doc.data().bio;
     });
     return bio;
@@ -72,7 +70,6 @@ export const getUsername = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let username = "";
     querySnapshot.forEach((doc) => {

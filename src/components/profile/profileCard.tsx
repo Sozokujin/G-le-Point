@@ -86,7 +86,6 @@ export const ProfileCard = () => {
       await fetch("/api/logout");
       router.push("/");
     } catch (error) {
-      console.log(error);
     }
   };
 

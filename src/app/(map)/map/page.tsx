@@ -20,6 +20,8 @@ export default function Home() {
   const [showFriends, setShowFriends] = useState(true);
   const [showGroups, setShowGroups] = useState(true);
 
+  const map = useRef<MapRef | null>(null);
+
   const {
     userMarkers,
     friendsMarkers,
@@ -28,8 +30,6 @@ export default function Home() {
     getFriendsMarkers,
     getGroupsMarkers,
   } = useMarkerStore();
-
-  const map = useRef<MapRef | null>(null);
 
   useEffect(() => {
     if (user && user.uid) {

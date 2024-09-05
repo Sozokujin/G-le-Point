@@ -8,9 +8,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addMarkerGroup } from "@/services/firebase/markers";
-import useUserStore from "@/stores/userStore";
 import { useGroupStore } from "@/stores/groupStore";
 import useMarkerStore from "@/stores/markerStore";
+import useUserStore from "@/stores/userStore";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -38,11 +38,30 @@ const ModalCreateMarker = () => {
   const pointAddressRef = useRef<HTMLInputElement>(null);
   const pointGpsRef = useRef<HTMLInputElement>(null);
 
-  const [display, setDisplay] = useState<"address" | "gps" | "position" | "">("");
+  const [display, setDisplay] = useState<"address" | "gps" | "position" | "">(
+    ""
+  );
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<any[]>([]);
+
+  const mapTags: string[] = [
+    "Points de vue",
+    "Randonnée et sentiers",
+    "Espace vert",
+    "Site sportif",
+    "Site touristique",
+    "Site historique",
+    "Site culturel",
+    "Loisirs",
+    "Commerce",
+    "Transport",
+    "Restauration",
+    "Hébergement",
+    "Service public",
+    "Espace de santé",
+  ];
 
   useEffect(() => {
     if (groups.length === 0) getGroups();
@@ -158,9 +177,11 @@ const ModalCreateMarker = () => {
             <SelectValue placeholder="Tag" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="commerce">Commerce</SelectItem>
-            <SelectItem value="point-de-vue">Point de vue</SelectItem>
-            <SelectItem value="autre">Autre</SelectItem>
+            {mapTags.map((tag: string) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {!isPublic && (

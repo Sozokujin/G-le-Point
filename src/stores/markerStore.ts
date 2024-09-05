@@ -22,7 +22,9 @@ const useMarkerStore = create((set: any) => ({
       userMarkers: state.userMarkers.filter((m: Marker) => m.id !== marker.id),
     })),
 
-  clearMarkers: () => set({ userMarkers: [] }),
+  clearUserMarkers: () => set({ userMarkers: [] }),
+  clearFriendsMarkers: () => set({ friendsMarkers: [] }),
+  clearGroupsMarkers: () => set({ groupsMarkers: [] }),
 
   getMarkers: async (userUid: any) => {
     const markersData = await getMarkers(userUid);
@@ -30,18 +32,15 @@ const useMarkerStore = create((set: any) => ({
   },
 
   getFriendsMarkers: async (userUid: any) => {
+    set({ friendsMarkers: [] });
     const markersData = await getFriendsMarkers(userUid);
-    set((state: any) => ({
-      friendsMarkers: [...state.friendsMarkers, ...markersData],
-    }));
+    set({ friendsMarkers: markersData });
   },
 
   getGroupsMarkers: async (userUid: any) => {
+    set({ groupsMarkers: [] });
     const markersData = await getGroupsMarkers(userUid);
-    console.log(markersData);
-    set((state: any) => ({
-      groupsMarkers: [...state.groupsMarkers, ...markersData],
-    }));
+    set({ groupsMarkers: markersData });
   },
 }));
 

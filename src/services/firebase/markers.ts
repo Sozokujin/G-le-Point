@@ -50,15 +50,13 @@ export const getGroupsMarkers = async (userUid: string) => {
   const markersCollectionRef = collection(db, "markers");
   const groupCollectionRef = collection(db, "groups");
 
-  // Get all groups where the user is a member
   const groupDocSnapshot = await getDocs(groupCollectionRef);
 
-  // Find all markers from the groups where the user is a member
   const userGroups = groupDocSnapshot.docs
     .map((doc) => doc.data())
     .filter((group) => group.members.includes(userUid))
-    .flatMap((group) => group.markers) // Flatten the array of markers
-    .filter((marker) => marker !== undefined); // Ensure no undefined values
+    .flatMap((group) => group.markers)
+    .filter((marker) => marker !== undefined && marker.idUser !== userUid);
 
   if (!userGroups || userGroups.length === 0) return [];
 
@@ -68,9 +66,8 @@ export const getGroupsMarkers = async (userUid: string) => {
   for (let i = 0; i < userGroups.length; i += chunkSize) {
     const chunk = userGroups
       .slice(i, i + chunkSize)
-      .map((marker) => marker.idMarker); // Extract idMarker
+      .map((marker) => marker.idMarker);
     if (chunk.length > 0) {
-      console.log(chunk); // This should print an array of strings (marker IDs)
       const markersQuery = query(
         markersCollectionRef,
         where("id", "in", chunk)

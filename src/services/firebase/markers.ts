@@ -90,17 +90,18 @@ export const getGroupsMarkers = async (userUid: string) => {
   return markers;
 };
 
-export const getPublicMarkers = async () => {
+export const getPublicMarkers = async (userUid: string) => {
   const markersCollectionRef = collection(db, "markers");
   const querry = query(
     markersCollectionRef,
     where("visibiltyStatus", "==", "public")
   );
   const querySnapshot = await getDocs(querry);
-  return querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
+
+  // Filter out markers from the current user in the code
+  return querySnapshot.docs
+    .map((doc) => ({ ...(doc.data() as Marker), id: doc.id }))
+    .filter((marker) => marker.user.uid !== userUid);
 };
 
 export const addMarkerGroup = async (

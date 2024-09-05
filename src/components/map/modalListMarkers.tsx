@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import useMarkerStore from "@/stores/markerStore";
@@ -22,7 +23,9 @@ export const ModalListMarkers = () => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <h2 className="text-primary text-xl font-bold">Liste des marqueurs</h2>
+        <DialogTitle className="text-primary text-xl font-bold">
+          Liste des marqueurs
+        </DialogTitle>
         {UserMarkers.length > 0 ? (
           <ul>
             {UserMarkers.map((userMarker) => (

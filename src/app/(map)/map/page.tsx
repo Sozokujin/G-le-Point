@@ -19,6 +19,7 @@ export default function Home() {
   const [modalMarker, setModalMarker] = useState<any>(null);
   const [showFriends, setShowFriends] = useState(true);
   const [showGroups, setShowGroups] = useState(true);
+  const [showPublic, setShowPublic] = useState(true);
 
   const map = useRef<MapRef | null>(null);
 
@@ -26,10 +27,12 @@ export default function Home() {
     userMarkers,
     friendsMarkers,
     groupsMarkers,
+    publicMarkers,
     lastAddedMarker,
     getMarkers,
     getFriendsMarkers,
     getGroupsMarkers,
+    getPublicMarkers,
     clearLastAddedMarker,
   } = useMarkerStore();
 
@@ -38,6 +41,7 @@ export default function Home() {
       getMarkers(user.uid);
       getFriendsMarkers(user.uid);
       getGroupsMarkers(user.uid);
+      getPublicMarkers(user.uid);
     }
   }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
@@ -103,6 +107,15 @@ export default function Home() {
           }
         }
       );
+      currentMap.loadImage(
+        "images/logo-public.png",
+        (error: any, image: any) => {
+          if (error) throw error;
+          if (!currentMap.hasImage("logo-public")) {
+            currentMap.addImage("logo-public", image);
+          }
+        }
+      );
     });
   }
 
@@ -152,6 +165,21 @@ export default function Home() {
             },
           }))
         : []),
+      ...(showPublic
+        ? publicMarkers.map<Feature<Point>>((marker) => ({
+            type: "Feature",
+            properties: {
+              id: marker.id,
+              name: marker.name,
+              description: marker.description,
+              type: "public",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [marker.longitude, marker.latitude],
+            },
+          }))
+        : []),
     ],
   };
 
@@ -192,17 +220,18 @@ export default function Home() {
     source: "my-data",
     filter: ["!", ["has", "point_count"]],
     layout: {
-      // Utilisation d'une expression 'match' pour choisir l'icône en fonction du type de marqueur
       "icon-image": [
         "match",
         ["get", "type"],
         "user",
-        "logo-user", // Icône pour les marqueurs utilisateurs
+        "logo-user",
         "friend",
-        "logo-friend", // Icône pour les marqueurs amis
+        "logo-friend",
         "group",
-        "logo-group", // Icône pour les marqueurs de groupes
-        "default-marker", // Icône par défaut si aucun type ne correspond
+        "logo-group",
+        "public",
+        "logo-public",
+        "default-marker",
       ],
       "icon-size": 0.5,
       "icon-allow-overlap": true,
@@ -219,6 +248,8 @@ export default function Home() {
         setShowFriends={setShowFriends}
         showGroups={showGroups}
         setShowGroups={setShowGroups}
+        showPublic={showPublic}
+        setShowPublic={setShowPublic}
       />
       <Map
         mapboxAccessToken={mapboxToken}

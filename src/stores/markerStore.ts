@@ -47,9 +47,10 @@ const useMarkerStore = create((set: any) => ({
     set({ groupsMarkers: markersData });
   },
 
-  getPublicMarkers: async () => {
+  getPublicMarkers: async (userUid: any) => {
     set({ publicMarkers: [] });
-    const markersData = await getPublicMarkers();
+    const markersData = await getPublicMarkers(userUid);
+    console.log(markersData);
     set({ publicMarkers: markersData });
   },
 }));

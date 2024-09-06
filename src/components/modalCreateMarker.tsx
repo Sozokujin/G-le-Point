@@ -103,7 +103,7 @@ const ModalCreateMarker = () => {
           createdAt: Date.now(),
           user: {
             uid: user.uid,
-            displayName: user.displayName,
+            username: user.username,
           },
         });
       }

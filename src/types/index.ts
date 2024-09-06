@@ -17,7 +17,7 @@ export interface Marker {
   createdAt: number;
   user: {
     uid: string | null;
-    displayName: string | null;
+    username: string | null;
   };
 }
 

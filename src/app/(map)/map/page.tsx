@@ -46,17 +46,21 @@ export default function Home() {
   }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
   const handleClickUnclusteredPoint = useCallback((e: any) => {
-    console.log("truc");
     const features = e.features[0];
-    if (features && features.properties) {
+    console.log("features", features);
+    if (features && features.properties && map.current) {
+      const currentMap = map.current.getMap();
       const properties = features.properties;
       setModalMarker(
-        userMarkers.find((userMarker) => userMarker.id === properties.id) ||
-          friendsMarkers.find(
-            (userMarker) => userMarker.id === properties.id
-          ) ||
-          groupsMarkers.find((userMarker) => userMarker.id === properties.id)
+        userMarkers.find((marker) => marker.id === properties.id) ||
+          friendsMarkers.find((marker) => marker.id === properties.id) ||
+          groupsMarkers.find((marker) => marker.id === properties.id) ||
+          publicMarkers.find((marker) => marker.id === properties.id)
       );
+      currentMap.flyTo({
+        center: features.geometry.coordinates,
+        zoom: 15,
+      });
     }
   }, []);
 
@@ -67,6 +71,10 @@ export default function Home() {
       currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
     }
   }, [handleClickUnclusteredPoint]);
+
+  useEffect(() => {
+    console.log("modalMarker", modalMarker);
+  }, [modalMarker]);
 
   useEffect(() => {
     if (lastMarker && map.current) {
@@ -116,6 +124,14 @@ export default function Home() {
           }
         }
       );
+    });
+
+    currentMap.on("mouseenter", "unclustered-point", () => {
+      currentMap.getCanvas().style.cursor = "pointer";
+    });
+
+    currentMap.on("mouseleave", "unclustered-point", () => {
+      currentMap.getCanvas().style.cursor = "";
     });
   }
 
@@ -235,7 +251,7 @@ export default function Home() {
       ],
       "icon-size": 0.5,
       "icon-allow-overlap": true,
-      "icon-ignore-placement": true,
+      "icon-anchor": "bottom",
     },
   };
 

@@ -29,7 +29,7 @@ export const ModalListMarkers = () => {
             {UserMarkers.map((userMarker: any, i) => (
               <DialogClose asChild key={i}>
                 <li
-                  className="border p-4"
+                  className="border p-4 cursor-pointer"
                   onClick={() => addClickedMarker(userMarker)}
                 >
                   <p>{userMarker.name}</p>

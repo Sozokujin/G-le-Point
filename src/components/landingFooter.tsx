@@ -91,7 +91,11 @@ export default function LandingFooter() {
                       {item.name}
                     </Link>
                   ) : (
-                    <button type="button" data-cc="show-preferencesModal">
+                    <button
+                      type="button"
+                      data-cc="show-preferencesModal"
+                      className="text-sm leading-6 text-gray-600 hover:text-black"
+                    >
                       {item.name}
                     </button>
                   )}

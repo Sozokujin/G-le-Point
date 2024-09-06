@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getMarkers } from "@/services/firebase/markers";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MarkerList } from "@/components/marker/marker-list";
@@ -24,12 +24,22 @@ const Friends = () => {
   const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleSelectedFriendChange = async (friend: FirebaseUser) => {
     setDisplayMarkers([]);
     setSelectedFriend(friend);
     setDisplayMarkers(await getMarkers(friend.uid));
+    if (isInitialLoad) {// je trouve pas mieux
+      setIsInitialLoad(false);
+      return;
+    }
     setDrawerOpen(true);
+  };
+
+  const forceCloseDrawer = () => {
+    setDrawerOpen(false);
+    setIsInitialLoad(true);
   };
 
   const handleCloseDrawer = () => {
@@ -39,7 +49,7 @@ const Friends = () => {
   return (
     <div className="w-full h-full flex gap-2 p-2 bg-muted">
       <section className="sm:w-5/12 w-full h-full">
-        <Tabs defaultValue="friends" className="w-full h-full flex flex-col">
+        <Tabs defaultValue="friends" className="w-full h-full flex flex-col" onValueChange={() => forceCloseDrawer()}>
           <Card className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-slate-200">
               <TabsTrigger value="friends">Amis</TabsTrigger>

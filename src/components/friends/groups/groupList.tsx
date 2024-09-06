@@ -4,10 +4,15 @@ import { useEffect, useState } from "react";
 import { ModalCreateGroup } from "./ModalCreateGroup";
 import { Group } from "@/types";
 import GroupAvatar, { AvatarUser } from "@/components/ui/group-avatar";
-import { getUserById } from "@/services/firebase/profil";
+import { getUserById } from "@/services/firebase/user";
 
 export const GroupList = () => {
   const { groups, getGroups } = useGroupStore();
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+
+  const selectGroup = (group: Group) => {
+    setSelectedGroup(group);
+  };
 
   useEffect(() => {
     if (groups.length === 0) {
@@ -24,8 +29,8 @@ export const GroupList = () => {
         <GroupLine
           key={group.id}
           group={group}
-          selected
-          onSelect={() => {}}
+          selected={selectedGroup?.id === group.id}
+          onSelect={() => selectGroup(group)}
         />
       ))}
     </Card>
@@ -62,10 +67,11 @@ const GroupLine = ({ group, selected, onSelect }: { group: Group; selected: bool
       onClick={onSelect}
     >
       <GroupAvatar users={users} size="sm" />
-      <div className="grid gap-1">
-        <p className="text-sm font-medium leading-none truncate">
+      <div className="grid grid-flow-col grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        <p className="col-span-1 md:col-span-2 lg:col-span-3 text-sm font-medium leading-none truncate w-full">
           {group.name}
         </p>
+        <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{users.length}</span>
       </div>
     </div>
   );

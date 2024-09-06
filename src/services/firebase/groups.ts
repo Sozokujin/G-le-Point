@@ -1,11 +1,11 @@
 import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 
-  import {  collection, getDocs, query, where, addDoc } from "firebase/firestore";
+import {  collection, getDocs, query, where, addDoc } from "firebase/firestore";
 
-  export const getAllGroups = async () => {
+export const getAllGroups = async () => {
     const currentUser = useUserStore.getState().user;
-    
+
     if (!currentUser?.uid) return [];
 
     const groupsCollectionRef = collection(db, "groups");

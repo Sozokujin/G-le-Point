@@ -12,9 +12,8 @@ interface GroupAvatarProps {
 }
 
 export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
-  console.log("users:", users);
   const displayUsers = users.slice(0, 3)
-  const remainingCount = Math.max(0, users.length - 3)
+  const remainingCount = Math.max(0, users.length - 2)
 
   const sizeClasses = {
     sm: 'h-8 w-8',
@@ -47,7 +46,7 @@ export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
           <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
       ))}
-      {remainingCount > 0 && (
+      {remainingCount > 1 && (
         <Avatar className={`${avatarSize} absolute bottom-0 translate-x-[25%] border-2 border-background bg-muted`}>
           <AvatarFallback className="font-medium text-muted-foreground">
             +{remainingCount}

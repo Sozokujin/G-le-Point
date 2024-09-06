@@ -32,7 +32,6 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
       setShowPopupCopy((prev) => ({ ...prev, [marker.id]: false }));
     }, 3000);
   };
-
   return (
     <>
       {markers.length === 0 ? (
@@ -48,8 +47,20 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                   key={marker.id}
                   className="p-4 bg-slate-200 rounded-lg shadow"
                 >
-                  <div className="font-bold">{marker.name}</div>
-                  <div className="flex mt-2 gap-4">
+                  <div className="font-bold mb-4">{marker.name}</div>
+                  <div className="w-full flex justify-between mb-3">
+                    {marker.description && (
+                      <div className="text-sm text-slate-400 truncate">
+                        {marker.description}
+                      </div>
+                    )}
+                    {marker.address && (
+                      <div className="text-sm text-slate-400 truncate">
+                        {marker.address}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-4">
                     <div className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full w-fit mr-auto">
                       {marker.tags || "Autre"}
                     </div>

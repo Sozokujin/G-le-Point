@@ -23,9 +23,9 @@ export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
   }
 
   const containerSizeClasses = {
-    sm: 'h-12 w-12',
-    md: 'h-18 w-18',
-    lg: 'h-22 w-22'
+    sm: 'min-h-12 min-w-12',
+    md: 'min-h-18 min-w-18',
+    lg: 'min-h-22 min-w-22'
   }
 
   const avatarSize = sizeClasses[size]
@@ -38,8 +38,9 @@ export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
           key={user.id}
           className={`${avatarSize} border-2 border-background absolute
             ${index === 0 ? 'left-0 top-0' : ''}
-            ${index === 1 ? 'right-0 top-0' : ''}
-            ${index === 2 ? 'bottom-0 right-0' : ''}
+            ${index === 1 ? 'bottom-0 translate-x-[25%]' : ''}
+            ${index === 2 ? 'right-0 top-0' : ''}
+
           `}
         >
           <AvatarImage src={user.image} alt={user.name} />
@@ -47,9 +48,11 @@ export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
         </Avatar>
       ))}
       {remainingCount > 0 && (
-        <div className={`${avatarSize} absolute bottom-0 left-0 flex items-center justify-center bg-muted rounded-full border-2 border-background`}>
-          <span className="text-sm font-medium text-muted-foreground">+{remainingCount}</span>
-        </div>
+        <Avatar className={`${avatarSize} absolute bottom-0 translate-x-[25%] border-2 border-background bg-muted`}>
+          <AvatarFallback className="font-medium text-muted-foreground">
+            +{remainingCount}
+          </AvatarFallback>
+        </Avatar>
       )}
     </div>
   )

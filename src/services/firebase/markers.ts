@@ -2,9 +2,11 @@ import { db } from "@/services/firebase/config";
 import { Group, Marker } from "@/types/index";
 import {
   addDoc,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -117,6 +119,38 @@ export const addMarkerGroup = async (
         idMarker: markerId,
         idUser: userId,
       }),
+    });
+  }
+};
+
+export const addLike = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentLikeCount = markerData.likeCount;
+
+    await updateDoc(markerDocRef, {
+      likedBy: arrayUnion(userId),
+      likeCount: currentLikeCount + 1,
+    });
+  }
+};
+
+export const removeLike = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentLikeCount = markerData.likeCount;
+
+    await updateDoc(markerDocRef, {
+      likedBy: arrayRemove(userId),
+      likeCount: currentLikeCount - 1,
     });
   }
 };

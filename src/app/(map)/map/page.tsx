@@ -9,7 +9,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { CircleLayerSpecification, SymbolLayerSpecification } from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map, { GeolocateControl, Layer, MapRef, Source } from "react-map-gl";
 import classes from "../../Page.module.css";
 
@@ -45,9 +45,9 @@ export default function Home() {
     }
   }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
-  const handleClickUnclusteredPoint = useCallback((e: any) => {
+  const handleClickUnclusteredPoint = (e: any) => {
     const features = e.features[0];
-    console.log("features", features);
+
     if (features && features.properties && map.current) {
       const currentMap = map.current.getMap();
       const properties = features.properties;
@@ -62,7 +62,7 @@ export default function Home() {
         zoom: 15,
       });
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (map.current) {
@@ -158,6 +158,8 @@ export default function Home() {
               id: marker.id,
               name: marker.name,
               description: marker.description,
+              likedBy: marker.likedBy,
+              likeCount: marker.likeCount,
               type: "friend",
             },
             geometry: {
@@ -173,6 +175,8 @@ export default function Home() {
               id: marker.id,
               name: marker.name,
               description: marker.description,
+              likedBy: marker.likedBy,
+              likeCount: marker.likeCount,
               type: "group",
             },
             geometry: {
@@ -188,6 +192,8 @@ export default function Home() {
               id: marker.id,
               name: marker.name,
               description: marker.description,
+              likedBy: marker.likedBy,
+              likeCount: marker.likeCount,
               type: "public",
             },
             geometry: {

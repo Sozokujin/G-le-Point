@@ -54,13 +54,14 @@ const ModalCreateMarker = () => {
     "Site touristique",
     "Site historique",
     "Site culturel",
-    "Loisirs",
+    "Centre de loisirs",
     "Commerce",
     "Transport",
     "Restauration",
     "Hébergement",
     "Service public",
     "Espace de santé",
+    "Autre",
   ];
 
   useEffect(() => {
@@ -105,6 +106,8 @@ const ModalCreateMarker = () => {
             uid: user.uid,
             username: user.username,
           },
+          likeCount: 0,
+          likedBy: [],
         });
       }
       if (selectedGroups.length > 0 && user?.uid) {

@@ -19,6 +19,8 @@ export interface Marker {
     uid: string | null;
     username: string | null;
   };
+  likeCount: number;
+  likedBy: string[];
 }
 
 export interface FirebaseUser {

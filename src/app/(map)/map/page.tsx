@@ -65,14 +65,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (map.current) {
-      const currentMap = map.current.getMap();
-
-      currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
-    }
-  }, [handleClickUnclusteredPoint]);
-
-  useEffect(() => {
     console.log("modalMarker", modalMarker);
   }, [modalMarker]);
 
@@ -133,6 +125,8 @@ export default function Home() {
     currentMap.on("mouseleave", "unclustered-point", () => {
       currentMap.getCanvas().style.cursor = "";
     });
+
+    currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
   }
 
   const combinedMarkers: FeatureCollection<Point> = {

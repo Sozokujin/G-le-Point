@@ -2,7 +2,6 @@ import { getAllFriends, getFriendRequests } from "@/services/firebase/friends";
 import { FirebaseUser } from "@/types";
 import { create } from "zustand";
 
-
 export const useFriendStore = create((set: any, get: any) => ({
     friends: [] as FirebaseUser[],
     searchQuery: '',
@@ -23,14 +22,13 @@ export const useFriendStore = create((set: any, get: any) => ({
     filteredFriends: () => {
         const { friends, searchQuery } = get();
         if (!searchQuery) {
-            return friends;
+            set(friends);
         }
-        return friends.filter((friend: FirebaseUser) =>
-            friend.displayName!.toLowerCase().includes(searchQuery.toLowerCase()) || friend.email!.toLowerCase().includes(searchQuery.toLowerCase())
+        set(friends.filter((friend: FirebaseUser) =>
+            friend.displayName!.toLowerCase().includes(searchQuery.toLowerCase()) || friend.email!.toLowerCase().includes(searchQuery.toLowerCase()))
         );
     }
 }));
-
 
 export const useFriendRequestStore = create((set: any) => ({
     friendRequests: [] as any[],

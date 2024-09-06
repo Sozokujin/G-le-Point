@@ -41,5 +41,5 @@ export interface Group {
   groupOwner: string;
   members: string[];
 }
-//TODO: ADD TAG TYPES
-export type Tag = ''
+
+export type Tag = "Points de vue"|"Randonnée et sentiers"|"Espace vert"|"Site sportif"|"Site touristique"|"Site historique"|"Site culturel"|"Loisirs"|"Commerce"|"Transport"|"Restauration"|"Hébergement"|"Service public"|"Espace de santé"|"Autre"

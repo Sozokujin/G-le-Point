@@ -21,6 +21,30 @@ import {
 } from "firebase/firestore";
 import { toast } from "sonner";
 
+export const getUserById = async (uid: string): Promise<FirebaseUser | null> => {
+  try {
+    const userCollectionRef = collection(db, "users");
+    const userQuery = query(userCollectionRef, where("uid", "==", uid));
+
+    const userSnapshot = await getDocs(userQuery);
+
+    if (userSnapshot.empty) {
+      console.error("Aucun utilisateur trouvé pour cet ID.");
+      return null;
+    } else {
+      let user: FirebaseUser | null = null;
+      userSnapshot.forEach((doc) => {
+        user = doc.data() as FirebaseUser;
+      });
+
+      return user;
+    }
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    return null;
+  }
+};
+
 export const updateUser = async (user: FirebaseUser) => {
   try {
     const userCollectionRef = collection(db, "users");

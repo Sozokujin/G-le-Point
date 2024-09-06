@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -22,11 +22,21 @@ interface FriendListProps {
 }
 
 export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) => {
-  const { getFriends, setSearchQuery, filteredFriends } = useFriendStore();
+  const { getFriends, setSearchQuery, friends } = useFriendStore();
   const user = useUserStore((state) => state.user);
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
   const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
+
+  const selectFriend = useCallback(
+    (friend: FirebaseUser) => {
+      setSelectedFriend(friend);
+      if (onSelectedFriendChange) {
+        onSelectedFriendChange(friend);
+      }
+    },
+    [onSelectedFriendChange]
+  );
 
   useEffect(() => {
     const fetchInvitationCode = async () => {
@@ -48,7 +58,12 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
     if (user) {
       getFriends();
     }
-  }, [getFriends, filteredFriends, user]);
+
+    if (!selectedFriend && friends.length > 0) {
+      selectFriend(friends[0]);
+    }
+
+  }, [selectedFriend, getFriends, friends, user, selectFriend]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -62,16 +77,9 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
     }, 3000);
   };
 
-  const selectFriend = (friend: FirebaseUser) => {
-    setSelectedFriend(friend);
-    if (onSelectedFriendChange) {
-      onSelectedFriendChange(friend);
-    }
-  };
-
   return (
     <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
-    {/* ^ FIXME: the overflow is broken, find a better solution */}
+      {/* ^ FIXME: the overflow is broken, find a better solution */}
       <div className="w-full flex justify-between">
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />
@@ -103,8 +111,8 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
       </div>
       <section className="grow relative block">
         <ul className="flex flex-col gap-1 max-h-[calc(100%-56px)] overflow-y-auto">
-          {filteredFriends().length !== 0 ? (
-            filteredFriends().map((friend: FirebaseUser) => {
+          {friends.length !== 0 ? (
+            friends.map((friend: FirebaseUser) => {
               return (
                 <FriendLine
                   key={friend.uid}
@@ -125,15 +133,7 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   );
 };
 
-export const FriendLine = ({
-  friend,
-  selected,
-  onSelect,
-}: {
-  friend: FirebaseUser;
-  selected: boolean | null;
-  onSelect?: () => void;
-}) => {
+export const FriendLine = ({friend, selected, onSelect, }: {friend: FirebaseUser; selected: boolean | null; onSelect?: () => void;}) => {
   return (
     <div
       className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${

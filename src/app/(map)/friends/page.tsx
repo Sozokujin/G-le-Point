@@ -21,9 +21,7 @@ import { Separator } from "@/components/ui/separator";
 
 const Friends = () => {
   const isMobile = useIsMobile();
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
-    null
-  );
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
 
@@ -51,7 +49,7 @@ const Friends = () => {
           <TabsContent className="grow" value="friends">
             <FriendList onSelectedFriendChange={handleSelectedFriendChange} />
           </TabsContent>
-          <TabsContent value="groups">
+          <TabsContent className="grow" value="groups">
             <GroupList />
           </TabsContent>
         </Tabs>
@@ -76,7 +74,6 @@ const Friends = () => {
           <h1 className="text-2xl text-center text-primary">
             {selectedFriend?.displayName}
           </h1>
-          <Separator />
           <MarkerList markers={displayMarkers} />
         </section>
       )}

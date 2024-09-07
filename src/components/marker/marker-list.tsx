@@ -23,7 +23,9 @@ interface MarkerListProps {
 }
 
 export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
-  const [showPopupCopy, setShowPopupCopy] = useState<{[key: string]: boolean}>({});
+  const [showPopupCopy, setShowPopupCopy] = useState<{
+    [key: string]: boolean;
+  }>({});
   const isMobile = useIsMobile();
   const copyToClipboard = (marker: Marker) => {
     navigator.clipboard.writeText(marker.latitude + " , " + marker.longitude);
@@ -87,6 +89,8 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                 <TableRow>
                   <TableHead className="w-[150px] font-bold">Point</TableHead>
                   <TableHead className="font-bold">Tags</TableHead>
+                  <TableHead className="font-bold">Description</TableHead>
+                  <TableHead className="font-bold">Adresse</TableHead>
                   <TableHead className="text-right font-bold">Coords</TableHead>
                   <TableHead className="text-right font-bold w-24">
                     Actions
@@ -103,6 +107,12 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                       <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
                         {marker.tags || "Autre"}
                       </span>
+                    </TableCell>
+                    <TableCell className="text-slate-400 truncate">
+                      {marker.description || "Aucune description"}
+                    </TableCell>
+                    <TableCell className="text-slate-400 truncate">
+                      {marker.address || "Aucune adresse"}
                     </TableCell>
                     <TableCell className="text-center w-24">
                       <Button

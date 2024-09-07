@@ -84,7 +84,9 @@ const Friends = () => {
           <h1 className="text-2xl text-center text-primary">
             {selectedFriend?.displayName}
           </h1>
-          <MarkerList markers={displayMarkers} />
+            <div className="grow overflow-y-auto mb-[4.5rem]">
+            <MarkerList markers={displayMarkers} />
+          </div>
         </section>
       )}
     </div>

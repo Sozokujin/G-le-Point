@@ -18,16 +18,6 @@ export const useFriendStore = create((set: any, get: any) => ({
     addFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: [...state.friends, friend] })),
     removeFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: state.friends.filter((f: any) => f !== friend) })),
     clearFriends: () => set({ friends: [] }),
-    setSearchQuery: (query: string) => set({ searchQuery: query }),
-    filteredFriends: () => {
-        const { friends, searchQuery } = get();
-        if (!searchQuery) {
-            set(friends);
-        }
-        set(friends.filter((friend: FirebaseUser) =>
-            friend.displayName!.toLowerCase().includes(searchQuery.toLowerCase()) || friend.email!.toLowerCase().includes(searchQuery.toLowerCase()))
-        );
-    }
 }));
 
 export const useFriendRequestStore = create((set: any) => ({

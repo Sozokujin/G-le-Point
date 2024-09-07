@@ -8,7 +8,7 @@ export const addMarker = async (marker: Marker) => {
     await addDoc(markersCollectionRef, marker);
   };
 
-  export const getMarkers = async (userUid: any) => {
+  export const getMarkers = async (userUid: string) => {
     const markersCollectionRef = collection(db, "markers");
     const querry = query(markersCollectionRef, where("user.uid", "==", userUid));
     const querySnapshot = await getDocs(querry);
@@ -18,7 +18,7 @@ export const addMarker = async (marker: Marker) => {
     }) as Marker);
   };
 
-  export const getFriendsMarkers = async (userUid: any) => {
+  export const getFriendsMarkers = async (userUid: string) => {
     const markersCollectionRef = collection(db, "markers");
     const userCollectionRef = collection(db, "users");
 

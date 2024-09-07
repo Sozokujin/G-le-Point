@@ -2,7 +2,7 @@ import { Group } from '@/types';
 import { create } from 'zustand';
 import { getAllGroups } from '@/services/firebase/groups';
 
-export const useGroupStore = create((set: any) => ({
+export const useGroupStore = create((set: any, get: any) => ({
     groups: [] as Group[],
     getGroups: async () => {
         const groups = await getAllGroups();

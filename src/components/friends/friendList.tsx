@@ -21,12 +21,15 @@ interface FriendListProps {
   onSelectedFriendChange?: (friend: FirebaseUser) => void;
 }
 
-export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) => {
-  const { getFriends, setSearchQuery, friends } = useFriendStore();
+export const FriendList: React.FC<FriendListProps> = ({
+  onSelectedFriendChange,
+}) => {
+  const { getFriends, friends } = useFriendStore();
   const user = useUserStore((state) => state.currentUser);
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
   const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
+  const [filteredFriends, setFilteredFriends] = useState<FirebaseUser[]>([]);
 
   const selectFriend = useCallback(
     (friend: FirebaseUser) => {
@@ -41,7 +44,6 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   useEffect(() => {
     const fetchInvitationCode = async () => {
       const cachedCode = localStorage.getItem("invitationCode");
-
       if (cachedCode) {
         setInvitationCode(cachedCode);
       } else {
@@ -57,16 +59,26 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   useEffect(() => {
     if (user) {
       getFriends();
+      setFilteredFriends(friends);
     }
 
     if (!selectedFriend && friends.length > 0) {
       selectFriend(friends[0]);
     }
-
   }, [selectedFriend, getFriends, friends, user, selectFriend]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    const searchQuery = event.target.value.toLowerCase();
+    if (searchQuery === "") {
+      setFilteredFriends(friends);
+      return;
+    } else {
+      setFilteredFriends(
+        friends.filter((friend) => {
+          return (friend.displayName!.toLowerCase().includes(searchQuery.toLowerCase()) || friend.email!.toLowerCase().includes(searchQuery.toLowerCase()));
+        })
+      );
+    }
   };
 
   const copyToClipboard = () => {
@@ -111,8 +123,8 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
       </div>
       <section className="grow relative block">
         <ul className="flex flex-col gap-1 max-h-[calc(100%-56px)] overflow-y-auto">
-          {friends.length !== 0 ? (
-            friends.map((friend: FirebaseUser) => {
+          {filteredFriends.length !== 0 ? (
+            filteredFriends.map((friend: FirebaseUser) => {
               return (
                 <FriendLine
                   key={friend.uid}
@@ -133,7 +145,15 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   );
 };
 
-export const FriendLine = ({friend, selected, onSelect, }: {friend: FirebaseUser; selected: boolean | null; onSelect?: () => void;}) => {
+export const FriendLine = ({
+  friend,
+  selected,
+  onSelect,
+}: {
+  friend: FirebaseUser;
+  selected: boolean | null;
+  onSelect?: () => void;
+}) => {
   return (
     <div
       className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
@@ -156,7 +176,9 @@ export const FriendLine = ({friend, selected, onSelect, }: {friend: FirebaseUser
         </p>
         <p className="text-sm text-muted-foreground truncate">{friend.email}</p>
       </div>
-      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">POINT NBR</span>
+      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">
+        POINT NBR
+      </span>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { FriendList } from "@/components/friends/friendList";
 import { GroupList } from "@/components/friends/groups/groupList";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Marker } from "@/types/index";
+import { Group, Marker } from "@/types/index";
 import {
   Drawer,
   DrawerContent,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/drawer";
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { getMarkers } from "@/services/firebase/markers";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MarkerList } from "@/components/marker/marker-list";
@@ -21,13 +21,15 @@ import { Separator } from "@/components/ui/separator";
 
 const Friends = () => {
   const isMobile = useIsMobile();
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null)
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const handleSelectedFriendChange = async (friend: FirebaseUser) => {
     setDisplayMarkers([]);
+    setSelectedGroup(null);
     setSelectedFriend(friend);
     setDisplayMarkers(await getMarkers(friend.uid));
     if (isInitialLoad) {// je trouve pas mieux
@@ -37,7 +39,15 @@ const Friends = () => {
     setDrawerOpen(true);
   };
 
-  const forceCloseDrawer = () => {
+  const handleSelectedGroupChange = async (group: Group) => {
+    setDisplayMarkers([]);
+    setSelectedFriend(null);
+    setSelectedGroup(group);
+    setDisplayMarkers(await getMarkers(group.id));
+    setDrawerOpen(true);
+  }
+
+  const resetDrawerState = () => {
     setDrawerOpen(false);
     setIsInitialLoad(true);
   };
@@ -49,7 +59,7 @@ const Friends = () => {
   return (
     <div className="w-full h-full flex gap-2 p-2 bg-muted">
       <section className="sm:w-5/12 w-full h-full">
-        <Tabs defaultValue="friends" className="w-full h-full flex flex-col" onValueChange={() => forceCloseDrawer()}>
+        <Tabs defaultValue="friends" className="w-full h-full flex flex-col" onValueChange={() => resetDrawerState()}>
           <Card className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-slate-200">
               <TabsTrigger value="friends">Amis</TabsTrigger>
@@ -60,7 +70,7 @@ const Friends = () => {
             <FriendList onSelectedFriendChange={handleSelectedFriendChange} />
           </TabsContent>
           <TabsContent className="grow" value="groups">
-            <GroupList />
+            <GroupList onSelectGroupChange={handleSelectedGroupChange} />
           </TabsContent>
         </Tabs>
       </section>

@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 export interface AvatarUser {
   id: string
   name: string
-  image?: string
+  image?: string | null | undefined;
 }
 
 interface GroupAvatarProps {
@@ -42,8 +42,8 @@ export default function GroupAvatar({ users, size = 'md' }: GroupAvatarProps) {
 
           `}
         >
-          <AvatarImage src={user.image} alt={user.name} />
-          <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarImage src={user.image ?? undefined} alt={user.name} />
+          <AvatarFallback className="font-medium text-muted-foreground">{user.name.slice(0, 1)}</AvatarFallback>
         </Avatar>
       ))}
       {remainingCount > 1 && (

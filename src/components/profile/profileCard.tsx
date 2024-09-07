@@ -53,24 +53,24 @@ const FormSchema = z.object({
 
 export const ProfileCard = () => {
   const router = useRouter();
-  const { user, clearUser } = useUserStore();
+  const { currentUser, clearCurrentUser } = useUserStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: user?.username || user?.displayName || "",
-      bio: user?.bio || "",
+      username: currentUser?.username || currentUser?.displayName || "",
+      bio: currentUser?.bio || "",
     },
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!user) return;
+    if (!currentUser) return;
 
-    if (data.username) user.username = data.username;
-    user.bio = data.bio ?? null;
+    if (data.username) currentUser.username = data.username;
+    currentUser.bio = data.bio ?? null;
 
     try {
-      await updateUser(user);
+      await updateUser(currentUser);
       toast("Vous avez mis à jour votre profil avec succès.");
     } catch (error) {
       toast.error(
@@ -82,7 +82,7 @@ export const ProfileCard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      clearUser();
+      clearCurrentUser();
       await fetch("/api/logout");
       router.push("/");
     } catch (error) {
@@ -90,7 +90,7 @@ export const ProfileCard = () => {
   };
 
   const handleDelete = async () => {
-    if (user) {
+    if (currentUser) {
       try {
         await deleteAccount();
         toast("Votre compte a été supprimé avec succès.");
@@ -101,27 +101,27 @@ export const ProfileCard = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       form.reset({
-        username: user.username || user.displayName || "",
-        bio: user.bio || "",
+        username: currentUser.username || currentUser.displayName || "",
+        bio: currentUser.bio || "",
       });
     }
-  }, [user, form]);
+  }, [currentUser, form]);
 
   return (
     <div className="relative overflow-hidden w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
-      {user?.photoURL ? (
+      {currentUser?.photoURL ? (
         <Image
-          src={user?.photoURL ?? ""}
-          alt={"Photo de profil de " + user?.displayName ?? "l'utilisateur"}
+          src={currentUser?.photoURL ?? ""}
+          alt={"Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"}
           width={96}
           height={96}
           className="rounded-full shadow-md"
         />
       ) : (
         <div className="flex justify-center items-center w-16 h-16 bg-primary text-white rounded-full shadow-md">
-          <span className="text-xl">{user?.displayName?.charAt(0)}</span>
+          <span className="text-xl">{currentUser?.displayName?.charAt(0)}</span>
         </div>
       )}
       <h1 className="text-2xl">Mon compte</h1>
@@ -141,7 +141,7 @@ export const ProfileCard = () => {
                       <FormItem>
                         <FormLabel>E-mail</FormLabel>
                         <FormControl>
-                          <Input placeholder={user?.email ?? ""} {...field} />
+                          <Input placeholder={currentUser?.email ?? ""} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

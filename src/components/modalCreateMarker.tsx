@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const ModalCreateMarker = () => {
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
   const { addMarker } = useMarkerStore();
 
   const pointNameRef = useRef<HTMLInputElement>(null);
@@ -35,7 +35,7 @@ const ModalCreateMarker = () => {
         "La géolocalisation n'est pas disponible sur votre navigateur"
       );
     navigator.geolocation.getCurrentPosition((position) => {
-      if (user?.uid && user?.displayName) {
+      if (currentUser?.uid && currentUser?.displayName) {
         addMarker({
           name: pointNameRef.current?.value || "Point",
           description: pointDescriptionRef.current?.value || "",
@@ -44,8 +44,8 @@ const ModalCreateMarker = () => {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           user: {
-            uid: user.uid,
-            displayName: user.displayName,
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
           },
         });
       }
@@ -56,7 +56,7 @@ const ModalCreateMarker = () => {
     if (!pointAddressRef.current?.value) {
       return alert("Veuillez renseigner une adresse");
     }
-    if (user?.uid && user?.displayName) {
+    if (currentUser?.uid && currentUser?.displayName) {
       addMarker({
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
@@ -65,8 +65,8 @@ const ModalCreateMarker = () => {
         latitude: 0,
         longitude: 0,
         user: {
-          uid: user.uid,
-          displayName: user.displayName,
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
         },
       });
     }
@@ -80,7 +80,7 @@ const ModalCreateMarker = () => {
     if (!latitude || !longitude) {
       return alert("Le point GPS est invalide");
     }
-    if (user?.uid && user?.displayName) {
+    if (currentUser?.uid && currentUser?.displayName) {
       addMarker({
         name: pointNameRef.current?.value || "Point",
         description: pointDescriptionRef.current?.value || "",
@@ -89,8 +89,8 @@ const ModalCreateMarker = () => {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
         user: {
-          uid: user.uid,
-          displayName: user.displayName,
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
         },
       });
     }

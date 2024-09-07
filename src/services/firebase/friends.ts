@@ -12,7 +12,7 @@ import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 export const getAllFriends = async () => {
   try {
-    const currentUser = useUserStore.getState().user;
+    const currentUser = useUserStore.getState().currentUser;
     if (!currentUser) throw new Error("Utilisateur non authentifié");
     const usersCollectionRef = collection(db, "users");
     const q = query(usersCollectionRef, where("uid", "==", currentUser.uid));
@@ -49,7 +49,7 @@ export const sendFriendRequest = async (invitationCode: string | undefined) => {
   const querySnapshot = await getDocs(q);
   if (querySnapshot.empty) return alert("Code d'invitation invalide");
 
-  const currentUser = useUserStore.getState().user;
+  const currentUser = useUserStore.getState().currentUser;
   if (!currentUser?.uid) return alert("Utilisateur non authentifié");
   const friendRequest = collection(db, "friendRequests");
   await addDoc(friendRequest, {
@@ -60,7 +60,7 @@ export const sendFriendRequest = async (invitationCode: string | undefined) => {
 };
 
 export const getFriendRequests = async () => {
-    const currentUser = useUserStore.getState().user;
+    const currentUser = useUserStore.getState().currentUser;
     const friendRequestsCollectionRef = collection(db, "friendRequests");
     if(!currentUser) return [];
     const q = query(friendRequestsCollectionRef, where("to", "==", currentUser.uid), where("status", "==", "pending"));
@@ -76,7 +76,7 @@ export const getFriendRequests = async () => {
 };
 
 export const acceptFriendRequest = async (from: string) => {
-  const currentUser = useUserStore.getState().user;
+  const currentUser = useUserStore.getState().currentUser;
 
   if (!currentUser?.uid) return alert("Utilisateur non authentifié");
 
@@ -132,7 +132,7 @@ export const acceptFriendRequest = async (from: string) => {
 };
 
 export const declineFriendRequest = async (from: string) => {
-  const currentUser = useUserStore.getState().user;
+  const currentUser = useUserStore.getState().currentUser;
 
   if (!currentUser?.uid) return;
 
@@ -156,7 +156,7 @@ export const declineFriendRequest = async (from: string) => {
 
 
 export const getInvitationCode = async () => {
-  const currentUser = useUserStore.getState().user;
+  const currentUser = useUserStore.getState().currentUser;
   if(!currentUser) return alert("Utilisateur non authentifié");
   const usersCollectionRef = collection(db, "users");
   const q = query(usersCollectionRef, where("uid", "==", currentUser.uid));

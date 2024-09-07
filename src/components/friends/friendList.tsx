@@ -23,7 +23,7 @@ interface FriendListProps {
 
 export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) => {
   const { getFriends, setSearchQuery, friends } = useFriendStore();
-  const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.currentUser);
   const [showPopupCopy, setShowPopupCopy] = useState(false);
   const [invitationCode, setInvitationCode] = useState<string | null>(null);
   const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);

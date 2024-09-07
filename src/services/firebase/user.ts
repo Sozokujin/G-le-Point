@@ -25,3 +25,27 @@ export const getUserById = async (uid: string): Promise<FirebaseUser | null> => 
     return null;
   }
 };
+
+export const getUsersByIds = async (uids: string[]): Promise<FirebaseUser[]> => {
+  try {
+    const userCollectionRef = collection(db, "users");
+    const userQuery = query(userCollectionRef, where("uid", "in", uids));
+
+    const userSnapshot = await getDocs(userQuery);
+
+    if (userSnapshot.empty) {
+      console.error("Aucun utilisateur trouvé pour ces ID.");
+      return [];
+    } else {
+      const users: FirebaseUser[] = [];
+      userSnapshot.forEach((doc) => {
+        users.push(doc.data() as FirebaseUser);
+      });
+
+      return users;
+    }
+  } catch (error) {
+    console.error("Error fetching users by IDs:", error);
+    return [];
+  }
+};

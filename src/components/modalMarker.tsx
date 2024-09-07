@@ -3,7 +3,7 @@ import useUserStore from "@/stores/userStore";
 import { Button } from "@/components/ui/button";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
 
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-lg shadow-lg">
@@ -16,7 +16,7 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
         Latitude: {marker.latitude}, Longitude: {marker.longitude}
       </p>
       <p className="text-sm text-gray-500">{marker.description}</p>
-      {marker.user.uid === user?.uid ? (
+      {marker.user.uid === currentUser?.uid ? (
         <Button className="bg-primary text-white px-4 py-2 rounded-lg mt-2">
           Passer le point en premium
         </Button>

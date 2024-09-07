@@ -3,22 +3,46 @@ import { Card } from "@/components/ui/card";
 import { useGroupStore } from "@/stores/groupStore";
 import { useEffect, useState } from "react";
 import { ModalCreateGroup } from "./ModalCreateGroup";
-import { Group } from "@/types";
-import { getUserById } from "@/services/firebase/user";
-
+import {  FirebaseUser, Group } from "@/types";
+import useUserStore from "@/stores/userStore";
 export const GroupList = () => {
   const { groups, getGroups } = useGroupStore();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
+
+  const { users, fetchUsersByIds } = useUserStore();
 
   const selectGroup = (group: Group) => {
     setSelectedGroup(group);
   };
+
+  const transformToAvatarUser = (user: FirebaseUser): AvatarUser => ({
+    id: user.uid,
+    name: user.displayName || user.email || 'Unknown User',
+    image: user.photoURL,
+  });
 
   useEffect(() => {
     if (groups.length === 0) {
       getGroups();
     }
   }, [getGroups, groups.length]);
+
+  useEffect(() => {
+    const groupMembersIds = groups.reduce((acc, group) => [...acc, ...group.members], [] as string[]);
+    fetchUsersByIds(groupMembersIds);
+    if (users) {
+      setGroupUsers(
+        groups.reduce((acc, group) => {
+          acc[group.id] = group.members
+            .map((memberId) => users.find((user) => user.uid === memberId))
+            .filter((user): user is FirebaseUser => user !== undefined)
+            .map(transformToAvatarUser);
+          return acc;
+        }, {} as { [key: string]: AvatarUser[] })
+      );
+    }
+  },[fetchUsersByIds, groups, users]);
 
   return (
     <Card className="p-5 flex flex-col gap-4 h-full">
@@ -28,6 +52,7 @@ export const GroupList = () => {
         <GroupLine
           key={group.id}
           group={group}
+          groupUsers={groupUsers[group.id] || []}
           selected={selectedGroup?.id === group.id}
           onSelect={() => selectGroup(group)}
         />
@@ -38,34 +63,15 @@ export const GroupList = () => {
 
 const GroupLine = ({
   group,
+  groupUsers,
   selected,
   onSelect,
-}: {
-  group: Group;
-  selected: boolean;
-  onSelect?: () => void;
+} : {
+    group: Group;
+    groupUsers: AvatarUser[];
+    selected: boolean;
+    onSelect?: () => void;
 }) => {
-  const [users, setUsers] = useState<AvatarUser[]>([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const resolvedUsers = await Promise.all(
-        group.members.map(async (userId) => {
-          const user = await getUserById(userId);
-          if (!user) return null;
-          return {
-            id: user.uid || "",
-            name: user.displayName || "",
-            image: user.photoURL || "",
-          };
-        })
-      );
-      setUsers(resolvedUsers.filter((user) => user !== null) as AvatarUser[]);
-    };
-
-    fetchUsers();
-  }, [group.members]);
-
   return (
     <div
       className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
@@ -73,12 +79,12 @@ const GroupLine = ({
       }`}
       onClick={onSelect}
     >
-      <GroupAvatar users={users} size="sm" />
+      <GroupAvatar users={groupUsers} size="sm" />
       <div className="grid gap-1">
         <p className="text-sm font-medium leading-none truncate">
           {group.name || "Groupe sans nom"}
         </p>
-        <p className="text-xs text-muted-foreground truncate">{users.length} Membres</p>
+        <p className="text-xs text-muted-foreground truncate">{groupUsers.length} Membres</p>
       </div>
       <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">POINT NBR</span>
     </div>

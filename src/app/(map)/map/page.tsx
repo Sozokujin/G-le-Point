@@ -11,7 +11,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 export default function Home() {
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
   const { markers, getMarkers, getFriendsMarkers } = useMarkerStore();
 
   const [displayFriendsMarkers, setDisplayFriendsMarkers] = useState<boolean>(false);
@@ -20,12 +20,12 @@ export default function Home() {
   const map = useRef(null);
 
   useEffect(() => {
-    if (user && user.uid) {
-      getMarkers(user.uid);
-      displayFriendsMarkers ? getFriendsMarkers(user.uid) : null;
+    if (currentUser && currentUser.uid) {
+      getMarkers(currentUser.uid);
+      displayFriendsMarkers ? getFriendsMarkers(currentUser.uid) : null;
     }
   }, [
-    user,
+    currentUser,
     getFriendsMarkers,
     getMarkers,
     displayFriendsMarkers,

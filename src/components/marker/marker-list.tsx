@@ -29,9 +29,9 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
   const isMobile = useIsMobile();
   const copyToClipboard = (marker: Marker) => {
     navigator.clipboard.writeText(marker.latitude + " , " + marker.longitude);
-    setShowPopupCopy((prev) => ({ ...prev, [marker.id]: true }));
+    setShowPopupCopy((prev) => ({ ...prev, [marker.id!]: true }));
     setTimeout(() => {
-      setShowPopupCopy((prev) => ({ ...prev, [marker.id]: false }));
+      setShowPopupCopy((prev) => ({ ...prev, [marker.id!]: false }));
     }, 3000);
   };
   return (
@@ -70,7 +70,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                       className="p-1 w-6 h-6 rounded-full"
                       onClick={() => copyToClipboard(marker)}
                     >
-                      {!showPopupCopy[marker.id] ? (
+                      {!showPopupCopy[marker.id!] ? (
                         <ClipboardDocumentIcon />
                       ) : (
                         <CheckIcon />
@@ -116,7 +116,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                         className="p-1 w-6 h-6 rounded-full mr-4"
                         onClick={() => copyToClipboard(marker)}
                       >
-                        {!showPopupCopy[marker.id] ? (
+                        {!showPopupCopy[marker.id!] ? (
                           <ClipboardDocumentIcon />
                         ) : (
                           <CheckIcon />

@@ -1,9 +1,9 @@
+import GroupAvatar, { AvatarUser } from "@/components/ui/group-avatar";
 import { Card } from "@/components/ui/card";
 import { useGroupStore } from "@/stores/groupStore";
 import { useEffect, useState } from "react";
 import { ModalCreateGroup } from "./ModalCreateGroup";
 import { Group } from "@/types";
-import GroupAvatar, { AvatarUser } from "@/components/ui/group-avatar";
 import { getUserById } from "@/services/firebase/user";
 
 export const GroupList = () => {
@@ -17,7 +17,6 @@ export const GroupList = () => {
   useEffect(() => {
     if (groups.length === 0) {
       getGroups();
-
     }
   }, [getGroups, groups.length]);
 
@@ -37,7 +36,15 @@ export const GroupList = () => {
   );
 };
 
-const GroupLine = ({ group, selected, onSelect }: { group: Group; selected: boolean; onSelect?: () => void; }) => {
+const GroupLine = ({
+  group,
+  selected,
+  onSelect,
+}: {
+  group: Group;
+  selected: boolean;
+  onSelect?: () => void;
+}) => {
   const [users, setUsers] = useState<AvatarUser[]>([]);
 
   useEffect(() => {
@@ -67,12 +74,13 @@ const GroupLine = ({ group, selected, onSelect }: { group: Group; selected: bool
       onClick={onSelect}
     >
       <GroupAvatar users={users} size="sm" />
-      <div className="grid grid-flow-col grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-        <p className="col-span-1 md:col-span-2 lg:col-span-3 text-sm font-medium leading-none truncate w-full">
-          {group.name}
+      <div className="grid gap-1">
+        <p className="text-sm font-medium leading-none truncate">
+          {group.name || "Groupe sans nom"}
         </p>
-        <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{users.length}</span>
+        <p className="text-xs text-muted-foreground truncate">{users.length} Membres</p>
       </div>
+      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">POINT NBR</span>
     </div>
   );
 };

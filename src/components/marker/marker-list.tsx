@@ -47,7 +47,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
               {markers.map((marker) => (
                 <div
                   key={marker.id}
-                  className="p-4 bg-slate-200 rounded-lg shadow"
+                  className="p-4 bg-slate-100 rounded-lg shadow"
                 >
                   <div className="font-bold mb-4">{marker.name}</div>
                   <div className="w-full flex justify-between mb-3">
@@ -91,10 +91,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                   <TableHead className="font-bold">Tags</TableHead>
                   <TableHead className="font-bold">Description</TableHead>
                   <TableHead className="font-bold">Adresse</TableHead>
-                  <TableHead className="text-right font-bold">Coords</TableHead>
-                  <TableHead className="text-right font-bold w-24">
-                    Actions
-                  </TableHead>
+                  <TableHead className="text-center font-bold w-24">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -116,7 +113,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                     </TableCell>
                     <TableCell className="text-center w-24">
                       <Button
-                        className="p-1 w-6 h-6 rounded-full"
+                        className="p-1 w-6 h-6 rounded-full mr-4"
                         onClick={() => copyToClipboard(marker)}
                       >
                         {!showPopupCopy[marker.id] ? (
@@ -125,8 +122,6 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                           <CheckIcon />
                         )}
                       </Button>
-                    </TableCell>
-                    <TableCell className="text-center">
                       <Button className="p-1 w-6 h-6 rounded-full">
                         <MapPinIcon />
                       </Button>

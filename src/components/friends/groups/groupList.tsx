@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useGroupStore } from "@/stores/groupStore";
+import { Group } from "@/types";
 import { useEffect } from "react";
 import { ModalCreateGroup } from "./ModalCreateGroup";
 
@@ -23,9 +24,30 @@ export const GroupList = () => {
   );
 };
 
-const GroupLine = ({ group }: { group: any }) => {
+export const GroupLine = ({ group }: { group: any }) => {
   return (
     <li className="h-24 w-full border-primary border-y-2 p-2 rounded-sm">
+      <span className="text-primary font-semibold">{group.name}</span>
+    </li>
+  );
+};
+
+export const SelectableGroupLine = ({
+  group,
+  selected,
+  onSelect,
+}: {
+  group: Group;
+  selected: boolean;
+  onSelect: () => void;
+}) => {
+  return (
+    <li
+      className={`h-24 w-full border-primary border-y-2 p-2 rounded-sm cursor-pointer ${
+        selected ? "bg-blue-200" : "bg-white"
+      }`}
+      onClick={onSelect}
+    >
       <span className="text-primary font-semibold">{group.name}</span>
     </li>
   );

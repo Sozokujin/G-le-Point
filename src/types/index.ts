@@ -6,16 +6,21 @@ export interface UserStore {
 }
 
 export interface Marker {
+  id: string;
   name: string;
   description: string | null;
-  tags: string[];
+  tags: string | null;
   address: string | null;
   latitude: number;
   longitude: number;
+  visibiltyStatus: string | null; // public / friend / groups
+  createdAt: number;
   user: {
     uid: string | null;
-    displayName: string | null;
+    username: string | null;
   };
+  likeCount: number;
+  likedBy: string[];
 }
 
 export interface FirebaseUser {
@@ -39,4 +44,8 @@ export interface Group {
   name: string;
   groupOwner: string;
   members: string[];
+  markers: {
+    idMarker: string;
+    idUser: string;
+  };
 }

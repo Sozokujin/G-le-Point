@@ -65,10 +65,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("modalMarker", modalMarker);
-  }, [modalMarker]);
-
-  useEffect(() => {
     if (lastMarker && map.current) {
       const currentMap = map.current.getMap();
 
@@ -80,54 +76,59 @@ export default function Home() {
     }
   }, [lastMarker, clearLastMarker]);
 
-  if (map.current) {
-    const currentMap = map.current.getMap();
-    currentMap.on("load", () => {
-      currentMap.loadImage("images/logo-user.png", (error: any, image: any) => {
-        if (error) throw error;
-        if (!currentMap.hasImage("logo-user")) {
-          currentMap.addImage("logo-user", image);
-        }
+  useEffect(() => {
+    if (map.current) {
+      const currentMap = map.current.getMap();
+      currentMap.on("load", () => {
+        currentMap.loadImage(
+          "images/logo-user.png",
+          (error: any, image: any) => {
+            if (error) throw error;
+            if (!currentMap.hasImage("logo-user")) {
+              currentMap.addImage("logo-user", image);
+            }
+          }
+        );
+        currentMap.loadImage(
+          "images/logo-friend.png",
+          (error: any, image: any) => {
+            if (error) throw error;
+            if (!currentMap.hasImage("logo-friend")) {
+              currentMap.addImage("logo-friend", image);
+            }
+          }
+        );
+        currentMap.loadImage(
+          "images/logo-group.png",
+          (error: any, image: any) => {
+            if (error) throw error;
+            if (!currentMap.hasImage("logo-group")) {
+              currentMap.addImage("logo-group", image);
+            }
+          }
+        );
+        currentMap.loadImage(
+          "images/logo-public.png",
+          (error: any, image: any) => {
+            if (error) throw error;
+            if (!currentMap.hasImage("logo-public")) {
+              currentMap.addImage("logo-public", image);
+            }
+          }
+        );
       });
-      currentMap.loadImage(
-        "images/logo-friend.png",
-        (error: any, image: any) => {
-          if (error) throw error;
-          if (!currentMap.hasImage("logo-friend")) {
-            currentMap.addImage("logo-friend", image);
-          }
-        }
-      );
-      currentMap.loadImage(
-        "images/logo-group.png",
-        (error: any, image: any) => {
-          if (error) throw error;
-          if (!currentMap.hasImage("logo-group")) {
-            currentMap.addImage("logo-group", image);
-          }
-        }
-      );
-      currentMap.loadImage(
-        "images/logo-public.png",
-        (error: any, image: any) => {
-          if (error) throw error;
-          if (!currentMap.hasImage("logo-public")) {
-            currentMap.addImage("logo-public", image);
-          }
-        }
-      );
-    });
 
-    currentMap.on("mouseenter", "unclustered-point", () => {
-      currentMap.getCanvas().style.cursor = "pointer";
-    });
+      currentMap.on("mouseenter", "unclustered-point", () => {
+        currentMap.getCanvas().style.cursor = "pointer";
+      });
 
-    currentMap.on("mouseleave", "unclustered-point", () => {
-      currentMap.getCanvas().style.cursor = "";
-    });
+      currentMap.on("mouseleave", "unclustered-point", () => {
+        currentMap.getCanvas().style.cursor = "";
+      });
 
-    currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
-  }
+      currentMap.on("click", "unclustered-point", handleClickUnclusteredPoint);
+    }
+  }, [map, handleClickUnclusteredPoint]);
 
   const combinedMarkers: FeatureCollection<Point> = {
     type: "FeatureCollection",

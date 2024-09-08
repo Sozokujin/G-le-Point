@@ -51,7 +51,7 @@ export interface Group {
   markers: {
     idMarker: string;
     idUser: string;
-  };
+  }[];
 }
 
 export type Tag = "Points de vue"|"Randonnée et sentiers"|"Espace vert"|"Site sportif"|"Site touristique"|"Site historique"|"Site culturel"|"Loisirs"|"Commerce"|"Transport"|"Restauration"|"Hébergement"|"Service public"|"Espace de santé"|"Autre"

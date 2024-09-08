@@ -2,16 +2,19 @@ import {
   addMarker,
   getFriendsMarkers,
   getGroupsMarkers,
+  getGroupMarkers,
   getPublicMarkers,
   getUserMarkers,
 } from "@/services/firebase/markers";
 import { Marker } from "@/types/index";
+import { group } from "console";
 import { create } from "zustand";
 
 const useMarkerStore = create((set: any, get: any) => ({
   userMarkers: [] as Marker[],
   friendsMarkers: [] as Marker[],
   groupsMarkers: [] as Marker[],
+  groupMarkers: [] as Marker[],
   publicMarkers: [] as Marker[],
   lastMarker: null as Marker | null,
 
@@ -55,7 +58,7 @@ const useMarkerStore = create((set: any, get: any) => ({
     }),
 
   // Méthode pour récupérer les marqueurs utilisateurs avec cache
-  getMarkers: async (userUid: any) => {
+  getMarkers: async (userUid: string) => {
     const { userMarkers, markersLoaded } = get();
 
     // Si les marqueurs utilisateurs ont déjà été chargés, on ne refait pas l'appel
@@ -69,7 +72,7 @@ const useMarkerStore = create((set: any, get: any) => ({
   },
 
   // Méthode pour récupérer les marqueurs amis avec cache
-  getFriendsMarkers: async (userUid: any) => {
+  getFriendsMarkers: async (userUid: string) => {
     const { friendsMarkers, markersLoaded } = get();
 
     if (markersLoaded.friends && friendsMarkers.length > 0) return;
@@ -82,8 +85,18 @@ const useMarkerStore = create((set: any, get: any) => ({
     });
   },
 
+  getGroupMarkers: async (groupId: string) => {
+    const { groupMarkers } = get();
+
+    if (groupMarkers.length > 0) return;
+
+    set({ groupMarkers: [] });
+    const markersData = await getGroupMarkers(groupId);
+    set({groupMarkers: markersData,});
+  },
+
   // Méthode pour récupérer les marqueurs de groupe avec cache
-  getGroupsMarkers: async (userUid: any) => {
+  getGroupsMarkers: async (userUid: string) => {
     const { groupsMarkers, markersLoaded } = get();
 
     if (markersLoaded.groups && groupsMarkers.length > 0) return;
@@ -97,7 +110,7 @@ const useMarkerStore = create((set: any, get: any) => ({
   },
 
   // Méthode pour récupérer les marqueurs publics avec cache
-  getPublicMarkers: async (userUid: any) => {
+  getPublicMarkers: async (userUid: string) => {
     const { publicMarkers, markersLoaded } = get();
 
     if (markersLoaded.public && publicMarkers.length > 0) return;

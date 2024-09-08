@@ -13,13 +13,16 @@ import useUserStore from "@/stores/userStore";
 export const getAllFriends = async () => {
   try {
     const currentUser = useUserStore.getState().currentUser;
-    if (!currentUser) throw new Error("Utilisateur non authentifié");
+    if (!currentUser) {
+      console.error("Utilisateur non authentifié");
+      return [];
+    }
     const usersCollectionRef = collection(db, "users");
     const q = query(usersCollectionRef, where("uid", "==", currentUser.uid));
 
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
-      alert("Utilisateur introuvable");
+      console.error("Utilisateur introuvable");
       return [];
     }
 

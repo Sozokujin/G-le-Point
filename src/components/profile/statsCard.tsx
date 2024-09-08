@@ -9,17 +9,17 @@ import { useEffect } from "react";
 export const StatsCard = () => {
   const markers = useMarkerStore((state) => state.userMarkers);
   const getMarkers = useMarkerStore((state) => state.getMarkers);
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       const loadMarkers = async () => {
-        await getMarkers(user.uid);
+        await getMarkers(currentUser.uid);
       };
 
       loadMarkers();
     }
-  }, [getMarkers, user]);
+  }, [getMarkers, currentUser]);
 
   return (
     <div className="relative overflow-hidden mb-32 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">

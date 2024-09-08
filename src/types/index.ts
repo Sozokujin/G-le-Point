@@ -1,12 +1,16 @@
 //Store types
 export interface UserStore {
-  user: FirebaseUser | null;
-  setUser: (user: FirebaseUser) => void;
-  clearUser: () => void;
+  fetchUsersByIds: any;
+  currentUser: FirebaseUser | null;
+  users: FirebaseUser[];
+  setCurrentUser: (user: FirebaseUser) => void;
+  clearCurrentUser: () => void;
+  setUsers: (users: FirebaseUser[]) => void;
+  clearUsers: () => void;
 }
 
 export interface Marker {
-  id: string;
+  id?: string;
   name: string;
   description: string | null;
   tags: string | null;
@@ -49,3 +53,5 @@ export interface Group {
     idUser: string;
   };
 }
+
+export type Tag = "Points de vue"|"Randonnée et sentiers"|"Espace vert"|"Site sportif"|"Site touristique"|"Site historique"|"Site culturel"|"Loisirs"|"Commerce"|"Transport"|"Restauration"|"Hébergement"|"Service public"|"Espace de santé"|"Autre"

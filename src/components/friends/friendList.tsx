@@ -63,7 +63,7 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
     if (!selectedFriend && friends.length > 0) {
       selectFriend(friends[0]);
     }
-  }, [selectedFriend, getFriends, friends, user, selectFriend]);
+  }, [selectedFriend, getFriends, friends, user, selectFriend]); //FIXME: infinite loop if no friends
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchQuery = event.target.value.toLowerCase();
@@ -89,7 +89,7 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
 
   return (
     <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
-      {/* ^ FIXME: the overflow is broken, find a better solution */}
+      {/* FIXME: the overflow is broken, find a better solution */}
       <div className="w-full flex justify-between">
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />

@@ -103,9 +103,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({
                   <TableHead className="font-bold">Tags</TableHead>
                   <TableHead className="font-bold">Description</TableHead>
                   <TableHead className="font-bold">Adresse</TableHead>
-                  <TableHead className="text-center font-bold w-24">
-                    Actions
-                  </TableHead>
+                  <TableHead className="text-center font-bold w-24">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

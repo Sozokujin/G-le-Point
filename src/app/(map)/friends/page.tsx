@@ -24,9 +24,7 @@ import GroupHeader from "@/components/friends/groups/group-header";
 const Friends = () => {
   const isMobile = useIsMobile();
   // const { friendsMarkers, getFriendsMarkers, groupMarkers, getGroupMarkers } = markerStore(); //FIXME: REFACTO MARKERSTORE !!!!!!
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(
-    null
-  );
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);

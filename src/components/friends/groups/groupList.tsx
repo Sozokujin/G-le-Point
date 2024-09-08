@@ -118,7 +118,7 @@ export const GroupList: React.FC<GroupListProps> = ({onSelectGroupChange}) => {
   );
 };
 
-const GroupLine = ({
+export const GroupLine = ({
   group,
   groupUsers,
   selected,

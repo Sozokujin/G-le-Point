@@ -7,7 +7,7 @@ import useUserStore from "@/stores/userStore";
 import { useEffect } from "react";
 
 export const StatsCard = () => {
-  const markers = useMarkerStore((state) => state.markers);
+  const markers = useMarkerStore((state) => state.userMarkers);
   const getMarkers = useMarkerStore((state) => state.getMarkers);
   const { currentUser } = useUserStore();
 

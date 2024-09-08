@@ -1,42 +1,156 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
-import { Marker } from "@/types/index";
-
+import { Group, Marker } from "@/types/index";
+import {
+  addDoc,
+  arrayRemove,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
 export const addMarker = async (marker: Marker) => {
-    const markersCollectionRef = collection(db, "markers");
-    await addDoc(markersCollectionRef, marker);
-  };
+  const markersCollectionRef = collection(db, "markers");
+  await addDoc(markersCollectionRef, marker);
+};
 
-  export const getMarkers = async (userUid: string) => {
-    const markersCollectionRef = collection(db, "markers");
-    const querry = query(markersCollectionRef, where("user.uid", "==", userUid));
-    const querySnapshot = await getDocs(querry);
-    return querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }) as Marker);
-  };
+export const getUserMarkers = async (userUid: any) => {
+  const markersCollectionRef = collection(db, "markers");
+  const querry = query(markersCollectionRef, where("user.uid", "==", userUid));
+  const querySnapshot = await getDocs(querry);
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+};
 
-  export const getFriendsMarkers = async (userUid: string) => {
-    const markersCollectionRef = collection(db, "markers");
-    const userCollectionRef = collection(db, "users");
+export const getFriendsMarkers = async (userUid: any) => {
+  const markersCollectionRef = collection(db, "markers");
+  const userCollectionRef = collection(db, "users");
 
-    const userDocSnapshot = await getDocs(userCollectionRef);
+  const userDocSnapshot = await getDocs(userCollectionRef);
 
-    const friends: [] = userDocSnapshot.docs
-      .map((doc) => doc.data())
-      .find((user) => user.uid === userUid)?.friends;
+  const friends: [] = userDocSnapshot.docs
+    .map((doc) => doc.data())
+    .find((user) => user.uid === userUid)?.friends;
 
-    if (!friends || friends.length == 0) return [];
+  if (!friends || friends.length == 0) return [];
 
-    const querry = query(
-      markersCollectionRef,
-      where("user.uid", "in", friends)
-    );
-    const querySnapshot = await getDocs(querry);
-    return querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }) as Marker);
-  };
+  const querry = query(
+    markersCollectionRef,
+    where("user.uid", "in", friends),
+    where("visibiltyStatus", "==", "friends")
+  );
+  const querySnapshot = await getDocs(querry);
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+};
+
+export const getGroupsMarkers = async (userUid: string) => {
+  const markersCollectionRef = collection(db, "markers");
+  const groupCollectionRef = collection(db, "groups");
+
+  const groupDocSnapshot = await getDocs(groupCollectionRef);
+
+  const userGroups = groupDocSnapshot.docs
+    .map((doc) => doc.data())
+    .filter((group) => group.members.includes(userUid))
+    .flatMap((group) => group.markers)
+    .filter((marker) => marker !== undefined && marker.idUser !== userUid);
+
+  if (!userGroups || userGroups.length === 0) return [];
+
+  const chunkSize = 10;
+  const markers = [];
+
+  for (let i = 0; i < userGroups.length; i += chunkSize) {
+    const chunk = userGroups
+      .slice(i, i + chunkSize)
+      .map((marker) => marker.idMarker);
+    if (chunk.length > 0) {
+      const markersQuery = query(
+        markersCollectionRef,
+        where("id", "in", chunk),
+        where("visibiltyStatus", "==", "groups")
+      );
+      const querySnapshot = await getDocs(markersQuery);
+      markers.push(
+        ...querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+      );
+    }
+  }
+
+  return markers;
+};
+
+export const getPublicMarkers = async (userUid: string) => {
+  const markersCollectionRef = collection(db, "markers");
+  const querry = query(
+    markersCollectionRef,
+    where("visibiltyStatus", "==", "public")
+  );
+  const querySnapshot = await getDocs(querry);
+
+  // Filter out markers from the current user in the code
+  return querySnapshot.docs
+    .map((doc) => ({ ...(doc.data() as Marker), id: doc.id }))
+    .filter((marker) => marker.user.uid !== userUid);
+};
+
+export const addMarkerGroup = async (
+  markerId: string,
+  groups: Group[],
+  userId: string
+) => {
+  for (const group of groups) {
+    const groupDocRef = doc(db, "groups", group.id);
+
+    await updateDoc(groupDocRef, {
+      markers: arrayUnion({
+        idMarker: markerId,
+        idUser: userId,
+      }),
+    });
+  }
+};
+
+export const addLike = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentLikeCount = markerData.likeCount;
+
+    await updateDoc(markerDocRef, {
+      likedBy: arrayUnion(userId),
+      likeCount: currentLikeCount + 1,
+    });
+  }
+};
+
+export const removeLike = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentLikeCount = markerData.likeCount;
+
+    await updateDoc(markerDocRef, {
+      likedBy: arrayRemove(userId),
+      likeCount: currentLikeCount - 1,
+    });
+  }
+};

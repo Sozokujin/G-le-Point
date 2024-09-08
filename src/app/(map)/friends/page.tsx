@@ -14,7 +14,7 @@ import {
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
 import {  useState } from "react";
-import { getMarkers } from "@/services/firebase/markers";
+import { getFriendsMarkers, getGroupsMarkers } from "@/services/firebase/markers";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MarkerList } from "@/components/marker/marker-list";
 import { Separator } from "@/components/ui/separator";
@@ -31,7 +31,7 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedGroup(null);
     setSelectedFriend(friend);
-    setDisplayMarkers(await getMarkers(friend.uid));
+    setDisplayMarkers(await getFriendsMarkers(friend.uid));
     if (isInitialLoad) {// je trouve pas mieux
       setIsInitialLoad(false);
       return;
@@ -43,7 +43,7 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedFriend(null);
     setSelectedGroup(group);
-    setDisplayMarkers(await getMarkers(group.id));
+    setDisplayMarkers(await getGroupsMarkers(group.id));
     setDrawerOpen(true);
   }
 

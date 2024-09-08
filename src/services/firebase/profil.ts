@@ -56,11 +56,9 @@ export const getBio = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let bio = "";
     querySnapshot.forEach((doc) => {
-      console.log(doc.data().bio);
       bio = doc.data().bio;
     });
     return bio;
@@ -72,7 +70,6 @@ export const getUsername = async (user: string): Promise<string> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
   const querySnapshot = await getDocs(currentUserQuery);
-  console.log(querySnapshot);
   if (!querySnapshot.empty) {
     let username = "";
     querySnapshot.forEach((doc) => {
@@ -85,7 +82,7 @@ export const getUsername = async (user: string): Promise<string> => {
 
 export const deleteAccount = async () => {
   const user = auth.currentUser;
-  const { clearUser } = useUserStore.getState();
+  const { clearCurrentUser } = useUserStore.getState();
 
   if (!user) {
     toast("Vous devez être connecté pour supprimer votre compte.");
@@ -202,7 +199,7 @@ export const deleteAccount = async () => {
 
     // Logout user
     await signOut(auth);
-    clearUser();
+    clearCurrentUser();
     fetch("/api/logout");
     window.location.href = "/?account=deleted";
   } catch (error) {

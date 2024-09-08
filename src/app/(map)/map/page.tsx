@@ -14,15 +14,12 @@ import Map, { GeolocateControl, Layer, MapRef, Source } from "react-map-gl";
 import classes from "../../Page.module.css";
 
 export default function Home() {
-  const { user } = useUserStore();
-
+  const { currentUser } = useUserStore();
   const [modalMarker, setModalMarker] = useState<any>(null);
   const [showFriends, setShowFriends] = useState(true);
   const [showGroups, setShowGroups] = useState(true);
   const [showPublic, setShowPublic] = useState(true);
-
   const map = useRef<MapRef | null>(null);
-
   const {
     userMarkers,
     friendsMarkers,
@@ -37,13 +34,13 @@ export default function Home() {
   } = useMarkerStore();
 
   useEffect(() => {
-    if (user && user.uid) {
-      getMarkers(user.uid);
-      getFriendsMarkers(user.uid);
-      getGroupsMarkers(user.uid);
-      getPublicMarkers(user.uid);
+    if (currentUser && currentUser.uid) {
+      getMarkers(currentUser.uid);
+      getFriendsMarkers(currentUser.uid);
+      getGroupsMarkers(currentUser.uid);
+      getPublicMarkers(currentUser.uid);
     }
-  }, [user, getFriendsMarkers, getMarkers, getGroupsMarkers]);
+  }, [currentUser, getFriendsMarkers, getMarkers, getGroupsMarkers]);
 
   const handleClickUnclusteredPoint = (e: any) => {
     const features = e.features[0];

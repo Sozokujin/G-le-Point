@@ -12,7 +12,8 @@ import { useFriendStore } from "@/stores/friendStore";
 import { FirebaseUser } from "@/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { SelectableFriendLine } from "../friendList";
+import { FriendLine } from "../friendList";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 export const ModalCreateGroup = () => {
   const { friends, getFriends } = useFriendStore();
@@ -21,7 +22,7 @@ export const ModalCreateGroup = () => {
     if (friends.length === 0) {
       getFriends();
     }
-  }, [getFriends]);
+  }, [getFriends, friends.length]);
 
   const [selectedFriends, setSelectedFriends] = useState<FirebaseUser[]>([]); // Gère la sélection des amis
   const [groupName, setGroupName] = useState<string>("");
@@ -37,7 +38,6 @@ export const ModalCreateGroup = () => {
   };
 
   useEffect(() => {
-    console.log("Amis :", selectedFriends);
   }, [selectedFriends]);
 
   const createGroupHandler = async () => {
@@ -54,7 +54,9 @@ export const ModalCreateGroup = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="btn btn-primary">Créer un groupe</Button>
+          <Button className="px-0 w-10 h-10 rounded-full">
+            <PlusCircleIcon className="h-6 w-6" />
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <div className="flex flex-col gap-2">
@@ -72,7 +74,7 @@ export const ModalCreateGroup = () => {
             <ul>
               {friends.length !== 0 ? (
                 friends.map((friend, index) => (
-                  <SelectableFriendLine
+                  <FriendLine
                     key={index}
                     friend={friend}
                     selected={selectedFriends.includes(friend)}

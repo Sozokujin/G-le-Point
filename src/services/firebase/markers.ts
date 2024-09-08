@@ -49,7 +49,7 @@ export const getFriendsMarkers = async (userUid: any) => {
   return querySnapshot.docs.map((doc) => ({
     ...doc.data(),
     id: doc.id,
-  }));
+  })) as Marker[];
 };
 
 export const getGroupsMarkers = async (userUid: string) => {
@@ -89,7 +89,7 @@ export const getGroupsMarkers = async (userUid: string) => {
     }
   }
 
-  return markers;
+  return markers as Marker[];
 };
 
 export const getPublicMarkers = async (userUid: string) => {

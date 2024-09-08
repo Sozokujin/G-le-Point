@@ -15,7 +15,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast, Toaster } from "sonner";
-import { SelectableGroupLine } from "./friends/groups/groupList";
+import { GroupLine } from "./friends/groups/groupList";
 import AutocompleteMapbox from "./map/autocompleteMapbox";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -29,7 +29,7 @@ import {
 } from "./ui/select";
 
 const ModalCreateMarker = () => {
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
   const { addMarker } = useMarkerStore();
   const { groups, getGroups } = useGroupStore();
 
@@ -91,7 +91,7 @@ const ModalCreateMarker = () => {
   const addMarkerCommon = useCallback(
     (latitude: number, longitude: number, address = "") => {
       const idMarker = Math.random().toString(36).substring(2, 9);
-      if (user?.uid && user?.displayName) {
+      if (currentUser?.uid && currentUser?.displayName) {
         addMarker({
           id: idMarker,
           name: pointNameRef.current?.value || "Point",
@@ -103,15 +103,15 @@ const ModalCreateMarker = () => {
           visibiltyStatus: pointVisibility,
           createdAt: Date.now(),
           user: {
-            uid: user.uid,
-            username: user.username,
+            uid: currentUser.uid,
+            username: currentUser.username,
           },
           likeCount: 0,
           likedBy: [],
         });
       }
-      if (selectedGroups.length > 0 && user?.uid) {
-        addMarkerGroup(idMarker, selectedGroups, user.uid);
+      if (selectedGroups.length > 0 && currentUser?.uid) {
+        addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
       }
       setPointVisibility(null);
       setSelectedTag(null);
@@ -119,7 +119,7 @@ const ModalCreateMarker = () => {
       toast("Point ajouté avec succès");
     },
 
-    [user, selectedTag, pointVisibility, addMarker]
+    [currentUser, selectedTag, pointVisibility, addMarker]
   );
 
   const addMarkerWithCurrentLocation = () => {
@@ -202,9 +202,10 @@ const ModalCreateMarker = () => {
             <span>Partager le point avec vos groupes</span>
             <div className="overflow-y-auto max-h-28">
               {groups.map((group) => (
-                <SelectableGroupLine
+                <GroupLine
                   key={group.id}
                   group={group}
+                  groupUsers={[]}
                   selected={selectedGroups.includes(group)}
                   onSelect={() => toggleGroupSelection(group)}
                 />

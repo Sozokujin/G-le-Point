@@ -10,24 +10,24 @@ import { Badge } from "./ui/badge";
 import { Textarea } from "./ui/textarea";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
-  const { user } = useUserStore();
+  const { currentUser } = useUserStore();
 
   const [likeCount, setLikeCount] = useState(marker.likeCount || 0);
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    if (marker.likedBy && marker.likedBy.includes(user?.uid)) {
+    if (marker.likedBy && marker.likedBy.includes(currentUser?.uid)) {
       setLiked(true);
     }
-  }, [marker.likedBy, user]);
+  }, [marker.likedBy, currentUser]);
 
   const handleLike = () => {
     if (!liked) {
-      addLike(marker.id, user?.uid ?? "");
+      addLike(marker.id, currentUser?.uid ?? "");
       setLikeCount(likeCount + 1);
       setLiked(true);
     } else {
-      removeLike(marker.id, user?.uid ?? "");
+      removeLike(marker.id, currentUser?.uid ?? "");
       setLikeCount(likeCount - 1);
       setLiked(false);
     }

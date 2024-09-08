@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -35,9 +34,14 @@ export const ModalListFriendRequest = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Badge className="bg-glp-green text-white absolute right-8 top-4 cursor-pointer">
-          Demandes d&apos;amis {friendRequests.length}
-        </Badge>
+        <Button className="relative w-fit">
+          Demandes d&apos;amis
+          {friendRequests.length > 0 && (
+            <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2">
+              {friendRequests.length}
+            </div>
+          )}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <ul className="flex gap-3"></ul>

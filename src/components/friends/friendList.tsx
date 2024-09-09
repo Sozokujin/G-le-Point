@@ -27,23 +27,33 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
   const [showPopupCopy, setShowPopupCopy] = useState(false);
 
   const selectFriend = useCallback(
-    (friend: FirebaseUser) => {
+    (friend: FirebaseUser | null) => {
       setSelectedFriend(friend);
       if (onSelectedFriendChange) {
-        onSelectedFriendChange(friend);
+        onSelectedFriendChange(friend as FirebaseUser);
       }
     },
     [onSelectedFriendChange, setSelectedFriend]
   );
 
   useEffect(() => {
+    console.log('HEY 1 !!!!!');
     if (user) {
       getFriends();
       getInvitationCode();
     }
-  }, [user, getFriends, getInvitationCode]);
+
+    if (friends.length > 0) {
+      selectFriend(friends[0]);
+    } else {
+      selectFriend(null);
+      console.log('selectedFriend', selectedFriend);
+    }
+
+  }, [user, getFriends, getInvitationCode, friends.length]); //DO NOT ADD selectFriend OR friends DEPENDENCIES (infinte loop)
 
   useEffect(() => {
+    console.log('HEY 2 !!!!!');
     if (!selectedFriend && friends.length > 0) {
       selectFriend(friends[0]);
     }

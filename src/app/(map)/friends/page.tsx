@@ -34,7 +34,11 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedGroup(null);
     setSelectedFriend(friend);
-    setDisplayMarkers(await getUserMarkers(friend.uid));
+    if (friend) {
+      setDisplayMarkers(await getUserMarkers(friend.uid));
+    } else {
+      setDisplayMarkers([]);
+    }
     if (isInitialLoad) {
       // je trouve pas mieux
       setIsInitialLoad(false);
@@ -93,6 +97,7 @@ const Friends = () => {
             {selectedFriend && (
               <FriendHeader
                 className="m-4 bg-slate-100"
+                friendId={selectedFriend?.uid}
                 name={selectedFriend?.displayName}
                 email={selectedFriend?.email}
                 photoUrl={selectedFriend?.photoURL}
@@ -108,6 +113,7 @@ const Friends = () => {
         <section className="sm:w-7/12 sm:flex flex-col hidden h-full bg-white rounded shadow p-2">
           {selectedFriend && (
             <FriendHeader
+              friendId={selectedFriend?.uid}
               className="mb-4 bg-slate-100"
               name={selectedFriend?.displayName}
               email={selectedFriend?.email}

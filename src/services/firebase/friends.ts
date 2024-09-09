@@ -6,11 +6,13 @@ import {
   addDoc,
   doc,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
+import { useFriendStore } from "@/stores/friendStore";
 export const getAllFriends = async () => {
   try {
     const currentUser = useUserStore.getState().currentUser;
@@ -136,6 +138,8 @@ export const acceptFriendRequest = async (from: string) => {
   await updateDoc(friendUserDocRef, {
     friends: arrayUnion(currentUser.uid),
   });
+
+  useFriendStore.getState().clearFriends();
 };
 
 export const declineFriendRequest = async (from: string) => {
@@ -159,8 +163,47 @@ export const declineFriendRequest = async (from: string) => {
   await updateDoc(doc(friendRequestsCollectionRef, docId), {
     status: "declined",
   });
-}
+};
 
+export const unfriend = async (friendId: string) => {
+  const currentUser = useUserStore.getState().currentUser;
+
+  if (!currentUser?.uid) return;
+
+  const usersCollectionRef = collection(db, "users");
+
+  const currentUserQuery = query(usersCollectionRef, where("uid", "==", currentUser.uid));
+  const currentUserSnapshot = await getDocs(currentUserQuery);
+
+  let currentUserDocRef;
+  if (!currentUserSnapshot.empty) {
+    currentUserDocRef = doc(usersCollectionRef, currentUserSnapshot.docs[0].id);
+  } else {
+    console.error("Aucun document trouvé pour l'utilisateur actuel.");
+    return;
+  }
+
+  const friendUserQuery = query(usersCollectionRef, where("uid", "==", friendId));
+  const friendUserSnapshot = await getDocs(friendUserQuery);
+
+  let friendUserDocRef;
+  if (!friendUserSnapshot.empty) {
+    friendUserDocRef = doc(usersCollectionRef, friendUserSnapshot.docs[0].id);
+  } else {
+    console.error("Aucun document trouvé pour l'ami.");
+    return;
+  };
+
+  await updateDoc(currentUserDocRef, {
+    friends: arrayRemove(friendId),
+  });
+
+  await updateDoc(friendUserDocRef, {
+    friends: arrayRemove(currentUser.uid),
+  });
+
+  useFriendStore.getState().clearFriends();
+};
 
 export const getInvitationCode = async () => {
   const currentUser = useUserStore.getState().currentUser;

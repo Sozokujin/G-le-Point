@@ -5,6 +5,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -16,6 +17,27 @@ import {
 export const addMarker = async (marker: Marker) => {
   const markersCollectionRef = collection(db, "markers");
   await addDoc(markersCollectionRef, marker);
+};
+
+export const deleteMarker = async (markerId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+
+  await deleteDoc(markerDocRef);
+
+  const groupsCollectionRef = collection(db, "groups");
+  const q = query(
+    groupsCollectionRef,
+    where("markers", "array-contains", markerId)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach(async (groupDoc) => {
+    const groupDocRef = doc(db, "groups", groupDoc.id);
+    await updateDoc(groupDocRef, {
+      markers: arrayRemove(markerId),
+    });
+  });
 };
 
 export const getUserMarkers = async (userUid: any) => {
@@ -151,6 +173,36 @@ export const removeLike = async (markerId: string, userId: string) => {
     await updateDoc(markerDocRef, {
       likedBy: arrayRemove(userId),
       likeCount: currentLikeCount - 1,
+    });
+  }
+};
+
+export const addReport = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentReportCount = markerData.reportCount;
+
+    await updateDoc(markerDocRef, {
+      reportedBy: arrayUnion(userId),
+      reportCount: currentReportCount + 1,
+    });
+  }
+};
+
+export const removeReport = async (markerId: string, userId: string) => {
+  const markerDocRef = doc(db, "markers", markerId);
+  const markerDoc = await getDoc(markerDocRef);
+
+  if (markerDoc.exists()) {
+    const markerData = markerDoc.data();
+    const currentReportCount = markerData.reportCount;
+
+    await updateDoc(markerDocRef, {
+      reportedBy: arrayRemove(userId),
+      reportCount: currentReportCount - 1,
     });
   }
 };

@@ -1,9 +1,14 @@
 import {
+  addLike,
   addMarker,
+  addReport,
+  deleteMarker,
   getFriendsMarkers,
   getGroupsMarkers,
   getPublicMarkers,
   getUserMarkers,
+  removeLike,
+  removeReport,
 } from "@/services/firebase/markers";
 import { Marker } from "@/types/index";
 import { create } from "zustand";
@@ -14,6 +19,8 @@ const useMarkerStore = create((set: any, get: any) => ({
   groupsMarkers: [] as Marker[],
   publicMarkers: [] as Marker[],
   lastMarker: null as Marker | null,
+  likedMarkers: new Set() as Set<string>,
+  reportedMarkers: new Set() as Set<string>,
 
   // Ajout d'une propriété pour gérer le cache
   markersLoaded: {
@@ -96,7 +103,6 @@ const useMarkerStore = create((set: any, get: any) => ({
     });
   },
 
-  // Méthode pour récupérer les marqueurs publics avec cache
   getPublicMarkers: async (userUid: any) => {
     const { publicMarkers, markersLoaded } = get();
 
@@ -104,11 +110,71 @@ const useMarkerStore = create((set: any, get: any) => ({
 
     set({ publicMarkers: [] });
     const markersData = await getPublicMarkers(userUid);
-    console.log(markersData);
     set({
       publicMarkers: markersData,
       markersLoaded: { ...markersLoaded, public: true },
     });
+  },
+
+  deleteMarker: async (markerId: string) => {
+    if (markerId) {
+      await deleteMarker(markerId);
+      set((state: any) => ({
+        userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId),
+      }));
+    }
+  },
+
+  toggleLikeMarker: async (markerId: string, userId: string) => {
+    const state = get();
+    const updatedMarkers = state.userMarkers.map((marker: Marker) => {
+      if (marker.id === markerId) {
+        if (marker.likedBy.includes(userId)) {
+          marker.likeCount -= 1;
+          marker.likedBy = marker.likedBy.filter((id) => id !== userId);
+        } else {
+          marker.likeCount += 1;
+          marker.likedBy.push(userId);
+        }
+      }
+      return marker;
+    });
+
+    set({ userMarkers: updatedMarkers });
+
+    const marker = updatedMarkers.find((m: any) => m.id === markerId);
+    if (marker && marker.likedBy.includes(userId)) {
+      await addLike(markerId, userId);
+    } else {
+      await removeLike(markerId, userId);
+    }
+  },
+
+  toggleReportMarker: async (markerId: string, userId: string) => {
+    const state = get();
+    const updatedMarkers = state.userMarkers.map((marker: Marker) => {
+      if (marker.id === markerId) {
+        if (marker.reportedBy.includes(userId)) {
+          marker.reportCount -= 1;
+          marker.reportedBy = marker.reportedBy.filter((id) => id !== userId);
+        } else {
+          marker.reportCount += 1;
+          marker.reportedBy.push(userId);
+        }
+      }
+      return marker;
+    });
+
+    set({
+      userMarkers: updatedMarkers,
+    });
+
+    const marker = updatedMarkers.find((m: any) => m.id === markerId);
+    if (marker && marker.reportedBy.includes(userId)) {
+      await addReport(markerId, userId);
+    } else {
+      await removeReport(markerId, userId);
+    }
   },
 }));
 

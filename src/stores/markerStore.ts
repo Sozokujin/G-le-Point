@@ -13,27 +13,46 @@ import {
 import { Marker } from "@/types/index";
 import { create } from "zustand";
 
-const useMarkerStore = create((set: any, get: any) => ({
-  userMarkers: [] as Marker[],
-  friendsMarkers: [] as Marker[],
-  groupsMarkers: [] as Marker[],
-  publicMarkers: [] as Marker[],
-  lastMarker: null as Marker | null,
-  likedMarkers: new Set() as Set<string>,
-  reportedMarkers: new Set() as Set<string>,
+export interface MarkerState {
+  userMarkers: Marker[];
+  friendsMarkers: Marker[];
+  groupsMarkers: Marker[];
+  publicMarkers: Marker[];
+  lastMarker: Marker | null;
+  likedMarkers: string[];
+  reportedMarkers: string[];
+  addMarker: (marker: Marker) => void;
+  addClickedMarker: (marker: Marker) => void;
+  clearLastMarker: () => void;
+  removeMarker: (marker: Marker) => void;
+  clearUserMarkers: () => void;
+  clearFriendsMarkers: () => void;
+  clearGroupsMarkers: () => void;
+  clearPublicMarkers: () => void;
+  getMarkers: (userUid: string) => void;
+  getFriendsMarkers: (userUid: string) => void;
+  getGroupsMarkers: (userUid: string) => void;
+  getPublicMarkers: (userUid: string) => void;
+  deleteMarker: (markerId: string) => void;
+  toggleLikeMarker: (markerId: string, userId: string) => void;
+  toggleReportMarker: (markerId: string, userId: string) => void;
+}
 
-  // Ajout d'une propriété pour gérer le cache
-  markersLoaded: {
-    user: false,
-    friends: false,
-    groups: false,
-    public: false,
-  },
+export const useMarkerStore = create<MarkerState>((set, get) => ({
+  userMarkers: [],
+  friendsMarkers: [],
+  groupsMarkers: [],
+  publicMarkers: [],
+  lastMarker: null,
+  likedMarkers: [],
+  reportedMarkers: [],
 
   addMarker: async (marker: Marker) => {
     await addMarker(marker);
-    set((state: any) => ({ userMarkers: [...state.userMarkers, marker] }));
-    set({ lastMarker: marker });
+    set((state: MarkerState) => ({
+      userMarkers: [...state.userMarkers, marker],
+      lastMarker: marker,
+    }));
   },
 
   addClickedMarker: (marker: Marker) => set({ lastMarker: marker }),
@@ -41,88 +60,40 @@ const useMarkerStore = create((set: any, get: any) => ({
   clearLastMarker: () => set({ lastMarker: null }),
 
   removeMarker: (marker: Marker) =>
-    set((state: any) => ({
+    set((state: MarkerState) => ({
       userMarkers: state.userMarkers.filter((m: Marker) => m.id !== marker.id),
     })),
 
-  clearUserMarkers: () =>
-    set({
-      userMarkers: [],
-      markersLoaded: { ...get().markersLoaded, user: false },
-    }),
-  clearFriendsMarkers: () =>
-    set({
-      friendsMarkers: [],
-      markersLoaded: { ...get().markersLoaded, friends: false },
-    }),
-  clearGroupsMarkers: () =>
-    set({
-      groupsMarkers: [],
-      markersLoaded: { ...get().markersLoaded, groups: false },
-    }),
+  clearUserMarkers: () => set({ userMarkers: [] }),
+  clearFriendsMarkers: () => set({ friendsMarkers: [] }),
+  clearGroupsMarkers: () => set({ groupsMarkers: [] }),
+  clearPublicMarkers: () => set({ publicMarkers: [] }),
 
-  // Méthode pour récupérer les marqueurs utilisateurs avec cache
-  getMarkers: async (userUid: any) => {
-    const { userMarkers, markersLoaded } = get();
-
-    // Si les marqueurs utilisateurs ont déjà été chargés, on ne refait pas l'appel
-    if (markersLoaded.user && userMarkers.length > 0) return;
-
-    const markersData = await getUserMarkers(userUid);
-    set({
-      userMarkers: markersData,
-      markersLoaded: { ...markersLoaded, user: true },
-    });
+  getMarkers: async (userUid: string) => {
+    const userMarkers = await getUserMarkers(userUid);
+    set({ userMarkers });
   },
 
-  // Méthode pour récupérer les marqueurs amis avec cache
-  getFriendsMarkers: async (userUid: any) => {
-    const { friendsMarkers, markersLoaded } = get();
-
-    if (markersLoaded.friends && friendsMarkers.length > 0) return;
-
-    set({ friendsMarkers: [] }); // Optionnel, permet de réinitialiser les marqueurs précédents avant l'appel
-    const markersData = await getFriendsMarkers(userUid);
-    set({
-      friendsMarkers: markersData,
-      markersLoaded: { ...markersLoaded, friends: true },
-    });
+  getFriendsMarkers: async (userUid: string) => {
+    const friendsMarkers = await getFriendsMarkers(userUid);
+    set({ friendsMarkers });
   },
 
-  // Méthode pour récupérer les marqueurs de groupe avec cache
-  getGroupsMarkers: async (userUid: any) => {
-    const { groupsMarkers, markersLoaded } = get();
-
-    if (markersLoaded.groups && groupsMarkers.length > 0) return;
-
-    set({ groupsMarkers: [] });
-    const markersData = await getGroupsMarkers(userUid);
-    set({
-      groupsMarkers: markersData,
-      markersLoaded: { ...markersLoaded, groups: true },
-    });
+  getGroupsMarkers: async (userUid: string) => {
+    const groupsMarkers = await getGroupsMarkers(userUid);
+    set({ groupsMarkers });
   },
 
-  getPublicMarkers: async (userUid: any) => {
-    const { publicMarkers, markersLoaded } = get();
-
-    if (markersLoaded.public && publicMarkers.length > 0) return;
-
-    set({ publicMarkers: [] });
-    const markersData = await getPublicMarkers(userUid);
-    set({
-      publicMarkers: markersData,
-      markersLoaded: { ...markersLoaded, public: true },
-    });
+  getPublicMarkers: async (userUid: string) => {
+    const publicMarkers = await getPublicMarkers(userUid);
+    set({ publicMarkers });
   },
 
   deleteMarker: async (markerId: string) => {
-    if (markerId) {
-      await deleteMarker(markerId);
-      set((state: any) => ({
-        userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId),
-      }));
-    }
+    await deleteMarker(markerId);
+    set((state: any) => ({
+      userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId),
+    }));
   },
 
   toggleLikeMarker: async (markerId: string, userId: string) => {
@@ -142,7 +113,7 @@ const useMarkerStore = create((set: any, get: any) => ({
 
     set({ userMarkers: updatedMarkers });
 
-    const marker = updatedMarkers.find((m: any) => m.id === markerId);
+    const marker = updatedMarkers.find((m: Marker) => m.id === markerId);
     if (marker && marker.likedBy.includes(userId)) {
       await addLike(markerId, userId);
     } else {
@@ -165,11 +136,9 @@ const useMarkerStore = create((set: any, get: any) => ({
       return marker;
     });
 
-    set({
-      userMarkers: updatedMarkers,
-    });
+    set({ userMarkers: updatedMarkers });
 
-    const marker = updatedMarkers.find((m: any) => m.id === markerId);
+    const marker = updatedMarkers.find((m: Marker) => m.id === markerId);
     if (marker && marker.reportedBy.includes(userId)) {
       await addReport(markerId, userId);
     } else {

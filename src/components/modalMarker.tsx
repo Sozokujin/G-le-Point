@@ -1,3 +1,4 @@
+import { debounce } from "@/lib/utils";
 import useMarkerStore from "@/stores/markerStore";
 import useUserStore from "@/stores/userStore";
 import {
@@ -73,7 +74,7 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
           <Badge className="text-md">{currentMarker.tags}</Badge>
           <div>
             <Badge
-              onClick={handleLike}
+              onClick={debounce(() => handleLike())}
               className={`text-md bg-white border-glp-green cursor-pointer`}
             >
               {liked ? (
@@ -86,7 +87,7 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
               </span>
             </Badge>
             <Badge
-              onClick={handleReport}
+              onClick={debounce(() => handleReport())}
               className="text-md bg-white border-red-500 cursor-pointer"
             >
               {reported ? (

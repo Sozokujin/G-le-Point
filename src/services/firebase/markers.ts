@@ -47,7 +47,7 @@ export const getUserMarkers = async (userUid: any) => {
   return querySnapshot.docs.map((doc) => ({
     ...doc.data(),
     id: doc.id,
-  }));
+  })) as Marker[];
 };
 
 export const getFriendsMarkers = async (userUid: any) => {

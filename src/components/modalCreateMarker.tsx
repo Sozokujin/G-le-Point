@@ -108,6 +108,8 @@ const ModalCreateMarker = () => {
           },
           likeCount: 0,
           likedBy: [],
+          reportCount: 0,
+          reportedBy: [],
         });
       }
       if (selectedGroups.length > 0 && currentUser?.uid) {

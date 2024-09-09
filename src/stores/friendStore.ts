@@ -6,11 +6,9 @@ interface FriendState {
     friends: FirebaseUser[];
     friendRequests: any[];
     invitationCode: string | null;
-    selectedFriend: FirebaseUser | null;
     filteredFriends: FirebaseUser[];
     getFriends: () => Promise<void>;
     getFriendRequests: () => Promise<void>;
-    setSelectedFriend: (friend: FirebaseUser | null) => void;
     setFilteredFriends: (friends: FirebaseUser[]) => void;
     addFriend: (friend: FirebaseUser) => void;
     removeFriend: (friendId: string) => void;
@@ -23,7 +21,6 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     friends: [],
     friendRequests: [],
     invitationCode: null,
-    selectedFriend: null,
     filteredFriends: [],
     getFriends: async () => {
         const fetchedFriends = await getAllFriends();
@@ -31,9 +28,8 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     },
     getFriendRequests: async () => {
         const fetchedRequests = await getFriendRequests();
-        set({ friendRequests: fetchedRequests });
+        if (fetchedRequests) set({ friendRequests: fetchedRequests });
     },
-    setSelectedFriend: (friend) => set({ selectedFriend: friend }),
     setFilteredFriends: (friends) => set({ filteredFriends: friends }),
     addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend] })),
     removeFriend: (friendId) => set((state) => ({

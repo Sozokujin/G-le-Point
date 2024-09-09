@@ -67,7 +67,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({
                     )}
                     {marker.address && (
                       <div className="text-sm text-slate-400 truncate">
-                        {marker.address}
+                        {marker.address || marker.latitude + " , " + marker.longitude}
                       </div>
                     )}
                   </div>
@@ -126,7 +126,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({
                       {marker.description || "Aucune description"}
                     </TableCell>
                     <TableCell className="text-slate-400 truncate">
-                      {marker.address || "Aucune adresse"}
+                      {marker.address || marker.latitude + " , " + marker.longitude}
                     </TableCell>
                     <TableCell className="text-center w-24">
                       <Button

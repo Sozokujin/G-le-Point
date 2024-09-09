@@ -66,7 +66,10 @@ export const sendFriendRequest = async (invitationCode: string | undefined) => {
 export const getFriendRequests = async () => {
     const currentUser = useUserStore.getState().currentUser;
     const friendRequestsCollectionRef = collection(db, "friendRequests");
-    if(!currentUser) return [];
+  if (!currentUser) {
+    console.error("Utilisateur non authentifié");
+    return null;
+  }
     const q = query(friendRequestsCollectionRef, where("to", "==", currentUser.uid), where("status", "==", "pending"));
 
     const querySnapshot = await getDocs(q);

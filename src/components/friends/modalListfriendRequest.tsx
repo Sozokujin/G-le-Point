@@ -12,12 +12,16 @@ import { useFriendStore } from "@/stores/friendStore";
 import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import useUserStore from "@/stores/userStore";
+
 export const ModalListFriendRequest = () => {
   const { friendRequests, getFriendRequests } = useFriendStore();
+  const user = useUserStore((state) => state.currentUser);
 
   useEffect(() => { //XXX: maybe fetch from store and refresh the page for new requests
+    if(!user) return;
     getFriendRequests();
-  }, [getFriendRequests]);
+  }, [getFriendRequests, user]);
 
   return (
     <Dialog>

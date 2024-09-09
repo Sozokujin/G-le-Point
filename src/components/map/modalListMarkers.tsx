@@ -27,7 +27,7 @@ export const ModalListMarkers = () => {
         {UserMarkers.length > 0 ? (
           <ul className="flex flex-col gap-4 max-h-96 overflow-y-auto">
             {UserMarkers.map((userMarker: any, i) => (
-              <li className="border p-4">
+              <li key={userMarker.id} className="border p-4">
                 <p>{userMarker.name}</p>
                 <p>
                   {userMarker.latitude}

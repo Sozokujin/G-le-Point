@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
+import { FirebaseUser } from "@/types";
 export const getAllFriends = async () => {
   try {
     const currentUser = useUserStore.getState().currentUser;
@@ -33,7 +34,7 @@ export const getAllFriends = async () => {
     const querySnapshot2 = await getDocs(q2);
 
     const friends = querySnapshot2.docs.map((doc) => doc.data());
-    return friends;
+    return friends as FirebaseUser[];
   } catch (error) {
     console.error('Error fetching friends:', error);
     return [];

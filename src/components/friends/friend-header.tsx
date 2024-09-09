@@ -43,7 +43,7 @@ export default function FriendHeader({ name = 'No Name', email = 'No Email', pho
         <DropdownMenuContent align="end">
           <DropdownMenuItem>Signaler</DropdownMenuItem>
           <Separator className="my-1" />
-          <DropdownMenuItem>Supprimer l&apos;aims</DropdownMenuItem>
+          <DropdownMenuItem>Supprimer l&apos;amis</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

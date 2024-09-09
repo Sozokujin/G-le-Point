@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +9,6 @@ import {
   MagnifyingGlassIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
-import { getInvitationCode } from "@/services/firebase/friends";
 import { useFriendStore } from "@/stores/friendStore";
 import { ModalListFriendRequest } from "./modalListfriendRequest";
 import { ModalSendFriendRequest } from "./modalSendFriendRequest";
@@ -21,13 +20,10 @@ interface FriendListProps {
   onSelectedFriendChange?: (friend: FirebaseUser) => void;
 }
 
-export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) => {
-  const { getFriends, friends } = useFriendStore();
+export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }) => {
+  const { getFriends, friends, invitationCode, getInvitationCode, selectedFriend, setSelectedFriend, filteredFriends, setFilteredFriends } = useFriendStore();
   const user = useUserStore((state) => state.currentUser);
   const [showPopupCopy, setShowPopupCopy] = useState(false);
-  const [invitationCode, setInvitationCode] = useState<string | null>(null);
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
-  const [filteredFriends, setFilteredFriends] = useState<FirebaseUser[]>([]);
 
   const selectFriend = useCallback(
     (friend: FirebaseUser) => {
@@ -36,60 +32,41 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
         onSelectedFriendChange(friend);
       }
     },
-    [onSelectedFriendChange]
+    [onSelectedFriendChange, setSelectedFriend]
   );
-
-  useEffect(() => {
-    const fetchInvitationCode = async () => {
-      const cachedCode = localStorage.getItem("invitationCode");
-      if (cachedCode) {
-        setInvitationCode(cachedCode);
-      } else {
-        const code = await getInvitationCode();
-        setInvitationCode(code);
-        localStorage.setItem("invitationCode", code);
-      }
-    };
-
-    fetchInvitationCode();
-  }, []);
 
   useEffect(() => {
     if (user) {
       getFriends();
-      setFilteredFriends(friends);
+      getInvitationCode();
     }
+  }, [user, getFriends, getInvitationCode]);
 
+  useEffect(() => {
     if (!selectedFriend && friends.length > 0) {
       selectFriend(friends[0]);
     }
-  }, [selectedFriend, getFriends, friends, user, selectFriend]); //FIXME: infinite loop if no friends
+  }, [friends, selectedFriend, selectFriend]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const searchQuery = event.target.value.toLowerCase();
-    if (searchQuery === "") {
-      setFilteredFriends(friends);
-      return;
-    } else {
-      setFilteredFriends(
-        friends.filter((friend) => {
-          return (friend.displayName!.toLowerCase().includes(searchQuery.toLowerCase()) || friend.email!.toLowerCase().includes(searchQuery.toLowerCase()));
-        })
-      );
-    }
-  };
+    const filtered = friends.filter((friend) =>
+      friend.displayName?.toLowerCase().includes(searchQuery) ||
+      friend.email?.toLowerCase().includes(searchQuery)
+    );
+    setFilteredFriends(filtered);
+  }, [friends, setFilteredFriends]);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(invitationCode || "");
-    setShowPopupCopy(true);
-    setTimeout(() => {
-      setShowPopupCopy(false);
-    }, 3000);
-  };
+  const copyToClipboard = useCallback(() => {
+    if (invitationCode) {
+      navigator.clipboard.writeText(invitationCode);
+      setShowPopupCopy(true);
+      setTimeout(() => setShowPopupCopy(false), 3000);
+    }
+  }, [invitationCode]);
 
   return (
     <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
-      {/* FIXME: the overflow is broken, find a better solution */}
       <div className="w-full flex justify-between">
         <p className="text-primary text-3xl font-bold">Mes amis</p>
         <ModalSendFriendRequest />
@@ -101,7 +78,7 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
           {!showPopupCopy ? (
             <ClipboardDocumentIcon
               className="cursor-pointer ml-2 inline-block h-4 text-muted-foreground"
-              onClick={() => copyToClipboard()}
+              onClick={copyToClipboard}
             />
           ) : (
             <CheckIcon className="cursor-pointer ml-2 inline-block h-4 text-glp-green" />
@@ -122,16 +99,14 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
       <section className="grow relative block">
         <ul className="flex flex-col gap-1 max-h-[calc(100%-56px)] overflow-y-auto">
           {filteredFriends.length !== 0 ? (
-            filteredFriends.map((friend: FirebaseUser) => {
-              return (
-                <FriendLine
-                  key={friend.uid}
-                  friend={friend}
-                  selected={selectedFriend?.uid === friend.uid}
-                  onSelect={() => selectFriend(friend)}
-                />
-              );
-            })
+            filteredFriends.map((friend: FirebaseUser) => (
+              <FriendLine
+                key={friend.uid}
+                friend={friend}
+                selected={selectedFriend?.uid === friend.uid}
+                onSelect={() => selectFriend(friend)}
+              />
+            ))
           ) : (
             <div>
               <p>Rien à afficher...</p>
@@ -143,14 +118,14 @@ export const FriendList: React.FC<FriendListProps> = ({onSelectedFriendChange}) 
   );
 };
 
-export const FriendLine = ({
+export const FriendLine = React.memo(({
   friend,
   selected,
   onSelect,
 }: {
   friend: FirebaseUser;
-  selected: boolean | null;
-  onSelect?: () => void;
+  selected: boolean;
+  onSelect: () => void;
 }) => {
   return (
     <div
@@ -179,4 +154,6 @@ export const FriendLine = ({
       </span>
     </div>
   );
-};
+});
+
+FriendLine.displayName = 'FriendLine'; // For ReactMemo

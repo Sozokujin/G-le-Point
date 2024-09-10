@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
 import { useEffect, useState } from "react";
+import BarLoader from "react-spinners/BarLoader";
 
 const Leaderboard = () => {
   const [loading, setLoading] = useState(true);
@@ -36,22 +37,26 @@ const Leaderboard = () => {
   const otherFriends: FirebaseUser[] = topFriendsUsersByScore.slice(3);
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <BarLoader color="#37b978" />
+      </div>
+    );
   }
 
   return (
-    <div className="w-full min-h-[100svh]">
+    <div className="w-full h-full px-2">
       <Tabs
         defaultValue="global"
         className="w-full flex flex-col justify-center"
       >
-        <TabsList className="w-auto mx-auto mt-4">
+        <TabsList className="mx-auto mt-4">
           <TabsTrigger value="global">Global</TabsTrigger>
           <TabsTrigger value="amis">Amis</TabsTrigger>
         </TabsList>
         <TabsContent
           value="global"
-          className="w-2/3 mx-auto  flex flex-col justify-center items-center"
+          className="w-full md:w-2/3 mx-auto flex flex-col justify-center items-center mt-12"
         >
           <h2>Classement Global</h2>
           <LeaderboardBanners players={topUsers} />
@@ -60,7 +65,7 @@ const Leaderboard = () => {
         </TabsContent>
         <TabsContent
           value="amis"
-          className="w-2/3 mx-auto  flex flex-col justify-center items-center"
+          className="w-full md:w-2/3 mx-auto flex flex-col justify-center items-center mt-12"
         >
           <h2>Classement Amis</h2>
           <LeaderboardBanners players={topFriends} />

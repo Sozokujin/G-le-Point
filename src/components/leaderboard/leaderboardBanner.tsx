@@ -3,7 +3,11 @@ import { FirebaseUser } from "@/types";
 import NumberTicker from "../magicui/number-ticker";
 
 const colors = ["bg-yellow-500", "bg-slate-400", "bg-amber-600"];
-const sizes = ["h-64 w-48 pt-4", "h-52 w-44 pt-4", "h-52 w-44 pt-4"];
+const sizes = [
+  "h-72 md:h-64 w-36 md:48 pt-4",
+  "h-64 md:h-52 w-32 md:w-44 pt-4",
+  "h-64 md:h-52 w-32 md:w-44 pt-4",
+];
 const positions = ["order-2", "order-1", "order-3"];
 const bgColor = ["bg-slate-200", "bg-slate-100", "bg-slate-100"];
 const rounded = ["rounded-t-xl", "rounded-l-xl", "rounded-r-xl"];

@@ -8,7 +8,7 @@ export default function LeaderboardProfile() {
       <div className="flex items-center justify-between px-4 py-2 rounded-lg bg-green-200 my-2">
         <div className="flex flex-row items-center justify-between gap-6">
           <span className="text-gray-500">1</span>
-          <Avatar className="w-12 h-12 ring-2 ring-amber-600 ring-offset-2">
+          <Avatar className="w-12 h-12 ring-2 ring-green-400 ring-offset-2">
             <AvatarImage
               src={currentUser?.photoURL ?? ""}
               alt={currentUser?.username ?? ""}

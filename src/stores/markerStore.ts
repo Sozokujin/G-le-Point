@@ -5,12 +5,14 @@ import {
   deleteMarker,
   getFriendsMarkers,
   getGroupsMarkers,
+  getGroupMarkers,
   getPublicMarkers,
   getUserMarkers,
   removeLike,
   removeReport,
 } from "@/services/firebase/markers";
 import { Marker } from "@/types/index";
+import { group } from "console";
 import { create } from "zustand";
 
 export interface MarkerState {

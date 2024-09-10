@@ -74,6 +74,41 @@ export const getFriendsMarkers = async (userUid: any) => {
   })) as Marker[];
 };
 
+export const getGroupMarkers = async (groupId: string) => {
+
+  const groupDocRef = doc(db, "groups", groupId);
+  const groupDocSnapshot = await getDoc(groupDocRef);
+
+  const group = groupDocSnapshot.data() as Group;
+
+  if (!group) {
+    return [];
+  }
+
+  const markers = group.markers;
+
+  if (!markers || markers.length === 0) {
+    console.warn("No markers found in group");
+    return [];
+  }
+
+  const markersData: Marker[] = [];
+  const markerIds = markers.map((marker) => marker.idMarker);
+
+  const markerCollectionRef = collection(db, "markers");
+  const markerQuery = query(markerCollectionRef, where("id", "in", markerIds));
+  const markerQuerySnapshot = await getDocs(markerQuery);
+
+  markerQuerySnapshot.docs.forEach((doc) => {
+    markersData.push({
+      ...doc.data(),
+      id: doc.id,
+    } as Marker);
+  });
+
+  return markersData as Marker[];
+};
+
 export const getGroupsMarkers = async (userUid: string) => {
   const markersCollectionRef = collection(db, "markers");
   const groupCollectionRef = collection(db, "groups");

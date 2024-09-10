@@ -25,6 +25,7 @@ const useUserStore = create<UserStore>((set) => ({
     });
   },
   fetchUsersByIds: async (ids: string[]) => {
+    if (ids.length === 0) return;
     const users = await getUsersByIds(ids);
     set((state) => {
       const newUsers = users.filter((user) => !state.users.some((u) => u.uid === user.uid));

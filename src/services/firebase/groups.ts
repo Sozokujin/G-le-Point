@@ -1,11 +1,13 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
+import { useGroupStore } from "@/stores/groupStore";
+import { use } from "react";
 
 export const getAllGroups = async () => {
-    const currentUser = useUserStore.getState().currentUser;
+  const currentUser = useUserStore.getState().currentUser;
 
-    if (!currentUser?.uid) return [];
+  if (!currentUser?.uid) return [];
 
   const groupsCollectionRef = collection(db, "groups");
 
@@ -50,13 +52,64 @@ export const createGroup = async (name: string, members: string[]) => {
   if (!currentUser?.uid) return;
 
   const groupsCollectionRef = collection(db, "groups");
+  const groupDocRef = doc(groupsCollectionRef);
+  const groupId = groupDocRef.id;
 
   const docRef = await addDoc(groupsCollectionRef, {
     name,
     groupOwner: currentUser.uid,
     members: members.concat(currentUser.uid),
-    markers: {},
+    markers: [],
+    uid: groupId
   });
-
+  useGroupStore.getState().clearGroups(); //TODO: Add group to the store instead of fetching all groups again
   return docRef.id;
+};
+
+export const leaveGroup = async (groupId: string) => {
+  const currentUser = useUserStore.getState().currentUser;
+
+  if (!currentUser?.uid) {
+    throw new Error("User not authenticated");
+  }
+
+  const groupRef = doc(db, "groups", groupId);
+
+  try {
+    const groupSnapshot = await getDoc(groupRef);
+
+    if (!groupSnapshot.exists()) {
+      throw new Error("Group not found");
+    }
+
+    const groupData = groupSnapshot.data();
+    const isOwner = groupData.groupOwner === currentUser.uid;
+    const updatedMembers = groupData.members.filter((memberId: string) => memberId !== currentUser.uid);
+
+    if (isOwner) {
+      if (updatedMembers.length === 0) {
+        // Delete the group if there are no other members
+        await deleteDoc(groupRef);
+        console.warn("Group deleted, owner was the last member");
+      } else {
+        // Transfer ownership to the next member in the list
+        const newOwner = updatedMembers[0];
+        await updateDoc(groupRef, {
+          groupOwner: newOwner,
+          members: updatedMembers
+        });
+        console.warn("Ownership transferred and left the group");
+      }
+    } else {
+      // If not the owner, remove the user from the members list
+      await updateDoc(groupRef, {
+        members: arrayRemove(currentUser.uid)
+      });
+    }
+  } catch (error) {
+    console.error("Error leaving group: ", error);
+    throw error;
+  }
+
+  useGroupStore.getState().clearGroups(); //TODO: Remove the group from the store
 };

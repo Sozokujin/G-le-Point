@@ -8,28 +8,20 @@ import {
   acceptFriendRequest,
   declineFriendRequest,
 } from "@/services/firebase/friends";
-import { useFriendRequestStore } from "@/stores/friendStore";
-import { useEffect } from "react";
+import { useFriendStore } from "@/stores/friendStore";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Toaster } from "../ui/sonner";
+import useUserStore from "@/stores/userStore";
 
 export const ModalListFriendRequest = () => {
-  const { friendRequests, getFriendRequests } = useFriendRequestStore();
+  const { friendRequests, getFriendRequests } = useFriendStore();
+  const user = useUserStore((state) => state.currentUser);
 
-  useEffect(() => {
-    if (friendRequests.length === 0) {
-      getFriendRequests();
-    }
-  }, [getFriendRequests]);
-
-  useEffect(() => {
-    const fetchFriendRequests = async () => {
-      await getFriendRequests();
-    };
-
-    fetchFriendRequests();
-  }, []);
+  useEffect(() => { //XXX: maybe fetch from store and refresh the page for new requests
+    if(!user) return;
+    getFriendRequests();
+  }, [getFriendRequests, user]);
 
   return (
     <Dialog>
@@ -44,18 +36,17 @@ export const ModalListFriendRequest = () => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <ul className="flex gap-3"></ul>
         {friendRequests.length !== 0 ? (
-          friendRequests.map((friendRequest, key) => {
-            return (
-              <>
-                <h2 className="text-primary text-xl font-bold">
-                  Vos demandes d&apos;amis
-                </h2>
+          <>
+            <h2 className="text-primary text-xl font-bold">
+              Vos demandes d&apos;amis
+            </h2>
+            <ul className="flex flex-col gap-3">
+              {friendRequests.map((friendRequest, key) => (
                 <FriendRequestLine key={key} friendRequest={friendRequest} />
-              </>
-            );
-          })
+              ))}
+            </ul>
+          </>
         ) : (
           <DialogHeader>
             <h2 className="text-primary text-xl font-bold">
@@ -69,45 +60,43 @@ export const ModalListFriendRequest = () => {
 };
 
 const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
-  const { removeFriendRequest, getFriendRequests } = useFriendRequestStore();
+  const { removeFriendRequest, getFriendRequests, addFriend } = useFriendStore();
 
-  const handleAcceptFriendRequest = async (uid: string) => {
+  const handleAcceptFriendRequest = useCallback(async (uid: string) => {
     await acceptFriendRequest(uid);
     await getFriendRequests();
-    removeFriendRequest(friendRequest);
+    removeFriendRequest(friendRequest.id);
+    addFriend(friendRequest);
     toast("Demande d'ami acceptée");
-  };
+  }, [friendRequest, getFriendRequests, removeFriendRequest, addFriend]);
 
-  const handleDeclineFriendRequest = async (uid: string) => {
+  const handleDeclineFriendRequest = useCallback(async (uid: string) => {
     await declineFriendRequest(uid);
     await getFriendRequests();
-    removeFriendRequest(friendRequest);
+    removeFriendRequest(friendRequest.id);
     toast("Demande d'ami refusée");
-  };
+  }, [friendRequest, getFriendRequests, removeFriendRequest]);
 
   return (
-    <>
-      <li className="h-24 w-full border-primary border-y-2 p-2 rounded-sm">
-        <div className="text-primary font-semibold">
-          {friendRequest.displayName}
-        </div>
-        <div className="w-full">
-          <Button
-            onClick={() => handleAcceptFriendRequest(friendRequest.uid)}
-            className="bg-glp-green text-white"
-          >
-            Accepter
-          </Button>
-          <Button
-            onClick={() => handleDeclineFriendRequest(friendRequest.uid)}
-            variant={"secondary"}
-            className="bg-red-500 text-white"
-          >
-            Refuser
-          </Button>
-        </div>
-      </li>
-      <Toaster position="top-right" />
-    </>
+    <li className="h-24 w-full border-primary border-y-2 p-2 rounded-sm">
+      <div className="text-primary font-semibold">
+        {friendRequest.displayName}
+      </div>
+      <div className="w-full">
+        <Button
+          onClick={() => handleAcceptFriendRequest(friendRequest.uid)}
+          className="bg-glp-green text-white"
+        >
+          Accepter
+        </Button>
+        <Button
+          onClick={() => handleDeclineFriendRequest(friendRequest.uid)}
+          variant={"secondary"}
+          className="bg-red-500 text-white"
+        >
+          Refuser
+        </Button>
+      </div>
+    </li>
   );
 };

@@ -38,8 +38,6 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
   const liked = marker.likedBy.includes(currentUser?.uid ?? "");
   const reported = marker.reportedBy.includes(currentUser?.uid ?? "");
 
-  console.log(reported);
-
   const handleLike = () => {
     toggleLikeMarker(currentMarker.id, currentUser?.uid ?? "");
   };

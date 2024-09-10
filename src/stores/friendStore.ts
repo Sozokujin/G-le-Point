@@ -1,30 +1,47 @@
-import { getAllFriends, getFriendRequests } from "@/services/firebase/friends";
+import { getAllFriends, getFriendRequests, getInvitationCode } from "@/services/firebase/friends";
 import { FirebaseUser } from "@/types";
 import { create } from "zustand";
 
-export const useFriendStore = create((set: any, get: any) => ({
-    friends: [] as FirebaseUser[],
-    searchQuery: '',
+interface FriendState {
+    friends: FirebaseUser[];
+    friendRequests: any[];
+    invitationCode: string | null;
+    filteredFriends: FirebaseUser[];
+    getFriends: () => Promise<void>;
+    getFriendRequests: () => Promise<void>;
+    setFilteredFriends: (friends: FirebaseUser[]) => void;
+    addFriend: (friend: FirebaseUser) => void;
+    removeFriend: (friendId: string) => void;
+    removeFriendRequest: (requestId: string) => void;
+    clearFriends: () => void;
+    getInvitationCode: () => Promise<void>;
+}
+
+export const useFriendStore = create<FriendState>((set, get) => ({
+    friends: [],
+    friendRequests: [],
+    invitationCode: null,
+    filteredFriends: [],
     getFriends: async () => {
-        const friends = get().friends;
-        if (friends.length > 0) {
-            return friends;
-        }
         const fetchedFriends = await getAllFriends();
-        set({ friends: fetchedFriends });
-        return fetchedFriends;
+        set({ friends: fetchedFriends, filteredFriends: fetchedFriends });
     },
-
-    addFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: [...state.friends, friend] })),
-    removeFriend: (friend: FirebaseUser) => set((state: any) => ({ friends: state.friends.filter((f: any) => f !== friend) })),
-    clearFriends: () => set({ friends: [] }),
-}));
-
-export const useFriendRequestStore = create((set: any) => ({
-    friendRequests: [] as any[],
     getFriendRequests: async () => {
-        const friendRequests = await getFriendRequests();
-        set({ friendRequests });
+        const fetchedRequests = await getFriendRequests();
+        if (fetchedRequests) set({ friendRequests: fetchedRequests });
     },
-    removeFriendRequest: (friendRequest: any) => set((state: any) => ({ friendRequests: state.friendRequests.filter((f: any) => f !== friendRequest) })),
+    setFilteredFriends: (friends) => set({ filteredFriends: friends }),
+    addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend] })),
+    removeFriend: (friendId) => set((state) => ({
+        friends: state.friends.filter((f) => f.uid !== friendId),
+        filteredFriends: state.filteredFriends.filter((f) => f.uid !== friendId),
+    })),
+    removeFriendRequest: (requestId) => set((state) => ({
+        friendRequests: state.friendRequests.filter((r) => r.id !== requestId),
+    })),
+    clearFriends: () => set({ friends: [], filteredFriends: [] }),
+    getInvitationCode: async () => {
+        const code = await getInvitationCode();
+        set({ invitationCode: code });
+    },
 }));

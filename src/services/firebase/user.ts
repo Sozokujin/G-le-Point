@@ -28,6 +28,10 @@ export const getUserById = async (uid: string): Promise<FirebaseUser | null> => 
 
 export const getUsersByIds = async (uids: string[]): Promise<FirebaseUser[]> => {
   try {
+    if (uids.length === 0) {
+      console.error("Aucun ID d'utilisateur fourni.");
+      return [];
+    }
     const userCollectionRef = collection(db, "users");
     const userQuery = query(userCollectionRef, where("uid", "in", uids));
 

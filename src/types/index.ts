@@ -54,7 +54,7 @@ export interface Group {
   markers: {
     idMarker: string;
     idUser: string;
-  };
+  }[];
 }
 
 export type Tag =

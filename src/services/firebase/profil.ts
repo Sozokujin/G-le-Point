@@ -80,6 +80,20 @@ export const getUsername = async (user: string): Promise<string> => {
   return "";
 };
 
+export const getSuperMarkers = async (user: string): Promise<number> => {
+  const currentUser = collection(db, "users");
+  const currentUserQuery = query(currentUser, where("uid", "==", user));
+  const querySnapshot = await getDocs(currentUserQuery);
+  if (!querySnapshot.empty) {
+    let superMarkers = 0;
+    querySnapshot.forEach((doc) => {
+      superMarkers = doc.data().superMarkers;
+    });
+    return superMarkers;
+  }
+  return 0;
+};
+
 export const getScore = async (user: string): Promise<number> => {
   const currentUser = collection(db, "users");
   const currentUserQuery = query(currentUser, where("uid", "==", user));
@@ -131,7 +145,6 @@ export const deleteAccount = async () => {
 
     await reauthenticateWithPopup(user, provider);
 
-    // 1 - Delete friends (request & send)
     const friendRequestsRef = collection(db, "friendRequests");
     const sentRequestsQuery = query(
       friendRequestsRef,
@@ -153,7 +166,6 @@ export const deleteAccount = async () => {
       await deleteDoc(doc.ref);
     });
 
-    // 2 - Delete friends groups
     const groupsRef = collection(db, "groups");
     const groupsQuery = query(groupsRef, where("groupOwner", "==", uid));
 
@@ -182,7 +194,6 @@ export const deleteAccount = async () => {
       }
     });
 
-    // 3 - Delete markers
     const markersRef = collection(db, "markers");
     const markersQuery = query(markersRef, where("user.uid", "==", uid));
 
@@ -208,10 +219,8 @@ export const deleteAccount = async () => {
     );
     await deleteDoc(currentUserDocRef);
 
-    // Delete - Firebase Authentication
     await deleteUser(user);
 
-    // Logout user
     await signOut(auth);
     clearCurrentUser();
     fetch("/api/logout");

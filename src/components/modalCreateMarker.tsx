@@ -108,6 +108,8 @@ const ModalCreateMarker = () => {
           },
           likeCount: 0,
           likedBy: [],
+          reportCount: 0,
+          reportedBy: [],
         });
       }
       if (selectedGroups.length > 0 && currentUser?.uid) {
@@ -213,7 +215,6 @@ const ModalCreateMarker = () => {
             </div>
           </>
         )}
-
         <div className="w-full h-8 flex flex-row border mb-4 text-xs">
           {["address", "gps", "position"].map((mode) => (
             <div

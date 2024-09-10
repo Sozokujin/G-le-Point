@@ -1,5 +1,5 @@
+import Cookies from "@/components/cookies";
 import "@/styles/global.css";
-import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
@@ -46,7 +46,7 @@ export default function RootLayout({
     <html lang="fr" className="scroll-smooth">
       <body className={inter.className}>
         {children}
-        <Analytics />
+        <Cookies />
       </body>
     </html>
   );

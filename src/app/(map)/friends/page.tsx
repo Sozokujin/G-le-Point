@@ -13,15 +13,18 @@ import {
 } from "@/components/ui/drawer";
 import useIsMobile from "@/utils/isMobile";
 import { FirebaseUser } from "@/types";
-import {  useState } from "react";
-import { getFriendsMarkers, getGroupsMarkers } from "@/services/firebase/markers";
+import { useState } from "react";
+import markerStore from "@/stores/markerStore";
+import { getUserMarkers, getGroupMarkers } from "@/services/firebase/markers";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MarkerList } from "@/components/marker/marker-list";
-import { Separator } from "@/components/ui/separator";
+import FriendHeader from "@/components/friends/friend-header";
+import GroupHeader from "@/components/friends/groups/group-header";
 
 const Friends = () => {
   const isMobile = useIsMobile();
-  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null)
+  // const { friendsMarkers, getFriendsMarkers, groupMarkers, getGroupMarkers } = markerStore(); //FIXME: REFACTO MARKERSTORE !!!!!!
+  const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
@@ -31,8 +34,12 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedGroup(null);
     setSelectedFriend(friend);
-    setDisplayMarkers(await getFriendsMarkers(friend.uid));
-    if (isInitialLoad) {// je trouve pas mieux
+    if (friend) {
+      setDisplayMarkers(await getUserMarkers(friend.uid));
+    } else {
+      setDisplayMarkers([]);
+    }
+    if (isInitialLoad) {
       setIsInitialLoad(false);
       return;
     }
@@ -43,9 +50,17 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedFriend(null);
     setSelectedGroup(group);
-    setDisplayMarkers(await getGroupsMarkers(group.id));
+    if (group) {
+      setDisplayMarkers(await getGroupMarkers(group.id));
+    } else {
+      setDisplayMarkers([]);
+    }
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+      return;
+    }
     setDrawerOpen(true);
-  }
+  };
 
   const resetDrawerState = () => {
     setDrawerOpen(false);
@@ -59,7 +74,11 @@ const Friends = () => {
   return (
     <div className="w-full h-full flex gap-2 p-2 bg-muted">
       <section className="sm:w-5/12 w-full h-full">
-        <Tabs defaultValue="friends" className="w-full h-full flex flex-col" onValueChange={() => resetDrawerState()}>
+        <Tabs
+          defaultValue="friends"
+          className="w-full h-full flex flex-col"
+          onValueChange={() => resetDrawerState()}
+        >
           <Card className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-slate-200">
               <TabsTrigger value="friends">Amis</TabsTrigger>
@@ -82,20 +101,37 @@ const Friends = () => {
             <DrawerDescription>List of your friends</DrawerDescription>
           </VisuallyHidden.Root>
           <DrawerContent className="h-[90%]">
-            <h1 className="text-2xl text-center text-primary">
-              {selectedFriend?.displayName}
-            </h1>
-            <Separator />
-            <MarkerList markers={displayMarkers} />
+            {selectedFriend && (
+              <FriendHeader
+                className="m-4 bg-slate-100"
+                friendId={selectedFriend?.uid}
+                name={selectedFriend?.displayName}
+                email={selectedFriend?.email}
+                photoUrl={selectedFriend?.photoURL}
+              />
+            )}
+            {selectedGroup && (
+              <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} />
+            )}
+            <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
           </DrawerContent>
         </Drawer>
       ) : (
         <section className="sm:w-7/12 sm:flex flex-col hidden h-full bg-white rounded shadow p-2">
-          <h1 className="text-2xl text-center text-primary">
-            {selectedFriend?.displayName}
-          </h1>
-            <div className="grow overflow-y-auto mb-[4.5rem]">
-            <MarkerList markers={displayMarkers} />
+          {selectedFriend && (
+            <FriendHeader
+              friendId={selectedFriend?.uid}
+              className="mb-4 bg-slate-100"
+              name={selectedFriend?.displayName}
+              email={selectedFriend?.email}
+              photoUrl={selectedFriend?.photoURL}
+            />
+          )}
+          {selectedGroup && (
+            <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} />
+          )}
+          <div className="flex grow overflow-y-auto mb-[4.5rem]">
+            <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
           </div>
         </section>
       )}

@@ -1,7 +1,7 @@
 import GroupAvatar, { AvatarUser } from "@/components/ui/group-avatar";
 import { Card } from "@/components/ui/card";
 import { useGroupStore } from "@/stores/groupStore";
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ModalCreateGroup } from "./ModalCreateGroup";
 import { FirebaseUser, Group } from "@/types";
 import useUserStore from "@/stores/userStore";
@@ -14,18 +14,18 @@ interface GroupListProps {
   onSelectGroupChange?: (group: Group) => void;
 }
 
-export const GroupList: React.FC<GroupListProps> = ({onSelectGroupChange}) => {
+export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => {
   const { groups, getGroups } = useGroupStore();
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
-  const { users, fetchUsersByIds } = useUserStore();
+  const { users, fetchUsersByIds, currentUser } = useUserStore();
 
   const selectGroup = useCallback(
-    (group: Group) => {
+    (group: Group | null) => {
       setSelectedGroup(group);
       if (onSelectGroupChange) {
-        onSelectGroupChange(group);
+        onSelectGroupChange(group as Group);
       }
     },
     [onSelectGroupChange]
@@ -38,13 +38,18 @@ export const GroupList: React.FC<GroupListProps> = ({onSelectGroupChange}) => {
   });
 
   useEffect(() => {
+    if (!currentUser) return; // currentUser is not loaded yet so we can't fetch groups. Avoid infinite loop
     if (groups.length === 0) {
       getGroups();
     } else {
       setFilteredGroups(groups);
-      selectGroup(groups[0]);
+      if (groups.length > 0) {
+        selectGroup(groups[0]);
+      } else {
+        selectGroup(null);
+      }
     }
-  }, [getGroups, groups.length, groups]);
+  }, [groups, getGroups, currentUser]);
 
   useEffect(() => {
     const groupMembersIds = groups.reduce(
@@ -52,29 +57,34 @@ export const GroupList: React.FC<GroupListProps> = ({onSelectGroupChange}) => {
       [] as string[]
     );
     fetchUsersByIds(groupMembersIds);
+  }, [groups, fetchUsersByIds]);
+
+  useEffect(() => {
     if (users) {
-      setGroupUsers(
-        groups.reduce((acc, group) => {
-          acc[group.id] = group.members
-            .map((memberId) => users.find((user) => user.uid === memberId))
-            .filter((user): user is FirebaseUser => user !== undefined)
-            .map(transformToAvatarUser);
-          return acc;
-        }, {} as { [key: string]: AvatarUser[] })
-      );
+      const newGroupUsers = groups.reduce((acc, group) => {
+        acc[group.id] = group.members
+          .map((memberId) => users.find((user) => user.uid === memberId))
+          .filter((user): user is FirebaseUser => user !== undefined)
+          .map(transformToAvatarUser);
+        return acc;
+      }, {} as { [key: string]: AvatarUser[] });
+
+      setGroupUsers((prevGroupUsers) => {
+        if (JSON.stringify(prevGroupUsers) !== JSON.stringify(newGroupUsers)) {
+          return newGroupUsers;
+        }
+        return prevGroupUsers;
+      });
     }
-  }, [fetchUsersByIds, groups, users]);
+  }, [groups, users]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchQuery = event.target.value.toLowerCase();
     if (searchQuery === "") {
       setFilteredGroups(groups);
-      return;
     } else {
       setFilteredGroups(
-        groups.filter((group) => {
-          return group.name.toLowerCase().includes(searchQuery);
-        })
+        groups.filter((group) => group.name.toLowerCase().includes(searchQuery))
       );
     }
   };

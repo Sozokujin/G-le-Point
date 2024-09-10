@@ -20,12 +20,14 @@ import useIsMobile from "@/utils/isMobile";
 
 interface MarkerListProps {
   markers: Marker[];
+  showUser?: boolean;
 }
 
-export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
-  const [showPopupCopy, setShowPopupCopy] = useState<{
-    [key: string]: boolean;
-  }>({});
+export const MarkerList: React.FC<MarkerListProps> = ({
+  markers,
+  showUser = false,
+}) => {
+  const [showPopupCopy, setShowPopupCopy] = useState<{[key: string]: boolean}>({});
   const isMobile = useIsMobile();
   const copyToClipboard = (marker: Marker) => {
     navigator.clipboard.writeText(marker.latitude + " , " + marker.longitude);
@@ -49,7 +51,14 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                   key={marker.id}
                   className="p-4 bg-slate-100 rounded-lg shadow"
                 >
-                  <div className="font-bold mb-4">{marker.name}</div>
+                  <div className=" mb-4 flex justify-between">
+                    <div className="font-bold">{marker.name}</div>
+                    {showUser && (
+                      <div className="text-sm text-slate-400 truncate">
+                        {marker.user.username || "Aucun utilisateur"}
+                      </div>
+                    )}
+                  </div>
                   <div className="w-full flex justify-between mb-3">
                     {marker.description && (
                       <div className="text-sm text-slate-400 truncate">
@@ -58,7 +67,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                     )}
                     {marker.address && (
                       <div className="text-sm text-slate-400 truncate">
-                        {marker.address}
+                        {marker.address || marker.latitude + " , " + marker.longitude}
                       </div>
                     )}
                   </div>
@@ -88,6 +97,9 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
               <TableHeader className="bg-slate-200">
                 <TableRow>
                   <TableHead className="w-[150px] font-bold">Point</TableHead>
+                  {showUser && (
+                    <TableHead className="font-bold">Utilisateur</TableHead>
+                  )}
                   <TableHead className="font-bold">Tags</TableHead>
                   <TableHead className="font-bold">Description</TableHead>
                   <TableHead className="font-bold">Adresse</TableHead>
@@ -100,6 +112,11 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                     <TableCell className="font-medium whitespace-nowrap truncate">
                       {marker.name}
                     </TableCell>
+                    {showUser && (
+                      <TableCell className="text-slate-400 truncate">
+                        {marker.user.username || "Aucun utilisateur"}
+                      </TableCell>
+                    )}
                     <TableCell>
                       <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">
                         {marker.tags || "Autre"}
@@ -109,7 +126,7 @@ export const MarkerList: React.FC<MarkerListProps> = ({ markers }) => {
                       {marker.description || "Aucune description"}
                     </TableCell>
                     <TableCell className="text-slate-400 truncate">
-                      {marker.address || "Aucune adresse"}
+                      {marker.address || marker.latitude + " , " + marker.longitude}
                     </TableCell>
                     <TableCell className="text-center w-24">
                       <Button

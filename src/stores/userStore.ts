@@ -3,11 +3,16 @@ import {
   getFriendsTopUsersByScore,
   getTopUsersByScore,
 } from "@/services/firebase/leaderboard";
-import { getBio, getScore, getUsername } from "@/services/firebase/profil";
-import { getUserById, getUsersByIds } from "@/services/firebase/user";
-import { FirebaseUser, UserStore } from "@/types";
+import {
+  getBio,
+  getScore,
+  getSuperMarkers,
+  getUsername,
+} from "@/services/firebase/profil";
 import { onAuthStateChanged } from "firebase/auth";
 import { create } from "zustand";
+import { getUserById, getUsersByIds } from "@/services/firebase/user";
+import { FirebaseUser, UserStore } from "@/types";
 
 const useUserStore = create<UserStore>((set) => ({
   currentUser: null,
@@ -27,6 +32,7 @@ const useUserStore = create<UserStore>((set) => ({
     });
   },
   fetchUsersByIds: async (ids: string[]) => {
+    if (ids.length === 0) return;
     const users = await getUsersByIds(ids);
     set((state) => {
       const newUsers = users.filter(
@@ -69,6 +75,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       photoURL: firebaseUser.photoURL,
       username: await getUsername(firebaseUser.uid),
       bio: await getBio(firebaseUser.uid),
+      superMarkers: await getSuperMarkers(firebaseUser.uid),
       score: await getScore(firebaseUser.uid),
     };
     useUserStore.getState().setCurrentUser(user);

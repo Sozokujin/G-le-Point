@@ -11,7 +11,7 @@ import useMarkerStore from "@/stores/markerStore";
 export const ModalListMarkers = () => {
   const UserMarkers = useMarkerStore((state) => state.userMarkers);
 
-  const { addClickedMarker } = useMarkerStore();
+  const { addClickedMarker, deleteMarker } = useMarkerStore();
 
   return (
     <Dialog>
@@ -27,18 +27,34 @@ export const ModalListMarkers = () => {
         {UserMarkers.length > 0 ? (
           <ul className="flex flex-col gap-4 max-h-96 overflow-y-auto">
             {UserMarkers.map((userMarker: any, i) => (
-              <DialogClose asChild key={i}>
-                <li
-                  className="border p-4 cursor-pointer"
-                  onClick={() => addClickedMarker(userMarker)}
-                >
-                  <p>{userMarker.name}</p>
-                  <p>
-                    {userMarker.latitude}
-                    {userMarker.longitude}
-                  </p>
-                </li>
-              </DialogClose>
+              <li key={userMarker.id} className="border p-4">
+                <p>{userMarker.name}</p>
+                <p>
+                  {userMarker.latitude}
+                  {userMarker.longitude}
+                </p>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant={"secondary"}>Supprimer</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogTitle className="text-primary text-xl font-bold">
+                      Êtes-vous sûr de vouloir supprimer ce marqueur ?
+                    </DialogTitle>
+                    <DialogClose asChild>
+                      <Button
+                        onClick={() => deleteMarker(userMarker.id)}
+                        variant={"secondary"}
+                      >
+                        Oui
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button>Non</Button>
+                    </DialogClose>
+                  </DialogContent>
+                </Dialog>
+              </li>
             ))}
           </ul>
         ) : (

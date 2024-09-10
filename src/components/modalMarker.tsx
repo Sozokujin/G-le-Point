@@ -1,7 +1,12 @@
-import { addLike, removeLike } from "@/services/firebase/markers";
+import { debounce } from "@/lib/utils";
+import useMarkerStore from "@/stores/markerStore";
 import useUserStore from "@/stores/userStore";
-import { HandThumbUpIcon } from "@heroicons/react/20/solid";
 import {
+  ExclamationTriangleIcon,
+  HandThumbUpIcon,
+} from "@heroicons/react/20/solid";
+import {
+  ExclamationTriangleIcon as ExclamationTriangleIconOutline,
   HandThumbUpIcon as HandThumbUpIconOutline,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -11,26 +16,34 @@ import { Textarea } from "./ui/textarea";
 
 const ModalMarker = ({ marker, setModalMarker }: any) => {
   const { currentUser } = useUserStore();
+  const {
+    toggleLikeMarker,
+    toggleReportMarker,
+    likedMarkers,
+    reportedMarkers,
+    userMarkers, // Access markers from the state
+  } = useMarkerStore();
 
-  const [likeCount, setLikeCount] = useState(marker.likeCount || 0);
-  const [liked, setLiked] = useState(false);
+  // Local state to track the marker in the component
+  const [currentMarker, setCurrentMarker] = useState(marker);
 
   useEffect(() => {
-    if (marker.likedBy && marker.likedBy.includes(currentUser?.uid)) {
-      setLiked(true);
+    // Keep the local marker data in sync with the store (for re-renders)
+    const updatedMarker = userMarkers.find((m) => m.id === marker.id);
+    if (updatedMarker) {
+      setCurrentMarker(updatedMarker);
     }
-  }, [marker.likedBy, currentUser]);
+  }, [userMarkers, marker.id]);
+
+  const liked = marker.likedBy.includes(currentUser?.uid ?? "");
+  const reported = marker.reportedBy.includes(currentUser?.uid ?? "");
 
   const handleLike = () => {
-    if (!liked) {
-      addLike(marker.id, currentUser?.uid ?? "");
-      setLikeCount(likeCount + 1);
-      setLiked(true);
-    } else {
-      removeLike(marker.id, currentUser?.uid ?? "");
-      setLikeCount(likeCount - 1);
-      setLiked(false);
-    }
+    toggleLikeMarker(currentMarker.id, currentUser?.uid ?? "");
+  };
+
+  const handleReport = () => {
+    toggleReportMarker(currentMarker.id, currentUser?.uid ?? "");
   };
 
   return (
@@ -45,29 +58,43 @@ const ModalMarker = ({ marker, setModalMarker }: any) => {
         />
         <div className="flex gap-4">
           <div className="flex flex-col gap-4">
-            <Badge className="text-xl font-bold">{marker.name}</Badge>
-            <Badge className="text-xl">{marker.user.username}</Badge>
+            <Badge className="text-xl font-bold">{currentMarker.name}</Badge>
+            <Badge className="text-xl">{currentMarker.user.username}</Badge>
           </div>
           <div>PHOTO</div>
         </div>
         <Textarea
           className="w-full h-56 resize-none mt-6 focus-visible:ring-0"
-          value={marker.description}
+          value={currentMarker.description}
           readOnly
         />
         <div className="flex gap-2 mt-4 justify-between">
-          <Badge className="text-md">{marker.tags}</Badge>
-          <Badge
-            onClick={handleLike}
-            className={`text-md bg-white border-glp-green cursor-pointer`}
-          >
-            {liked ? (
-              <HandThumbUpIcon className="h-6 w-6 text-glp-green" />
-            ) : (
-              <HandThumbUpIconOutline className="h-6 w-6 text-glp-green" />
-            )}
-            <span className="text-glp-green ml-2">{likeCount}</span>
-          </Badge>
+          <Badge className="text-md">{currentMarker.tags}</Badge>
+          <div>
+            <Badge
+              onClick={debounce(() => handleLike())}
+              className={`text-md bg-white border-glp-green cursor-pointer`}
+            >
+              {liked ? (
+                <HandThumbUpIcon className="h-6 w-6 text-glp-green" />
+              ) : (
+                <HandThumbUpIconOutline className="h-6 w-6 text-glp-green" />
+              )}
+              <span className="text-glp-green ml-2">
+                {currentMarker.likeCount}
+              </span>
+            </Badge>
+            <Badge
+              onClick={debounce(() => handleReport())}
+              className="text-md bg-white border-red-500 cursor-pointer"
+            >
+              {reported ? (
+                <ExclamationTriangleIcon className="h-6 w-6 text-red-500"></ExclamationTriangleIcon>
+              ) : (
+                <ExclamationTriangleIconOutline className="h-6 w-6 text-red-500 text-md bg-white border-glp-red cursor-pointer"></ExclamationTriangleIconOutline>
+              )}
+            </Badge>
+          </div>
         </div>
       </div>
     </div>

@@ -44,7 +44,7 @@ const tiers = [
   {
     name: "1 Super Point",
     id: "tier-premium",
-    href: "#",
+    href: "/login",
     priceYearly: "10€",
     description:
       "Pour les aventuriers passionnés souhaitant une visibilité accrue.",
@@ -60,7 +60,7 @@ const tiers = [
   {
     name: "Explorateur",
     id: "tier-free",
-    href: "#",
+    href: "/login",
     priceYearly: "Gratuit",
     description:
       "Idéal pour les explorateurs désirant partager et découvrir de nouveaux lieux.",
@@ -75,7 +75,7 @@ const tiers = [
   {
     name: "5 Super Points",
     id: "tier-professional",
-    href: "#",
+    href: "/login",
     priceYearly: "40€",
     description:
       "Le choix optimal pour les professionnels cherchant à maximiser leur visibilité.",

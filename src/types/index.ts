@@ -29,6 +29,8 @@ export interface Marker {
   };
   likeCount: number;
   likedBy: string[];
+  reportCount: number;
+  reportedBy: string[];
 }
 
 export interface FirebaseUser {
@@ -38,6 +40,7 @@ export interface FirebaseUser {
   photoURL: string | null | undefined;
   bio: string | null;
   username: string | null;
+  superMarkers: number;
   score: number;
 }
 
@@ -56,7 +59,7 @@ export interface Group {
   markers: {
     idMarker: string;
     idUser: string;
-  };
+  }[];
 }
 
 export type Tag =

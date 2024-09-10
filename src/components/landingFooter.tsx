@@ -83,12 +83,22 @@ export default function LandingFooter() {
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.legal.map((item) => (
                 <li key={item.name} className="text-center md:text-left ">
-                  <Link
-                    href={item.href}
-                    className="text-sm leading-6 text-gray-600 hover:text-black"
-                  >
-                    {item.name}
-                  </Link>
+                  {item.name !== "🍪 Gérer les cookies" ? (
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-gray-600 hover:text-black"
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      data-cc="show-preferencesModal"
+                      className="text-sm leading-6 text-gray-600 hover:text-black"
+                    >
+                      {item.name}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const appUrl = process.env.APP_URL_SCHEME + '://' + (process.env.VERCEL_URL ?? process.env.APP_URL_AUTHORITY);
 
 export async function POST(request: NextRequest) {
-    throw new Error(process.env.NEXT_PUBLIC_URL);
-
     try {
         const data = await request.json();
         const priceId = data.priceId;
@@ -20,8 +19,8 @@ export async function POST(request: NextRequest) {
                 }
             ],
             mode: 'payment',
-            success_url: `${process.env.NEXT_PUBLIC_URL}/checkout?session_id={CHECKOUT_SESSION_ID}&status=success`,
-            cancel_url: `${process.env.NEXT_PUBLIC_URL}/map`,
+            success_url: `${appUrl}/checkout?session_id={CHECKOUT_SESSION_ID}&status=success`,
+            cancel_url: `${appUrl}/map`,
             metadata: {
                 userId: user.uid,
                 priceId

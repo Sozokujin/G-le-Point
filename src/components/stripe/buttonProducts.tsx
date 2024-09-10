@@ -9,7 +9,7 @@ type props = {
 };
 
 const CheckoutStripe = ({ priceId, price, description }: props) => {
-  const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.currentUser);
 
   const handleSubmit = async () => {
     const stripe = await loadStripe(

@@ -63,8 +63,8 @@ export const ProfileCard = () => {
   });
 
   const isFormUnchanged =
-    form.watch("username") === user?.username &&
-    form.watch("bio") === user?.bio;
+    form.watch("username") === currentUser?.username &&
+    form.watch("bio") === currentUser?.bio;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!currentUser) return;
@@ -88,8 +88,7 @@ export const ProfileCard = () => {
       clearCurrentUser();
       await fetch("/api/logout");
       router.push("/");
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleDelete = async () => {
@@ -117,7 +116,9 @@ export const ProfileCard = () => {
       {currentUser?.photoURL ? (
         <Image
           src={currentUser?.photoURL ?? ""}
-          alt={"Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"}
+          alt={
+            "Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"
+          }
           width={96}
           height={96}
           className="rounded-full shadow-md"
@@ -144,7 +145,10 @@ export const ProfileCard = () => {
                       <FormItem>
                         <FormLabel>E-mail</FormLabel>
                         <FormControl>
-                          <Input placeholder={currentUser?.email ?? ""} {...field} />
+                          <Input
+                            placeholder={currentUser?.email ?? ""}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

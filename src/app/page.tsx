@@ -2,6 +2,7 @@
 import LandingFooter from "@/components/landingFooter";
 import LandingNavbar from "@/components/landingNavbar";
 import { BorderBeam } from "@/components/magicui/border-beam";
+import ToastDeletedAccount from "@/components/toastDeletedAccount";
 import PulsatingButton from "@/components/ui/pulsating-button";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import {
@@ -445,6 +446,7 @@ export default function Page() {
         </div>
       </main>
       <LandingFooter />
+      <ToastDeletedAccount />
     </div>
   );
 }

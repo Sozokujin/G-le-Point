@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { UserPlusIcon } from "@heroicons/react/24/solid";
 import { sendFriendRequest } from "@/services/firebase/friends";
 import { useRef } from "react";
 import { toast } from "sonner";
@@ -25,7 +26,9 @@ export const ModalSendFriendRequest = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="btn btn-primary">Ajouter un ami</Button>
+          <Button className="px-0 w-10 h-10 rounded-full">
+            <UserPlusIcon className="h-5 w-5" />
+          </Button>
         </DialogTrigger>
         <DialogContent>
           <h2 className="text-primary text-xl font-bold">Ajouter un ami</h2>

@@ -1,21 +1,32 @@
 //Store types
 export interface UserStore {
-  user: FirebaseUser | null;
-  setUser: (user: FirebaseUser) => void;
-  clearUser: () => void;
+  fetchUsersByIds: any;
+  currentUser: FirebaseUser | null;
+  users: FirebaseUser[];
+  setCurrentUser: (user: FirebaseUser) => void;
+  clearCurrentUser: () => void;
+  setUsers: (users: FirebaseUser[]) => void;
+  clearUsers: () => void;
 }
 
 export interface Marker {
+  id?: string;
   name: string;
   description: string | null;
-  tags: string[];
+  tags: string | null;
   address: string | null;
   latitude: number;
   longitude: number;
+  visibiltyStatus: string | null; // public / friend / groups
+  createdAt: number;
   user: {
     uid: string | null;
-    displayName: string | null;
+    username: string | null;
   };
+  likeCount: number;
+  likedBy: string[];
+  reportCount: number;
+  reportedBy: string[];
 }
 
 export interface FirebaseUser {
@@ -23,8 +34,9 @@ export interface FirebaseUser {
   displayName: string | null;
   email: string | null;
   photoURL: string | null | undefined;
+  bio: string | null;
+  username: string | null;
 }
-
 
 export interface FriendRequest {
   uid: string;
@@ -38,4 +50,25 @@ export interface Group {
   name: string;
   groupOwner: string;
   members: string[];
+  markers: {
+    idMarker: string;
+    idUser: string;
+  };
 }
+
+export type Tag =
+  | "Points de vue"
+  | "Randonnée et sentiers"
+  | "Espace vert"
+  | "Site sportif"
+  | "Site touristique"
+  | "Site historique"
+  | "Site culturel"
+  | "Loisirs"
+  | "Commerce"
+  | "Transport"
+  | "Restauration"
+  | "Hébergement"
+  | "Service public"
+  | "Espace de santé"
+  | "Autre";

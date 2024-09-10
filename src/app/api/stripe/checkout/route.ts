@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-const appUrl = process.env.APP_URL_SCHEME + '://' + (process.env.VERCEL_URL ?? process.env.APP_URL_AUTHORITY);
+const appUrl = process.env.APP_URL_SCHEME + '://' + (process.env.APP_URL_AUTHORITY ?? process.env.VERCEL_URL);
 
 export async function POST(request: NextRequest) {
     try {

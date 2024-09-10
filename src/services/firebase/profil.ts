@@ -96,7 +96,7 @@ export const getSuperMarkers = async (user: string): Promise<number> => {
 
 export const deleteAccount = async () => {
   const user = auth.currentUser;
-  const { clearUser } = useUserStore.getState();
+  const { clearCurrentUser } = useUserStore.getState();
 
   if (!user) {
     toast("Vous devez être connecté pour supprimer votre compte.");
@@ -213,7 +213,7 @@ export const deleteAccount = async () => {
 
     // Logout user
     await signOut(auth);
-    clearUser();
+    clearCurrentUser();
     fetch("/api/logout");
     window.location.href = "/?account=deleted";
   } catch (error) {

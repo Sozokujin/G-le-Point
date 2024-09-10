@@ -27,11 +27,11 @@ import { toast } from "sonner";
 
 const Login = () => {
   const router = useRouter();
-  const { setUser } = useUserStore();
+  const { setCurrentUser } = useUserStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const addToDbIfNewUser = async (user: any) => {
+  const addToDbIfNewUser = async (user: FirebaseUser) => {
     const usersCollectionRef = collection(db, "users");
     const _query = query(usersCollectionRef, where("uid", "==", user.uid));
     const querySnapshot = await getDocs(_query);
@@ -70,7 +70,7 @@ const Login = () => {
         };
 
         addToDbIfNewUser(firebaseUser);
-        setUser(firebaseUser);
+        setCurrentUser(firebaseUser);
 
         await fetch("/api/login", {
           headers: {

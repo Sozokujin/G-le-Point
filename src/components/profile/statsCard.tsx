@@ -37,6 +37,10 @@ export const StatsCard = () => {
     }
   }, [getMarkers, currentUser]);
 
+  /**
+   * TODO: Add the SuperMarkers to the user store
+   */
+
   return (
     <div className="relative overflow-hidden mb-20 md:mb-28 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
       <h2>Statistiques</h2>

@@ -117,7 +117,6 @@ export const deleteAccount = async () => {
 
     await reauthenticateWithPopup(user, provider);
 
-    // 1 - Delete friends (request & send)
     const friendRequestsRef = collection(db, "friendRequests");
     const sentRequestsQuery = query(
       friendRequestsRef,
@@ -139,7 +138,6 @@ export const deleteAccount = async () => {
       await deleteDoc(doc.ref);
     });
 
-    // 2 - Delete friends groups
     const groupsRef = collection(db, "groups");
     const groupsQuery = query(groupsRef, where("groupOwner", "==", uid));
 
@@ -168,7 +166,6 @@ export const deleteAccount = async () => {
       }
     });
 
-    // 3 - Delete markers
     const markersRef = collection(db, "markers");
     const markersQuery = query(markersRef, where("user.uid", "==", uid));
 
@@ -194,10 +191,8 @@ export const deleteAccount = async () => {
     );
     await deleteDoc(currentUserDocRef);
 
-    // Delete - Firebase Authentication
     await deleteUser(user);
 
-    // Logout user
     await signOut(auth);
     clearCurrentUser();
     fetch("/api/logout");

@@ -40,7 +40,6 @@ const Friends = () => {
       setDisplayMarkers([]);
     }
     if (isInitialLoad) {
-      // je trouve pas mieux
       setIsInitialLoad(false);
       return;
     }
@@ -51,7 +50,15 @@ const Friends = () => {
     setDisplayMarkers([]);
     setSelectedFriend(null);
     setSelectedGroup(group);
-    setDisplayMarkers(await getGroupMarkers(group.id));
+    if (group) {
+      setDisplayMarkers(await getGroupMarkers(group.id));
+    } else {
+      setDisplayMarkers([]);
+    }
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+      return;
+    }
     setDrawerOpen(true);
   };
 

@@ -11,8 +11,11 @@ import { FirebaseUser, Group } from "@/types";
 import GroupAvatar, { AvatarUser } from "@/components/ui/group-avatar";
 import { useEffect, useState } from "react";
 import useUserStore from "@/stores/userStore";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { leaveGroup } from "@/services/firebase/groups";
+import { toast } from "sonner";
+import ConfirmationDialog from "@/components/ui/confirmation-dialog";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 
 interface GroupProps {
   group: Group;
@@ -29,6 +32,22 @@ export default function GroupHeader({ group, className }: GroupProps) {
     name: user.displayName || user.email || "Unknown User",
     image: user.photoURL,
   });
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleConfirm = async () => {
+    try {
+      await leaveGroup(group.id);
+      toast.success('Successfully unfriended!');
+    } catch (error) {
+      toast.error('Failed to unfriend.');
+    }
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -71,7 +90,7 @@ export default function GroupHeader({ group, className }: GroupProps) {
           </>
         )}
       </div>
-      <DropdownMenu>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="default" size="icon">
             <MoreHorizontal className="h-4 w-4" />
@@ -80,8 +99,17 @@ export default function GroupHeader({ group, className }: GroupProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem>Voir les membres</DropdownMenuItem>
-          <Separator className="my-1" />
-          <DropdownMenuItem>Quitter</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <ConfirmationDialog
+            trigger={
+              <DropdownMenuItem onSelect={(event) => event.preventDefault()}>Quitter</DropdownMenuItem>
+            }
+            title="Etes-vous sûr(e)?"
+            description={`Voulez-vous vraiment quitter ${group.name}? Vous ne pourrez pas annuler cette action.`}
+            destructive
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

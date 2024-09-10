@@ -37,7 +37,9 @@ export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => 
   });
 
   useEffect(() => {
+    console.log('HEY 69 !!!!!');
     if (!currentUser) return; // currentUser is not loaded yet so we can't fetch groups. Avoid infinite loop
+    console.log('groups', groups);
     if (groups.length === 0) {
       getGroups();
     } else {

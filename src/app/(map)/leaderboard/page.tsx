@@ -1,6 +1,7 @@
 "use client";
 import LeaderboardBanners from "@/components/leaderboard/leaderboardBanner";
 import LeaderboardList from "@/components/leaderboard/leaderboardList";
+import LeaderboardProfile from "@/components/leaderboard/leaderboardProfile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
@@ -55,6 +56,7 @@ const Leaderboard = () => {
           <h2>Classement Global</h2>
           <LeaderboardBanners players={topUsers} />
           <LeaderboardList players={otherUsers} />
+          <LeaderboardProfile />
         </TabsContent>
         <TabsContent
           value="amis"
@@ -63,6 +65,7 @@ const Leaderboard = () => {
           <h2>Classement Amis</h2>
           <LeaderboardBanners players={topFriends} />
           <LeaderboardList players={otherFriends} />
+          <LeaderboardProfile />
         </TabsContent>
       </Tabs>
     </div>

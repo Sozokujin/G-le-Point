@@ -1,5 +1,5 @@
 import { FirebaseUser } from "@/types";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface LeaderboardProps {
   players: FirebaseUser[];
@@ -10,7 +10,7 @@ export default function LeaderboardList({ players }: LeaderboardProps) {
     return;
   }
   return (
-    <div className="overflow-y-auto max-h-64 w-full max-w-[800px]">
+    <div className="overflow-y-auto max-h-52 w-full max-w-[800px]">
       {players.map((player, index) => (
         <div
           key={index}
@@ -18,13 +18,16 @@ export default function LeaderboardList({ players }: LeaderboardProps) {
         >
           <div className="flex flex-row items-center justify-between gap-6">
             <span className="text-gray-500">{index + 4}</span>
-            <Image
-              width={40}
-              height={40}
-              className="rounded-full ml-2"
-              src={player.photoURL ?? ""}
-              alt={player.username ?? ""}
-            />
+            <Avatar className="w-12 h-12 ring-2 ring-offset-2">
+              <AvatarImage
+                src={player.photoURL ?? ""}
+                alt={player.username ?? ""}
+              />
+              <AvatarFallback>
+                {player.username?.slice(0, 1) ??
+                  player.displayName?.slice(0, 1)}
+              </AvatarFallback>
+            </Avatar>
           </div>
           <p className="ml-2">{player.username ?? player.displayName}</p>
 

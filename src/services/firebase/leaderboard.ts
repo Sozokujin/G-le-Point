@@ -104,6 +104,7 @@ export const getFriendsTopUsersByScore = async (currentUserId: string) => {
     }
 
     const friendsUid = querySnapshot.docs[0].data().friends || [];
+    friendsUid.push(currentUserId);
     if (friendsUid.length === 0) {
       return [];
     }

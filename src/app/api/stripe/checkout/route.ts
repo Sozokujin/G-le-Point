@@ -4,6 +4,8 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(request: NextRequest) {
+    throw new Error(process.env.NEXT_PUBLIC_URL);
+
     try {
         const data = await request.json();
         const priceId = data.priceId;

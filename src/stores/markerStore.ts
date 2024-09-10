@@ -117,7 +117,6 @@ const useMarkerStore = create((set: any, get: any) => ({
 
     set({ publicMarkers: [] });
     const markersData = await getPublicMarkers(userUid);
-    console.log(markersData);
     set({
       publicMarkers: markersData,
       markersLoaded: { ...markersLoaded, public: true },

@@ -62,7 +62,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("modalMarker", modalMarker);
   }, [modalMarker]);
 
   useEffect(() => {

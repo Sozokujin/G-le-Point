@@ -60,12 +60,10 @@ export const getGroupMarkers = async (groupId: string) => {
   const group = groupDocSnapshot.data() as Group;
 
   if (!group) {
-    console.error("Group not found");
     return [];
   }
 
   const markers = group.markers;
-  console.log("markers:", markers);
 
   if (!markers || markers.length === 0) {
     console.warn("No markers found in group");

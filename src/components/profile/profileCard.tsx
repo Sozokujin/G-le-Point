@@ -101,7 +101,7 @@ export const ProfileCard = () => {
             {currentUser?.photoURL ? (
                 <Image
                     src={currentUser?.photoURL ?? ''}
-                    alt={'Photo de profil de ' + currentUser?.displayName ?? "l'utilisateur"}
+                    alt={'Photo de profil de ' + (currentUser?.displayName ?? "l'utilisateur")}
                     width={96}
                     height={96}
                     className="rounded-full shadow-md"

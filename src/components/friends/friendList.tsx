@@ -37,7 +37,6 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
   );
 
   useEffect(() => {
-    console.log('HEY 1 !!!!!');
     if (user) {
       getFriends();
       getInvitationCode();
@@ -47,7 +46,6 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
       selectFriend(friends[0]);
     } else {
       selectFriend(null);
-      console.log('selectedFriend', selectedFriend);
     }
 
   }, [user, getFriends, getInvitationCode, friends.length]); //DO NOT ADD selectFriend OR friends DEPENDENCIES (infinte loop)

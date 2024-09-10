@@ -13,6 +13,7 @@ import { db } from "@/services/firebase/config";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types";
 import { useFriendStore } from "@/stores/friendStore";
+import useMarkerStore from "@/stores/markerStore";
 export const getAllFriends = async () => {
   try {
     const currentUser = useUserStore.getState().currentUser;
@@ -165,7 +166,7 @@ export const declineFriendRequest = async (from: string) => {
   });
 };
 
-export const unfriend = async (friendId: string) => {
+export const unfriend = async (friendId: string) => { //TODO: REMOVE MARKERS FROM STORE
   const currentUser = useUserStore.getState().currentUser;
 
   if (!currentUser?.uid) return;
@@ -203,6 +204,7 @@ export const unfriend = async (friendId: string) => {
   });
 
   useFriendStore.getState().clearFriends();
+  // useMarkerStore.getState().clearMarkers(); TODO
 };
 
 export const getInvitationCode = async () => {

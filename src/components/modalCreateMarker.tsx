@@ -215,7 +215,6 @@ const ModalCreateMarker = () => {
             </div>
           </>
         )}
-
         <div className="w-full h-8 flex flex-row border mb-4 text-xs">
           {["address", "gps", "position"].map((mode) => (
             <div

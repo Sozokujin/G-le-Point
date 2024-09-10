@@ -1,8 +1,12 @@
 //Store types
 export interface UserStore {
   fetchUsersByIds: any;
+  fetchUserByScores: any;
+  fetchFriendsUserByScores: any;
   currentUser: FirebaseUser | null;
   users: FirebaseUser[];
+  topUsersByScore: FirebaseUser[];
+  topFriendsUsersByScore: FirebaseUser[];
   setCurrentUser: (user: FirebaseUser) => void;
   clearCurrentUser: () => void;
   setUsers: (users: FirebaseUser[]) => void;
@@ -37,6 +41,7 @@ export interface FirebaseUser {
   bio: string | null;
   username: string | null;
   superMarkers: number;
+  score: number;
 }
 
 export interface FriendRequest {

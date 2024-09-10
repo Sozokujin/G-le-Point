@@ -7,7 +7,7 @@ import { auth, db } from "@/services/firebase/config";
 import {
   getBio,
   getSuperMarkers,
-  getUsername,
+  getScore, getUsername,
 } from "@/services/firebase/profil";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types/index";
@@ -45,6 +45,7 @@ const Login = () => {
           Math.random().toString(36).substring(2, 7),
         username: user.displayName,
         bio: "",
+        score: 0,
       });
     }
   };
@@ -67,6 +68,7 @@ const Login = () => {
           username: await getUsername(result.user.uid),
           bio: await getBio(result.user.uid),
           superMarkers: await getSuperMarkers(result.user.uid),
+          score: await getScore(result.user.uid),
         };
 
         addToDbIfNewUser(firebaseUser);

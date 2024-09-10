@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.NEXT_BASE_URL}/checkout?session_id={CHECKOUT_SESSION_ID}&status=success`,
-        cancel_url: `${process.env.NEXT_BASE_URL}/map`,
+        success_url: `${process.env.NEXT_PUBLIC_URL}/checkout?session_id={CHECKOUT_SESSION_ID}&status=success`,
+        cancel_url: `${process.env.NEXT_PUBLIC_URL}/map`,
         metadata: {
           userId: user.uid,
           priceId,

@@ -88,7 +88,9 @@ export const ProfileCard = () => {
       clearCurrentUser();
       await fetch("/api/logout");
       router.push("/");
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Une erreur s'est produite lors de la déconnexion.");
+    }
   };
 
   const handleDelete = async () => {

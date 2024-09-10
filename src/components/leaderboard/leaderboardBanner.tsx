@@ -13,11 +13,13 @@ interface LeaderboardProps {
 }
 
 export default function LeaderboardBanners({ players }: LeaderboardProps) {
-  const orderPlayers = [players[0], players[1], players[2]];
-  console.log(orderPlayers);
+  if (players.length === 0) {
+    return <div>Pas de joueurs</div>;
+  }
+
   return (
     <div className="w-full flex items-end justify-center p-8 rounded-lg">
-      {orderPlayers.map((player, index) => (
+      {players.map((player, index) => (
         <div
           key={index}
           className={`relative flex flex-col items-center ${positions[index]}`}

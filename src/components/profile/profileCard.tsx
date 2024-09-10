@@ -86,6 +86,7 @@ export const ProfileCard = () => {
       await fetch("/api/logout");
       router.push("/");
     } catch (error) {
+      toast.error("Une erreur s'est produite lors de la déconnexion.");
     }
   };
 
@@ -114,7 +115,9 @@ export const ProfileCard = () => {
       {currentUser?.photoURL ? (
         <Image
           src={currentUser?.photoURL ?? ""}
-          alt={"Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"}
+          alt={
+            "Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"
+          }
           width={96}
           height={96}
           className="rounded-full shadow-md"
@@ -141,7 +144,10 @@ export const ProfileCard = () => {
                       <FormItem>
                         <FormLabel>E-mail</FormLabel>
                         <FormControl>
-                          <Input placeholder={currentUser?.email ?? ""} {...field} />
+                          <Input
+                            placeholder={currentUser?.email ?? ""}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

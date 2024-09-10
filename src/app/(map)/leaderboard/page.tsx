@@ -8,19 +8,31 @@ import { useEffect, useState } from "react";
 
 const Leaderboard = () => {
   const [loading, setLoading] = useState(true);
-  const { topUsersByScore, fetchUserByScores } = useUserStore();
+  const {
+    currentUser,
+    topUsersByScore,
+    fetchUserByScores,
+    topFriendsUsersByScore,
+    fetchFriendsUserByScores,
+  } = useUserStore();
 
   useEffect(() => {
     const loadUsers = async () => {
       await fetchUserByScores();
-      setLoading(false); // Set loading to false only after data is fetched
+      if (currentUser) {
+        await fetchFriendsUserByScores(currentUser.uid);
+      }
+      setLoading(false);
     };
 
     loadUsers();
-  }, [fetchUserByScores]);
+  }, [fetchUserByScores, fetchFriendsUserByScores, currentUser]);
 
   const topUsers: FirebaseUser[] = topUsersByScore.slice(0, 3);
   const otherUsers: FirebaseUser[] = topUsersByScore.slice(3);
+
+  const topFriends: FirebaseUser[] = topFriendsUsersByScore.slice(0, 3);
+  const otherFriends: FirebaseUser[] = topFriendsUsersByScore.slice(3);
 
   if (loading) {
     return <div>Chargement...</div>;
@@ -44,8 +56,13 @@ const Leaderboard = () => {
           <LeaderboardBanners players={topUsers} />
           <LeaderboardList players={otherUsers} />
         </TabsContent>
-        <TabsContent value="amis">
+        <TabsContent
+          value="amis"
+          className="w-2/3 mx-auto  flex flex-col justify-center items-center"
+        >
           <h2>Classement Amis</h2>
+          <LeaderboardBanners players={topFriends} />
+          <LeaderboardList players={otherFriends} />
         </TabsContent>
       </Tabs>
     </div>

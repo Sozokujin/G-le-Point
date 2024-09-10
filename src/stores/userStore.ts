@@ -1,5 +1,8 @@
 import { auth } from "@/services/firebase/config";
-import { getTopUsersByScore } from "@/services/firebase/leaderboard";
+import {
+  getFriendsTopUsersByScore,
+  getTopUsersByScore,
+} from "@/services/firebase/leaderboard";
 import { getBio, getScore, getUsername } from "@/services/firebase/profil";
 import { getUserById, getUsersByIds } from "@/services/firebase/user";
 import { FirebaseUser, UserStore } from "@/types";
@@ -10,6 +13,7 @@ const useUserStore = create<UserStore>((set) => ({
   currentUser: null,
   users: [],
   topUsersByScore: [],
+  topFriendsUsersByScore: [],
   setCurrentUser: (currentUser: FirebaseUser) => set({ currentUser }),
   clearCurrentUser: () => set({ currentUser: null }),
   setUsers: (users: FirebaseUser[]) => set({ users }),
@@ -40,6 +44,18 @@ const useUserStore = create<UserStore>((set) => ({
       );
       if (newUsers.length === 0) return state;
       return { topUsersByScore: [...state.topUsersByScore, ...newUsers] };
+    });
+  },
+  fetchFriendsUserByScores: async (userId: string) => {
+    const users = await getFriendsTopUsersByScore(userId);
+    set((state) => {
+      const newUsers = users.filter(
+        (user) => !state.topFriendsUsersByScore.some((u) => u.uid === user.uid)
+      );
+      if (newUsers.length === 0) return state;
+      return {
+        topFriendsUsersByScore: [...state.topFriendsUsersByScore, ...newUsers],
+      };
     });
   },
 }));

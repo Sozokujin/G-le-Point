@@ -91,3 +91,44 @@ export const getTopUsersByScore = async () => {
     return [];
   }
 };
+
+export const getFriendsTopUsersByScore = async (currentUserId: string) => {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const q = query(usersCollectionRef, where("uid", "==", currentUserId));
+
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      console.error("Utilisateur introuvable");
+      return [];
+    }
+
+    const friendsUid = querySnapshot.docs[0].data().friends || [];
+    if (friendsUid.length === 0) {
+      return [];
+    }
+
+    const q2 = query(
+      usersCollectionRef,
+      where("uid", "in", friendsUid),
+      orderBy("score", "desc"),
+      limit(100)
+    );
+    const querySnapshot2 = await getDocs(q2);
+
+    const friends: FirebaseUser[] = querySnapshot2.docs.map((doc) => ({
+      uid: doc.data().uid,
+      displayName: doc.data().displayName,
+      email: doc.data().email,
+      photoURL: doc.data().photoURL,
+      username: doc.data().username,
+      bio: doc.data().bio,
+      score: doc.data().score,
+    }));
+
+    return friends;
+  } catch (error) {
+    console.error("Error getting top friends:", error);
+    return [];
+  }
+};

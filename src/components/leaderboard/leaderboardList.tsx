@@ -6,12 +6,15 @@ interface LeaderboardProps {
 }
 
 export default function LeaderboardList({ players }: LeaderboardProps) {
+  if (players.length === 0) {
+    return;
+  }
   return (
-    <div className="w-full max-w-[800px]">
+    <div className="overflow-y-auto max-h-64 w-full max-w-[800px]">
       {players.map((player, index) => (
         <div
           key={index}
-          className="flex items-center justify-between px-4 py-2 rounded-lg bg-slate-100"
+          className="flex items-center justify-between px-4 py-2 rounded-lg bg-slate-100 my-2"
         >
           <div className="flex flex-row items-center justify-between gap-6">
             <span className="text-gray-500">{index + 4}</span>

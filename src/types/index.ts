@@ -25,6 +25,8 @@ export interface Marker {
   };
   likeCount: number;
   likedBy: string[];
+  reportCount: number;
+  reportedBy: string[];
 }
 
 export interface FirebaseUser {
@@ -54,4 +56,19 @@ export interface Group {
   }[];
 }
 
-export type Tag = "Points de vue"|"Randonnée et sentiers"|"Espace vert"|"Site sportif"|"Site touristique"|"Site historique"|"Site culturel"|"Loisirs"|"Commerce"|"Transport"|"Restauration"|"Hébergement"|"Service public"|"Espace de santé"|"Autre"
+export type Tag =
+  | "Points de vue"
+  | "Randonnée et sentiers"
+  | "Espace vert"
+  | "Site sportif"
+  | "Site touristique"
+  | "Site historique"
+  | "Site culturel"
+  | "Loisirs"
+  | "Commerce"
+  | "Transport"
+  | "Restauration"
+  | "Hébergement"
+  | "Service public"
+  | "Espace de santé"
+  | "Autre";

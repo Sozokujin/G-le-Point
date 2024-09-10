@@ -135,7 +135,7 @@ export const getGroupsMarkers = async (userUid: string) => {
         markersCollectionRef,
         where("id", "in", chunk),
         where("visibiltyStatus", "==", "groups")
-      );
+      ); //FIXME Function where() called with invalid data. Unsupported field value: undefined
       const querySnapshot = await getDocs(markersQuery);
       markers.push(
         ...querySnapshot.docs.map((doc) => ({

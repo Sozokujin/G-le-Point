@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { auth, db } from "@/services/firebase/config";
-import { getBio, getUsername } from "@/services/firebase/profil";
+import { getBio, getScore, getUsername } from "@/services/firebase/profil";
 import useUserStore from "@/stores/userStore";
 import { FirebaseUser } from "@/types/index";
 import {
@@ -41,6 +41,7 @@ const Login = () => {
           Math.random().toString(36).substring(2, 7),
         username: user.displayName,
         bio: "",
+        score: 0,
       });
     }
   };
@@ -62,6 +63,7 @@ const Login = () => {
           photoURL: result.user.photoURL,
           username: await getUsername(result.user.uid),
           bio: await getBio(result.user.uid),
+          score: await getScore(result.user.uid),
         };
 
         addToDbIfNewUser(firebaseUser);

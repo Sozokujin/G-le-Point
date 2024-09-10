@@ -1,13 +1,15 @@
-import { create } from "zustand";
-import { UserStore, FirebaseUser } from "@/types/index";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/services/firebase/config";
-import { getBio, getUsername } from "@/services/firebase/profil";
+import { getTopUsersByScore } from "@/services/firebase/leaderboard";
+import { getBio, getScore, getUsername } from "@/services/firebase/profil";
 import { getUserById, getUsersByIds } from "@/services/firebase/user";
+import { FirebaseUser, UserStore } from "@/types";
+import { onAuthStateChanged } from "firebase/auth";
+import { create } from "zustand";
 
 const useUserStore = create<UserStore>((set) => ({
   currentUser: null,
   users: [],
+  topUsersByScore: [],
   setCurrentUser: (currentUser: FirebaseUser) => set({ currentUser }),
   clearCurrentUser: () => set({ currentUser: null }),
   setUsers: (users: FirebaseUser[]) => set({ users }),
@@ -23,9 +25,21 @@ const useUserStore = create<UserStore>((set) => ({
   fetchUsersByIds: async (ids: string[]) => {
     const users = await getUsersByIds(ids);
     set((state) => {
-      const newUsers = users.filter((user) => !state.users.some((u) => u.uid === user.uid));
+      const newUsers = users.filter(
+        (user) => !state.users.some((u) => u.uid === user.uid)
+      );
       if (newUsers.length === 0) return state;
       return { users: [...state.users, ...newUsers] };
+    });
+  },
+  fetchUserByScores: async () => {
+    const users = await getTopUsersByScore();
+    set((state) => {
+      const newUsers = users.filter(
+        (user) => !state.topUsersByScore.some((u) => u.uid === user.uid)
+      );
+      if (newUsers.length === 0) return state;
+      return { topUsersByScore: [...state.topUsersByScore, ...newUsers] };
     });
   },
 }));
@@ -39,6 +53,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       photoURL: firebaseUser.photoURL,
       username: await getUsername(firebaseUser.uid),
       bio: await getBio(firebaseUser.uid),
+      score: await getScore(firebaseUser.uid),
     };
     useUserStore.getState().setCurrentUser(user);
   } else {

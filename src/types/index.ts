@@ -1,8 +1,10 @@
 //Store types
 export interface UserStore {
   fetchUsersByIds: any;
+  fetchUserByScores: any;
   currentUser: FirebaseUser | null;
   users: FirebaseUser[];
+  topUsersByScore: FirebaseUser[];
   setCurrentUser: (user: FirebaseUser) => void;
   clearCurrentUser: () => void;
   setUsers: (users: FirebaseUser[]) => void;
@@ -34,6 +36,7 @@ export interface FirebaseUser {
   photoURL: string | null | undefined;
   bio: string | null;
   username: string | null;
+  score: number;
 }
 
 export interface FriendRequest {
@@ -54,4 +57,19 @@ export interface Group {
   };
 }
 
-export type Tag = "Points de vue"|"Randonnée et sentiers"|"Espace vert"|"Site sportif"|"Site touristique"|"Site historique"|"Site culturel"|"Loisirs"|"Commerce"|"Transport"|"Restauration"|"Hébergement"|"Service public"|"Espace de santé"|"Autre"
+export type Tag =
+  | "Points de vue"
+  | "Randonnée et sentiers"
+  | "Espace vert"
+  | "Site sportif"
+  | "Site touristique"
+  | "Site historique"
+  | "Site culturel"
+  | "Loisirs"
+  | "Commerce"
+  | "Transport"
+  | "Restauration"
+  | "Hébergement"
+  | "Service public"
+  | "Espace de santé"
+  | "Autre";

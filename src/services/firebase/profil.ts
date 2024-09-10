@@ -80,6 +80,20 @@ export const getUsername = async (user: string): Promise<string> => {
   return "";
 };
 
+export const getSuperMarkers = async (user: string): Promise<number> => {
+  const currentUser = collection(db, "users");
+  const currentUserQuery = query(currentUser, where("uid", "==", user));
+  const querySnapshot = await getDocs(currentUserQuery);
+  if (!querySnapshot.empty) {
+    let superMarkers = 0;
+    querySnapshot.forEach((doc) => {
+      superMarkers = doc.data().superMarkers;
+    });
+    return superMarkers;
+  }
+  return 0;
+};
+
 export const deleteAccount = async () => {
   const user = auth.currentUser;
   const { clearCurrentUser } = useUserStore.getState();

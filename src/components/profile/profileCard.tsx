@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { BorderBeam } from "@/components/magicui/border-beam";
@@ -63,6 +62,10 @@ export const ProfileCard = () => {
     },
   });
 
+  const isFormUnchanged =
+    form.watch("username") === currentUser?.username &&
+    form.watch("bio") === currentUser?.bio;
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!currentUser) return;
 
@@ -85,8 +88,7 @@ export const ProfileCard = () => {
       clearCurrentUser();
       await fetch("/api/logout");
       router.push("/");
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleDelete = async () => {
@@ -114,7 +116,9 @@ export const ProfileCard = () => {
       {currentUser?.photoURL ? (
         <Image
           src={currentUser?.photoURL ?? ""}
-          alt={"Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"}
+          alt={
+            "Photo de profil de " + currentUser?.displayName ?? "l'utilisateur"
+          }
           width={96}
           height={96}
           className="rounded-full shadow-md"
@@ -141,7 +145,10 @@ export const ProfileCard = () => {
                       <FormItem>
                         <FormLabel>E-mail</FormLabel>
                         <FormControl>
-                          <Input placeholder={currentUser?.email ?? ""} {...field} />
+                          <Input
+                            placeholder={currentUser?.email ?? ""}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -159,12 +166,12 @@ export const ProfileCard = () => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom d'utilisateur</FormLabel>
+                <FormLabel>Nom d&apos;utilisateur</FormLabel>
                 <FormControl>
                   <Input placeholder="Nom d'utilisateur" {...field} />
                 </FormControl>
                 <FormDescription>
-                  Il s'agit de votre nom d'affichage public.
+                  Il s&apos;agit de votre nom d&apos;affichage public.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -188,7 +195,11 @@ export const ProfileCard = () => {
             )}
           />
           <div className="w-full flex justify-center items-center">
-            <Button type="submit" className="w-64 rounded-full">
+            <Button
+              type="submit"
+              className="w-64 rounded-full"
+              disabled={isFormUnchanged}
+            >
               Enregistrer
             </Button>
           </div>

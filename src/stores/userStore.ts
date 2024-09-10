@@ -1,8 +1,12 @@
-import { create } from "zustand";
-import { UserStore, FirebaseUser } from "@/types/index";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/services/firebase/config";
-import { getBio, getUsername } from "@/services/firebase/profil";
+import {
+  getBio,
+  getSuperMarkers,
+  getUsername,
+} from "@/services/firebase/profil";
+import { FirebaseUser, UserStore } from "@/types/index";
+import { onAuthStateChanged } from "firebase/auth";
+import { create } from "zustand";
 import { getUserById, getUsersByIds } from "@/services/firebase/user";
 
 const useUserStore = create<UserStore>((set) => ({
@@ -40,6 +44,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       photoURL: firebaseUser.photoURL,
       username: await getUsername(firebaseUser.uid),
       bio: await getBio(firebaseUser.uid),
+      superMarkers: await getSuperMarkers(firebaseUser.uid),
     };
     useUserStore.getState().setCurrentUser(user);
   } else {

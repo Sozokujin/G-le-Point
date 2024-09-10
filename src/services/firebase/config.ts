@@ -19,27 +19,10 @@ const clientConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTID
 };
 
-const serverConfig = {
-    cookieName: process.env.AUTH_COOKIE_NAME!,
-    cookieSignatureKeys: [process.env.AUTH_COOKIE_SIGNATURE_KEY_CURRENT!, process.env.AUTH_COOKIE_SIGNATURE_KEY_PREVIOUS!],
-    cookieSerializeOptions: {
-        path: '/',
-        httpOnly: true,
-        secure: process.env.USE_SECURE_COOKIES === 'true',
-        sameSite: 'lax' as const,
-        maxAge: 12 * 60 * 60 * 24 // twelve days
-    },
-    serviceAccount: {
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID!,
-        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL!,
-        privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY!
-    },
-    debug: process.env.APP_DEBUG === 'true'
-};
-
 // Initialize Firebase
 const app = initializeApp(clientConfig);
 //const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-export { auth, db, serverConfig, clientConfig };
+
+export { auth, db, clientConfig };

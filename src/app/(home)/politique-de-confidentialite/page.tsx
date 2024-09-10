@@ -246,7 +246,7 @@ export default function Privacy() {
                             <tr>
                                 <td className="border border-slate-600 text-center px-4">auth_token</td>
                                 <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">11 jours</td>
+                                <td className="border border-slate-600 text-center px-4">12 jours</td>
                                 <td className="border border-slate-600 text-center px-4">
                                     Jeton d'authentification utilisateur.
                                 </td>
@@ -254,7 +254,7 @@ export default function Privacy() {
                             <tr>
                                 <td className="border border-slate-600 text-center px-4">auth_token.sig</td>
                                 <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">11 jours</td>
+                                <td className="border border-slate-600 text-center px-4">12 jours</td>
                                 <td className="border border-slate-600 text-center px-4">
                                     Utilisé pour vérifier l'intégrité du jeton d'authentification.
                                 </td>
@@ -262,7 +262,7 @@ export default function Privacy() {
                             <tr>
                                 <td className="border border-slate-600 text-center px-4">auth_token.custom</td>
                                 <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">11 jours</td>
+                                <td className="border border-slate-600 text-center px-4">12 jours</td>
                                 <td className="border border-slate-600 text-center px-4">
                                     Utilisé pour personnaliser l'expérience utilisateur.
                                 </td>

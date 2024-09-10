@@ -200,8 +200,250 @@ export default function Privacy() {
             garanties appropriées pour protéger vos données.
           </p>
 
+          <h2>9. Politique de cookies</h2>
+
+          <h3>1. Qu’est-ce qu’un cookie ?</h3>
+          <p>
+            Selon la définition de la CNIL, un cookie est un petit fichier
+            stocké par un serveur dans le terminal (ordinateur, téléphone, etc.)
+            d’un utilisateur et associé à un domaine web (c’est-à-dire dans la
+            majorité des cas à l’ensemble des pages d’un même site web). Ce
+            fichier est automatiquement renvoyé lors de contacts ultérieurs avec
+            le même domaine.
+          </p>
+          <p>
+            Les cookies ont de multiples usages. Certains de ces usages sont
+            strictement nécessaires aux fonctionnalités expressément demandées
+            par l’Utilisateur ou bien à l’établissement de la communication et
+            donc exemptés de consentement. D’autres, qui ne correspondent pas à
+            ces critères, nécessitent un consentement de l’Utilisateur avant
+            lecture ou écriture.
+          </p>
+
+          <h3>
+            2. Les cookies déposés lorsque l’Utilisateur navigue sur le site
+          </h3>
+          <p>
+            Lors de la première visite sur le site, un bandeau informe
+            l’Utilisateur de la présence de cookies et l’invite à indiquer son
+            choix. Les cookies nécessitant un consentement conformément à la
+            réglementation ne sont déposés que si l’Utilisateur les accepte.
+            L’Utilisateur peut à tout moment s’informer et paramétrer les
+            cookies pour les accepter ou les refuser en cliquant sur “🍪 Gérer
+            les cookies” en bas de chaque page du site.
+          </p>
+
+          <h3>3. Les données traitées à travers les cookies</h3>
+          <p>
+            Les cookies peuvent collecter toutes les données qui se rapportent à
+            un terminal à un instant donné, notamment :
+          </p>
+          <ul className="list-disc list-inside">
+            <li>Un ou plusieurs identifiants techniques</li>
+            <li>La date, l’heure et la durée de connexion d’un terminal</li>
+            <li>Le type de système d’exploitation du terminal</li>
+            <li>Le type et la version du logiciel de navigation</li>
+            <li>Les caractéristiques des contenus consultés</li>
+          </ul>
+
+          <h3>4. Les finalités des cookies collectés</h3>
+          <p>
+            Différents types de cookies sont déposés pour plusieurs finalités :
+          </p>
+
+          <h4>a. Cookies nécessaires</h4>
+          <p>
+            Ces cookies permettent à l’Utilisateur d’utiliser les principales
+            fonctionnalités du site, telles que l’authentification ou la gestion
+            de session. Ils ne requièrent pas de consentement préalable et sont
+            indispensables au bon fonctionnement du site.
+          </p>
+          <table className="border-collapse border border-slate-500 shadow-sm">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="border border-slate-600 text-center px-4">
+                  Nom
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Domaine
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Expiration
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  cc_cookie
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  6 mois
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour enregistrer les préférences de l'utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  __stripe_mid
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  12 mois
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour la prévention de la fraude et pour évaluer les
+                  risques associés à une tentative de transaction​.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  __stripe_sid
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Session
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour la prévention de la fraude et pour vérifier les
+                  informations du navigateur pendant une transaction​.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  auth_token
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  11 jours
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Jeton d'authentification utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  auth_token.sig
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  11 jours
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour vérifier l'intégrité du jeton d'authentification.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  auth_token.custom
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  glepoint.fr
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  11 jours
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour personnaliser l'expérience utilisateur.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>b. Cookies d’analyse</h4>
+          <p>
+            Ces cookies collectent des informations sur la manière dont vous
+            utilisez notre site web. Toutes les données sont anonymisées et ne
+            peuvent pas être utilisées pour vous identifier.
+          </p>
+
+          <table className="border-collapse border border-slate-500 shadow-sm">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="border border-slate-600 text-center px-4">
+                  Nom
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Domaine
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Expiration
+                </th>
+                <th className="border border-slate-600 text-center px-4">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  _vcn
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  vercel.live
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  6 mois
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour mesurer les performances et le comportement
+                  utilisateur.
+                </td>
+              </tr>
+              <tr>
+                <td className="border border-slate-600 text-center px-4">
+                  _vcnn
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  vercel.live
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  12 mois
+                </td>
+                <td className="border border-slate-600 text-center px-4">
+                  Utilisé pour collecter des statistiques anonymes à des fins
+                  d'analyse.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>5. Cookies tiers</h3>
+          <p>
+            Certains cookies, en particulier ceux liés à l'authentification via
+            Google (par le biais de Firebase), peuvent être déposés lorsque
+            l'Utilisateur se connecte au site. Ces cookies sont utilisés pour la
+            gestion sécurisée de l'authentification et peuvent inclure des
+            données liées à la session, à la sécurité, ou à la personnalisation
+            des services Google. L’Utilisateur est invité à consulter les
+            politiques de confidentialité de Google pour plus d'informations sur
+            ces cookies.
+          </p>
+
+          <h3>6. Gestion du consentement au dépôt des cookies</h3>
+          <p>
+            L’Utilisateur peut gérer ses préférences en matière de cookies à
+            tout moment, notamment via les paramètres du bandeau de cookies qui
+            s’affiche lors de sa première visite.
+          </p>
+
           <h2>
-            9. Qui pouvez-vous contacter pour obtenir plus d’informations ?
+            10. Qui pouvez-vous contacter pour obtenir plus d’informations ?
           </h2>
           <p>
             Pour toute question relative à la manière dont nous traitons vos
@@ -212,7 +454,7 @@ export default function Privacy() {
             .
           </p>
 
-          <h2>10. Comment pouvez-vous contacter la CNIL ?</h2>
+          <h2>11. Comment pouvez-vous contacter la CNIL ?</h2>
           <p>
             Vous pouvez contacter la Commission nationale de l’informatique et
             des libertés (CNIL) pour toute question relative à la protection des
@@ -221,7 +463,7 @@ export default function Privacy() {
             téléphone au 01.53.73.22.22.
           </p>
 
-          <h2>11. La politique peut-elle être modifiée ?</h2>
+          <h2>12. La politique peut-elle être modifiée ?</h2>
           <p>
             Nous pouvons modifier notre politique de confidentialité pour
             l'adapter aux nouvelles exigences légales ou à des changements dans
@@ -230,7 +472,7 @@ export default function Privacy() {
             publication.
           </p>
           <p className="italic text-lg mt-8">
-            Date de mise à jour : 18 Août 2024
+            Date de mise à jour : 6 Septembre 2024
           </p>
         </div>
       </div>

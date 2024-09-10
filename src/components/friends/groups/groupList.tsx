@@ -8,6 +8,7 @@ import useUserStore from "@/stores/userStore";
 import { Separator } from "@/components/ui/separator";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Input } from "@/components/ui/input";
+import { set } from "react-hook-form";
 
 interface GroupListProps {
   onSelectGroupChange?: (group: Group) => void;
@@ -21,10 +22,10 @@ export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => 
   const { users, fetchUsersByIds, currentUser } = useUserStore();
 
   const selectGroup = useCallback(
-    (group: Group) => {
+    (group: Group | null) => {
       setSelectedGroup(group);
       if (onSelectGroupChange) {
-        onSelectGroupChange(group);
+        onSelectGroupChange(group as Group);
       }
     },
     [onSelectGroupChange]
@@ -37,18 +38,18 @@ export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => 
   });
 
   useEffect(() => {
-    console.log('HEY 69 !!!!!');
     if (!currentUser) return; // currentUser is not loaded yet so we can't fetch groups. Avoid infinite loop
-    console.log('groups', groups);
     if (groups.length === 0) {
       getGroups();
     } else {
       setFilteredGroups(groups);
-      if (!selectedGroup && groups.length > 0) {
+      if (groups.length > 0) {
         selectGroup(groups[0]);
+      } else {
+        selectGroup(null);
       }
     }
-  }, [groups, getGroups, selectGroup, selectedGroup, currentUser]);
+  }, [groups, getGroups, currentUser]);
 
   useEffect(() => {
     const groupMembersIds = groups.reduce(

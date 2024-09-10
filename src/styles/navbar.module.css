@@ -7,7 +7,7 @@
 .icon {
     @apply h-5 w-5 xs:h-6 xs:w-6 sm:h-8 sm:w-8 text-gray-600;
 
-    &[class~="active"] {
+    &[class~='active'] {
         @apply text-[#37b978];
     }
 }

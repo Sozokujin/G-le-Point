@@ -10,5 +10,5 @@ export const useGroupStore = create((set: any, get: any) => ({
     },
     addGroup: (group: any) => set((state: any) => ({ groups: [...state.groups, group] })),
     removeGroup: (group: any) => set((state: any) => ({ groups: state.groups.filter((g: any) => g !== group) })),
-    clearGroups: () => set({ groups: [] }),
+    clearGroups: () => set({ groups: [] })
 }));

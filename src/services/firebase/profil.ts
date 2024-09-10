@@ -1,232 +1,203 @@
-import { auth, db } from "@/services/firebase/config";
-import useUserStore from "@/stores/userStore";
-import { FirebaseUser } from "@/types";
+import { auth, db } from '@/services/firebase/config';
+import useUserStore from '@/stores/userStore';
+import { FirebaseUser } from '@/types';
 import {
-  deleteUser,
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  OAuthProvider,
-  reauthenticateWithPopup,
-  signOut,
-} from "firebase/auth";
-import {
-  arrayRemove,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { toast } from "sonner";
+    deleteUser,
+    FacebookAuthProvider,
+    GoogleAuthProvider,
+    OAuthProvider,
+    reauthenticateWithPopup,
+    signOut
+} from 'firebase/auth';
+import { arrayRemove, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { toast } from 'sonner';
 
 export const updateUser = async (user: FirebaseUser) => {
-  try {
-    const userCollectionRef = collection(db, "users");
-    const currentUserQuery = query(
-      userCollectionRef,
-      where("uid", "==", user.uid)
-    );
+    try {
+        const userCollectionRef = collection(db, 'users');
+        const currentUserQuery = query(userCollectionRef, where('uid', '==', user.uid));
 
-    const currentUserSnapshot = await getDocs(currentUserQuery);
+        const currentUserSnapshot = await getDocs(currentUserQuery);
 
-    let currentUserDocRef;
-    if (!currentUserSnapshot.empty) {
-      currentUserDocRef = doc(
-        userCollectionRef,
-        currentUserSnapshot.docs[0].id
-      );
-    } else {
-      console.error("Aucun document trouvé pour l'utilisateur actuel.");
-      throw new Error("Échec de la mise à jour de l'utilisateur.");
+        let currentUserDocRef;
+        if (!currentUserSnapshot.empty) {
+            currentUserDocRef = doc(userCollectionRef, currentUserSnapshot.docs[0].id);
+        } else {
+            console.error("Aucun document trouvé pour l'utilisateur actuel.");
+            throw new Error("Échec de la mise à jour de l'utilisateur.");
+        }
+
+        updateDoc(currentUserDocRef, {
+            username: user.username,
+            bio: user.bio
+        });
+    } catch (error) {
+        console.error("Une erreur s'est produite lors de la mise à jour :", error);
+        throw new Error("Échec de la mise à jour de l'utilisateur.");
     }
-
-    updateDoc(currentUserDocRef, {
-      username: user.username,
-      bio: user.bio,
-    });
-  } catch (error) {
-    console.error("Une erreur s'est produite lors de la mise à jour :", error);
-    throw new Error("Échec de la mise à jour de l'utilisateur.");
-  }
 };
 
 export const getBio = async (user: string): Promise<string> => {
-  const currentUser = collection(db, "users");
-  const currentUserQuery = query(currentUser, where("uid", "==", user));
-  const querySnapshot = await getDocs(currentUserQuery);
-  if (!querySnapshot.empty) {
-    let bio = "";
-    querySnapshot.forEach((doc) => {
-      bio = doc.data().bio;
-    });
-    return bio;
-  }
-  return "";
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let bio = '';
+        querySnapshot.forEach((doc) => {
+            bio = doc.data().bio;
+        });
+        return bio;
+    }
+    return '';
 };
 
 export const getUsername = async (user: string): Promise<string> => {
-  const currentUser = collection(db, "users");
-  const currentUserQuery = query(currentUser, where("uid", "==", user));
-  const querySnapshot = await getDocs(currentUserQuery);
-  if (!querySnapshot.empty) {
-    let username = "";
-    querySnapshot.forEach((doc) => {
-      username = doc.data().username;
-    });
-    return username;
-  }
-  return "";
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let username = '';
+        querySnapshot.forEach((doc) => {
+            username = doc.data().username;
+        });
+        return username;
+    }
+    return '';
 };
 
 export const getSuperMarkers = async (user: string): Promise<number> => {
-  const currentUser = collection(db, "users");
-  const currentUserQuery = query(currentUser, where("uid", "==", user));
-  const querySnapshot = await getDocs(currentUserQuery);
-  if (!querySnapshot.empty) {
-    let superMarkers = 0;
-    querySnapshot.forEach((doc) => {
-      superMarkers = doc.data().superMarkers;
-    });
-    return superMarkers;
-  }
-  return 0;
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let superMarkers = 0;
+        querySnapshot.forEach((doc) => {
+            superMarkers = doc.data().superMarkers;
+        });
+        return superMarkers;
+    }
+    return 0;
 };
 
 export const getScore = async (user: string): Promise<number> => {
-  const currentUser = collection(db, "users");
-  const currentUserQuery = query(currentUser, where("uid", "==", user));
-  const querySnapshot = await getDocs(currentUserQuery);
-  if (!querySnapshot.empty) {
-    let score = 0;
-    querySnapshot.forEach((doc) => {
-      score = doc.data().score;
-    });
-    return score;
-  }
-  return 0;
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let score = 0;
+        querySnapshot.forEach((doc) => {
+            score = doc.data().score;
+        });
+        return score;
+    }
+    return 0;
 };
 
 export const deleteAccount = async () => {
-  const user = auth.currentUser;
-  const { clearCurrentUser } = useUserStore.getState();
+    const user = auth.currentUser;
+    const { clearCurrentUser } = useUserStore.getState();
 
-  if (!user) {
-    toast("Vous devez être connecté pour supprimer votre compte.");
-    return;
-  }
-
-  const uid = user.uid;
-
-  try {
-    let provider;
-    const currentProviderId = user.providerData[0]?.providerId;
-
-    switch (currentProviderId) {
-      case "google.com":
-        provider = new GoogleAuthProvider();
-        break;
-      case "facebook.com":
-        provider = new FacebookAuthProvider();
-        break;
-      case "microsoft.com":
-        provider = new OAuthProvider("microsoft.com");
-        break;
-      case "twitter.com":
-        provider = new OAuthProvider("twitter.com");
-        break;
-      default:
-        console.error(
-          "Fournisseur non supporté ou utilisateur non authentifié via un fournisseur SSO reconnu."
-        );
+    if (!user) {
+        toast('Vous devez être connecté pour supprimer votre compte.');
         return;
     }
 
-    await reauthenticateWithPopup(user, provider);
+    const uid = user.uid;
 
-    const friendRequestsRef = collection(db, "friendRequests");
-    const sentRequestsQuery = query(
-      friendRequestsRef,
-      where("from", "==", uid)
-    );
-    const receivedRequestsQuery = query(
-      friendRequestsRef,
-      where("to", "==", uid)
-    );
+    try {
+        let provider;
+        const currentProviderId = user.providerData[0]?.providerId;
 
-    const sentRequestsSnapshot = await getDocs(sentRequestsQuery);
-    const receivedRequestsSnapshot = await getDocs(receivedRequestsQuery);
+        switch (currentProviderId) {
+            case 'google.com':
+                provider = new GoogleAuthProvider();
+                break;
+            case 'facebook.com':
+                provider = new FacebookAuthProvider();
+                break;
+            case 'microsoft.com':
+                provider = new OAuthProvider('microsoft.com');
+                break;
+            case 'twitter.com':
+                provider = new OAuthProvider('twitter.com');
+                break;
+            default:
+                console.error('Fournisseur non supporté ou utilisateur non authentifié via un fournisseur SSO reconnu.');
+                return;
+        }
 
-    sentRequestsSnapshot.forEach(async (doc) => {
-      await deleteDoc(doc.ref);
-    });
+        await reauthenticateWithPopup(user, provider);
 
-    receivedRequestsSnapshot.forEach(async (doc) => {
-      await deleteDoc(doc.ref);
-    });
+        const friendRequestsRef = collection(db, 'friendRequests');
+        const sentRequestsQuery = query(friendRequestsRef, where('from', '==', uid));
+        const receivedRequestsQuery = query(friendRequestsRef, where('to', '==', uid));
 
-    const groupsRef = collection(db, "groups");
-    const groupsQuery = query(groupsRef, where("groupOwner", "==", uid));
+        const sentRequestsSnapshot = await getDocs(sentRequestsQuery);
+        const receivedRequestsSnapshot = await getDocs(receivedRequestsQuery);
 
-    const groupsSnapshot = await getDocs(groupsQuery);
+        sentRequestsSnapshot.forEach(async (doc) => {
+            await deleteDoc(doc.ref);
+        });
 
-    groupsSnapshot.forEach(async (groupDoc) => {
-      const groupData = groupDoc.data();
+        receivedRequestsSnapshot.forEach(async (doc) => {
+            await deleteDoc(doc.ref);
+        });
 
-      if (groupData.groupOwner === uid) {
-        await deleteDoc(groupDoc.ref);
-      } else {
-        const markersSubcollectionRef = collection(groupDoc.ref, "markers");
-        const markersQuery = query(
-          markersSubcollectionRef,
-          where("idUser", "==", uid)
-        );
+        const groupsRef = collection(db, 'groups');
+        const groupsQuery = query(groupsRef, where('groupOwner', '==', uid));
+
+        const groupsSnapshot = await getDocs(groupsQuery);
+
+        groupsSnapshot.forEach(async (groupDoc) => {
+            const groupData = groupDoc.data();
+
+            if (groupData.groupOwner === uid) {
+                await deleteDoc(groupDoc.ref);
+            } else {
+                const markersSubcollectionRef = collection(groupDoc.ref, 'markers');
+                const markersQuery = query(markersSubcollectionRef, where('idUser', '==', uid));
+                const markersSnapshot = await getDocs(markersQuery);
+
+                markersSnapshot.forEach(async (markerDoc) => {
+                    await deleteDoc(markerDoc.ref);
+                });
+
+                await updateDoc(groupDoc.ref, {
+                    markers: arrayRemove(uid)
+                });
+            }
+        });
+
+        const markersRef = collection(db, 'markers');
+        const markersQuery = query(markersRef, where('user.uid', '==', uid));
+
         const markersSnapshot = await getDocs(markersQuery);
 
         markersSnapshot.forEach(async (markerDoc) => {
-          await deleteDoc(markerDoc.ref);
+            await deleteDoc(markerDoc.ref);
         });
 
-        await updateDoc(groupDoc.ref, {
-          markers: arrayRemove(uid),
-        });
-      }
-    });
+        const userCollectionRef = collection(db, 'users');
+        const currentUserQuery = query(userCollectionRef, where('uid', '==', uid));
 
-    const markersRef = collection(db, "markers");
-    const markersQuery = query(markersRef, where("user.uid", "==", uid));
+        const currentUserSnapshot = await getDocs(currentUserQuery);
 
-    const markersSnapshot = await getDocs(markersQuery);
+        if (currentUserSnapshot.empty) {
+            console.error("Aucun document trouvé pour l'utilisateur actuel.");
+            return;
+        }
 
-    markersSnapshot.forEach(async (markerDoc) => {
-      await deleteDoc(markerDoc.ref);
-    });
+        const currentUserDocRef = doc(userCollectionRef, currentUserSnapshot.docs[0].id);
+        await deleteDoc(currentUserDocRef);
 
-    const userCollectionRef = collection(db, "users");
-    const currentUserQuery = query(userCollectionRef, where("uid", "==", uid));
+        await deleteUser(user);
 
-    const currentUserSnapshot = await getDocs(currentUserQuery);
-
-    if (currentUserSnapshot.empty) {
-      console.error("Aucun document trouvé pour l'utilisateur actuel.");
-      return;
+        await signOut(auth);
+        clearCurrentUser();
+        fetch('/api/logout');
+        window.location.href = '/?account=deleted';
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'utilisateur:", error);
+        toast("Une erreur s'est produite lors de la suppression du compte.");
     }
-
-    const currentUserDocRef = doc(
-      userCollectionRef,
-      currentUserSnapshot.docs[0].id
-    );
-    await deleteDoc(currentUserDocRef);
-
-    await deleteUser(user);
-
-    await signOut(auth);
-    clearCurrentUser();
-    fetch("/api/logout");
-    window.location.href = "/?account=deleted";
-  } catch (error) {
-    console.error("Erreur lors de la suppression de l'utilisateur:", error);
-    toast("Une erreur s'est produite lors de la suppression du compte.");
-  }
 };

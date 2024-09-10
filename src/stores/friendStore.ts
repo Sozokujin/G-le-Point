@@ -1,6 +1,6 @@
-import { getAllFriends, getFriendRequests, getInvitationCode } from "@/services/firebase/friends";
-import { FirebaseUser } from "@/types";
-import { create } from "zustand";
+import { getAllFriends, getFriendRequests, getInvitationCode } from '@/services/firebase/friends';
+import { FirebaseUser } from '@/types';
+import { create } from 'zustand';
 
 interface FriendState {
     friends: FirebaseUser[];
@@ -32,16 +32,18 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     },
     setFilteredFriends: (friends) => set({ filteredFriends: friends }),
     addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend] })),
-    removeFriend: (friendId) => set((state) => ({
-        friends: state.friends.filter((f) => f.uid !== friendId),
-        filteredFriends: state.filteredFriends.filter((f) => f.uid !== friendId),
-    })),
-    removeFriendRequest: (requestId) => set((state) => ({
-        friendRequests: state.friendRequests.filter((r) => r.id !== requestId),
-    })),
+    removeFriend: (friendId) =>
+        set((state) => ({
+            friends: state.friends.filter((f) => f.uid !== friendId),
+            filteredFriends: state.filteredFriends.filter((f) => f.uid !== friendId)
+        })),
+    removeFriendRequest: (requestId) =>
+        set((state) => ({
+            friendRequests: state.friendRequests.filter((r) => r.id !== requestId)
+        })),
     clearFriends: () => set({ friends: [], filteredFriends: [] }),
     getInvitationCode: async () => {
         const code = await getInvitationCode();
         set({ invitationCode: code });
-    },
+    }
 }));

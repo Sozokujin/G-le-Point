@@ -3,128 +3,127 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: #00a661;
-    --primary-foreground: 210 40% 98%;
+        --primary: #00a661;
+        --primary-foreground: 210 40% 98%;
 
-    --secondary: #067547;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+        --secondary: #067547;
+        --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
-  }
+        --radius: 0.5rem;
+    }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground antialiased w-full;
-    height: 100svh  !important; /* 100% of the viewport height */
-  }
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground antialiased w-full;
+        height: 100svh !important; /* 100% of the viewport height */
+    }
 }
 
 /* Overrides the original padding of the Popup component in the Map */
 .mapboxgl-popup-content {
-  padding: 0 !important;
+    padding: 0 !important;
 }
-
 
 ul.reset,
 ul.reset li,
 ul.reset ul li {
-  margin: 0;
-  padding: 0;
-  text-indent: 0;
-  list-style-type: 0;
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+    list-style-type: 0;
 }
 
 li {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 .mapboxgl-marker svg {
-  display: none;
+    display: none;
 }
 
 h1 {
-  @apply scroll-m-20 text-4xl font-extrabold tracking-tight my-4 lg:text-5xl;
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight my-4 lg:text-5xl;
 }
 
 h2 {
-  @apply scroll-m-20  text-3xl font-semibold tracking-tight my-2 first:mt-0;
+    @apply scroll-m-20  text-3xl font-semibold tracking-tight my-2 first:mt-0;
 }
 
 h3 {
-  @apply scroll-m-20 text-2xl font-semibold tracking-tight my-2;
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight my-2;
 }
 
 h4 {
-  @apply scroll-m-20 text-xl font-semibold tracking-tight my-2;
+    @apply scroll-m-20 text-xl font-semibold tracking-tight my-2;
 }
 
 p {
-  @apply leading-7;
+    @apply leading-7;
 }
 
 #cc-main {
-  --cc-font-family: "Arial";
-  --cc-btn-primary-bg: var(--primary);
-  --cc-btn-primary-border-color: var(--primary);
-  --cc-btn-primary-hover-bg: var(--secondary);
-  --cc-btn-primary-hover-border-color: var(--secondary);
-  --cc-toggle-on-bg: var(--cc-btn-primary-bg);
-  --cc-btn-border-radius: 10px;
+    --cc-font-family: 'Arial';
+    --cc-btn-primary-bg: var(--primary);
+    --cc-btn-primary-border-color: var(--primary);
+    --cc-btn-primary-hover-bg: var(--secondary);
+    --cc-btn-primary-hover-border-color: var(--secondary);
+    --cc-toggle-on-bg: var(--cc-btn-primary-bg);
+    --cc-btn-border-radius: 10px;
 }

@@ -20,7 +20,7 @@ export default function LeaderboardList({ players }: LeaderboardProps) {
                     id={player.uid}
                     className={`flex items-center justify-between px-4 py-2 rounded-lg  my-2 ${
                         player.uid === currentUser?.uid
-                            ? 'bg-glp-green text-white sticky top-0 bottom-0'
+                            ? 'bg-glp-green text-white sticky top-0 bottom-0 z-50'
                             : 'bg-slate-100 text-gray-500'
                     }`}
                 >

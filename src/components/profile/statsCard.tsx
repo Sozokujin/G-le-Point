@@ -24,7 +24,7 @@ const products = [
 
 export const StatsCard = () => {
     const { currentUser } = useUserStore();
-    const { userMarkers, getMarkers } = useMarkerStore();
+    const { userMarkers, getUserMarkers } = useMarkerStore();
 
     const userMarkersCount = useMemo(() => userMarkers?.length ?? 0, [userMarkers]);
     const userSuperMarkersCount = useMemo(() => currentUser?.superMarkers ?? 0, [currentUser]);
@@ -33,11 +33,11 @@ export const StatsCard = () => {
         if (!currentUser) return;
 
         const loadMarkers = async () => {
-            await getMarkers(currentUser.uid);
+            await getUserMarkers(currentUser.uid);
         };
 
         loadMarkers();
-    }, [getMarkers, currentUser]);
+    }, [getUserMarkers, currentUser]);
 
     // TODO: Add the SuperMarkers to the user store
 

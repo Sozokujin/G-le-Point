@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
@@ -69,8 +70,8 @@ const Checkout = () => {
     }
 
     return (
-        <div className="min-h-[100svh] flex flex-col justify-start md:justify-center items-center md:items-baseline container p-6">
-            <div className="relative mx-auto w-52 h-52 md:w-96 md:h-96 ">
+        <div className="min-h-[100svh] w-full lg:w-2/3 flex flex-col justify-start items-center md:items-baseline container p-6">
+            <div className="relative mx-auto w-32 h-32 lg:w-48 lg:h-48 ">
                 <Image src={'/images/order_success.svg'} fill={true} alt="" />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold mb-6">Merci pour votre achat !</h1>
@@ -94,15 +95,18 @@ const Checkout = () => {
                 </div>
             </div>
 
-            <div className="mt-6">
-                <p className="text-lg font-medium">
+            <div className="text-center mt-6">
+                <p className="text-slate-700 text-sm font-medium mb-4">
                     Nous vous remercions pour votre achat. Si vous avez des questions, n&apos;hésitez pas à nous contacter par
                     mail :{' '}
-                    <a href="mailto:team.glepoint@gmail.com" className="underline">
+                    <a href="mailto:team.glepoint@gmail.com" className="underline hover:text-slate-900">
                         team.glepoint@gmail.com
                     </a>
                     .
                 </p>
+                <Link className="text-slate-700 hover:text-slate-900 underline" href="/map">
+                    Revenir sur la carte
+                </Link>
             </div>
         </div>
     );

@@ -9,11 +9,11 @@ type props = {
 };
 
 const CheckoutStripe = ({ priceId, price, description }: props) => {
-    const user = useUserStore((state) => state.currentUser);
+    const { currentUser } = useUserStore();
 
     const handleSubmit = async () => {
         const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string);
-        if (!stripe || !user) {
+        if (!stripe || !currentUser) {
             return;
         }
         try {
@@ -24,7 +24,7 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
                 },
                 body: JSON.stringify({
                     priceId: priceId,
-                    user: user
+                    user: currentUser
                 })
             });
 

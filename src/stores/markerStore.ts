@@ -5,14 +5,12 @@ import {
     deleteMarker,
     getFriendsMarkers,
     getGroupsMarkers,
-    getGroupMarkers,
     getPublicMarkers,
     getUserMarkers,
     removeLike,
     removeReport
 } from '@/services/firebase/markers';
 import { Marker } from '@/types/index';
-import { group } from 'console';
 import { create } from 'zustand';
 
 export interface MarkerState {
@@ -31,7 +29,7 @@ export interface MarkerState {
     clearFriendsMarkers: () => void;
     clearGroupsMarkers: () => void;
     clearPublicMarkers: () => void;
-    getMarkers: (userUid: string) => void;
+    getUserMarkers: (userUid: string) => void;
     getFriendsMarkers: (userUid: string) => void;
     getGroupsMarkers: (userUid: string) => void;
     getPublicMarkers: (userUid: string) => void;
@@ -71,7 +69,7 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
     clearGroupsMarkers: () => set({ groupsMarkers: [] }),
     clearPublicMarkers: () => set({ publicMarkers: [] }),
 
-    getMarkers: async (userUid: string) => {
+    getUserMarkers: async (userUid: string) => {
         const userMarkers = await getUserMarkers(userUid);
         set({ userMarkers });
     },

@@ -19,7 +19,9 @@ export default function LeaderboardList({ players }: LeaderboardProps) {
                     key={index}
                     id={player.uid}
                     className={`flex items-center justify-between px-4 py-2 rounded-lg  my-2 ${
-                        player.uid === currentUser?.uid ? 'bg-glp-green text-white sticky top-0 bottom-0' : 'bg-slate-100 text-gray-500'
+                        player.uid === currentUser?.uid
+                            ? 'bg-glp-green text-white sticky top-0 bottom-0'
+                            : 'bg-slate-100 text-gray-500'
                     }`}
                 >
                     <div className="flex flex-row items-center justify-between gap-6">

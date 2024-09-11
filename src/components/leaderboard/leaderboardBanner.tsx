@@ -40,10 +40,14 @@ export default function LeaderboardBanners({ players }: LeaderboardProps) {
                         <div className={`text-center ${index === 0 ? 'mb-20' : 'mb-20'} text-sm font-semibold text-gray-800`}>
                             <p className="pt-2">{player.username ?? player.displayName}</p>
                             <p className={`mt-2 text-lg font-bold`}>
-                                <NumberTicker
-                                    className={`text-white ${colors[index]} px-2 py-1 rounded-xl`}
-                                    value={player.score}
-                                />
+                                {player.score > 0 ? (
+                                    <NumberTicker
+                                        className={`text-white ${colors[index]} px-2 py-1 rounded-xl`}
+                                        value={player.score}
+                                    />
+                                ) : (
+                                    '0'
+                                )}
                             </p>
                         </div>
                         {index === 0 && (

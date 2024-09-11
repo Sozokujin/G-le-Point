@@ -24,18 +24,18 @@ const products = [
 
 export const StatsCard = () => {
     const markers = useMarkerStore((state) => state.userMarkers);
-    const getMarkers = useMarkerStore((state) => state.getMarkers);
+    const getUserMarkers = useMarkerStore((state) => state.getUserMarkers);
     const { currentUser } = useUserStore();
 
     useEffect(() => {
         if (currentUser) {
             const loadMarkers = async () => {
-                await getMarkers(currentUser.uid);
+                await getUserMarkers(currentUser.uid);
             };
 
             loadMarkers();
         }
-    }, [getMarkers, currentUser]);
+    }, [getUserMarkers, currentUser]);
 
     /**
      * TODO: Add the SuperMarkers to the user store

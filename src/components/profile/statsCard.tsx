@@ -64,7 +64,11 @@ export const StatsCard = () => {
                 <div className="text-center lg:h-24">
                     <p className="text-lg">Supers points restant</p>
                     <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
-                        {currentUser && currentUser.superMarkers !== 0 ? <NumberTicker value={currentUser.superMarkers} /> : 0}
+                        {currentUser && currentUser.superMarkers !== undefined && currentUser.superMarkers !== 0 ? (
+                            <NumberTicker value={currentUser.superMarkers} />
+                        ) : (
+                            0
+                        )}
                     </span>
                 </div>
                 <div className="text-center lg:h-24">

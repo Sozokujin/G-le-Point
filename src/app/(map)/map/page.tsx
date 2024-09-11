@@ -1,25 +1,21 @@
 'use client';
 
-import Filter from '@/components/map/filter';
-import { ModalListMarkers } from '@/components/map/modalListMarkers';
-import ModalMarker from '@/components/modalMarker';
-import useMarkerStore from '@/stores/markerStore';
-import useUserStore from '@/stores/userStore';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useRef, useState } from 'react';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
+import useMarkerStore from '@/stores/markerStore';
+import useUserStore from '@/stores/userStore';
+import { Marker } from '@/types/index';
+import ModalMarker from '@/components/modalMarker';
+import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import Filter from '@/components/map/filter';
 import classes from '../../Page.module.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
     const { currentUser } = useUserStore();
-    const [modalMarker, setModalMarker] = useState<any>(null);
-    const [showFriends, setShowFriends] = useState(true);
-    const [showGroups, setShowGroups] = useState(true);
-    const [showPublic, setShowPublic] = useState(true);
-    const map = useRef<MapRef | null>(null);
     const {
         userMarkers,
         friendsMarkers,
@@ -33,6 +29,92 @@ export default function Home() {
         clearLastMarker
     } = useMarkerStore();
 
+    const [modalMarker, setModalMarker] = useState<any>(null);
+    const [showFriends, setShowFriends] = useState(true);
+    const [showGroups, setShowGroups] = useState(true);
+    const [showPublic, setShowPublic] = useState(true);
+
+    const map = useRef<MapRef | null>(null);
+    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
+
+    const combinedMarkers = useMemo<FeatureCollection<Point>>(() => {
+        const getMarkerGeoJson = (markers: Marker[], markerType: string): Feature<Point>[] => {
+            return markers.map((marker: Marker) => ({
+                type: 'Feature',
+                properties: {
+                    id: marker.id,
+                    name: marker.name,
+                    description: marker.description,
+                    likedBy: marker.likedBy,
+                    likeCount: marker.likeCount,
+                    type: markerType
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [marker.longitude, marker.latitude]
+                }
+            }))
+        };
+
+        return {
+            type: 'FeatureCollection',
+            features: [
+                ...getMarkerGeoJson(userMarkers, 'user'),
+                ...(showFriends ? getMarkerGeoJson(friendsMarkers, 'friend') : []),
+                ...(showGroups ? getMarkerGeoJson(groupsMarkers, 'group') : []),
+                ...(showPublic ? getMarkerGeoJson(publicMarkers, 'public') : [])
+            ]
+        }
+    }, [userMarkers, friendsMarkers, groupsMarkers, publicMarkers, showFriends, showGroups, showPublic]);
+
+    const onMapLoad = useCallback(() => {
+        const currentMap = map.current;
+        if (!currentMap) return;
+
+        const loadImage = (url: string, id: string) => {
+            currentMap.loadImage(url, (error: any, image: any) => {
+                if (error) throw error;
+                if (!currentMap.hasImage(id)) {
+                    currentMap.addImage(id, image);
+                }
+            });
+        };
+
+        const handleClickUnclusteredPoint = (e: any) => {
+            const features = e.features[0];
+    
+            if (features && features.properties && map.current) {
+                const currentMap = map.current.getMap();
+                const properties = features.properties;
+                setModalMarker(
+                    userMarkers.find((marker) => marker.id === properties.id) ||
+                        friendsMarkers.find((marker) => marker.id === properties.id) ||
+                        groupsMarkers.find((marker) => marker.id === properties.id) ||
+                        publicMarkers.find((marker) => marker.id === properties.id)
+                );
+                currentMap.flyTo({
+                    center: features.geometry.coordinates,
+                    zoom: 15
+                });
+            }
+        };
+
+        loadImage('images/logo-user.png', 'logo-user');
+        loadImage('images/logo-friend.png', 'logo-friend');
+        loadImage('images/logo-group.png', 'logo-group');
+        loadImage('images/logo-public.png', 'logo-public');
+
+        currentMap.on('click', 'unclustered-point', handleClickUnclusteredPoint);
+
+        currentMap.on('mouseenter', 'unclustered-point', () => {
+            currentMap.getCanvas().style.cursor = 'pointer';
+        });
+
+        currentMap.on('mouseleave', 'unclustered-point', () => {
+            currentMap.getCanvas().style.cursor = '';
+        });
+    }, []);
+
     useEffect(() => {
         if (currentUser && currentUser.uid) {
             getMarkers(currentUser.uid);
@@ -40,26 +122,7 @@ export default function Home() {
             getGroupsMarkers(currentUser.uid);
             getPublicMarkers(currentUser.uid);
         }
-    }, [currentUser, getFriendsMarkers, getMarkers, getGroupsMarkers]);
-
-    const handleClickUnclusteredPoint = (e: any) => {
-        const features = e.features[0];
-
-        if (features && features.properties && map.current) {
-            const currentMap = map.current.getMap();
-            const properties = features.properties;
-            setModalMarker(
-                userMarkers.find((marker) => marker.id === properties.id) ||
-                    friendsMarkers.find((marker) => marker.id === properties.id) ||
-                    groupsMarkers.find((marker) => marker.id === properties.id) ||
-                    publicMarkers.find((marker) => marker.id === properties.id)
-            );
-            currentMap.flyTo({
-                center: features.geometry.coordinates,
-                zoom: 15
-            });
-        }
-    };
+    }, [currentUser, getMarkers, getFriendsMarkers, getGroupsMarkers, getPublicMarkers]);
 
     useEffect(() => {
         if (lastMarker && map.current) {
@@ -72,118 +135,6 @@ export default function Home() {
             clearLastMarker();
         }
     }, [lastMarker, clearLastMarker]);
-
-    useEffect(() => {
-        if (map.current) {
-            const currentMap = map.current.getMap();
-            currentMap.on('load', () => {
-                currentMap.loadImage('images/logo-user.png', (error: any, image: any) => {
-                    if (error) throw error;
-                    if (!currentMap.hasImage('logo-user')) {
-                        currentMap.addImage('logo-user', image);
-                    }
-                });
-                currentMap.loadImage('images/logo-friend.png', (error: any, image: any) => {
-                    if (error) throw error;
-                    if (!currentMap.hasImage('logo-friend')) {
-                        currentMap.addImage('logo-friend', image);
-                    }
-                });
-                currentMap.loadImage('images/logo-group.png', (error: any, image: any) => {
-                    if (error) throw error;
-                    if (!currentMap.hasImage('logo-group')) {
-                        currentMap.addImage('logo-group', image);
-                    }
-                });
-                currentMap.loadImage('images/logo-public.png', (error: any, image: any) => {
-                    if (error) throw error;
-                    if (!currentMap.hasImage('logo-public')) {
-                        currentMap.addImage('logo-public', image);
-                    }
-                });
-            });
-
-            currentMap.on('mouseenter', 'unclustered-point', () => {
-                currentMap.getCanvas().style.cursor = 'pointer';
-            });
-
-            currentMap.on('mouseleave', 'unclustered-point', () => {
-                currentMap.getCanvas().style.cursor = '';
-            });
-
-            currentMap.on('click', 'unclustered-point', handleClickUnclusteredPoint);
-        }
-    }, [map, handleClickUnclusteredPoint]);
-
-    const combinedMarkers: FeatureCollection<Point> = {
-        type: 'FeatureCollection',
-        features: [
-            ...userMarkers.map<Feature<Point>>((marker) => ({
-                type: 'Feature',
-                properties: {
-                    id: marker.id,
-                    name: marker.name,
-                    description: marker.description,
-                    type: 'user'
-                },
-                geometry: {
-                    type: 'Point',
-                    coordinates: [marker.longitude, marker.latitude]
-                }
-            })),
-            ...(showFriends
-                ? friendsMarkers.map<Feature<Point>>((marker) => ({
-                      type: 'Feature',
-                      properties: {
-                          id: marker.id,
-                          name: marker.name,
-                          description: marker.description,
-                          likedBy: marker.likedBy,
-                          likeCount: marker.likeCount,
-                          type: 'friend'
-                      },
-                      geometry: {
-                          type: 'Point',
-                          coordinates: [marker.longitude, marker.latitude]
-                      }
-                  }))
-                : []),
-            ...(showGroups
-                ? groupsMarkers.map<Feature<Point>>((marker) => ({
-                      type: 'Feature',
-                      properties: {
-                          id: marker.id,
-                          name: marker.name,
-                          description: marker.description,
-                          likedBy: marker.likedBy,
-                          likeCount: marker.likeCount,
-                          type: 'group'
-                      },
-                      geometry: {
-                          type: 'Point',
-                          coordinates: [marker.longitude, marker.latitude]
-                      }
-                  }))
-                : []),
-            ...(showPublic
-                ? publicMarkers.map<Feature<Point>>((marker) => ({
-                      type: 'Feature',
-                      properties: {
-                          id: marker.id,
-                          name: marker.name,
-                          description: marker.description,
-                          likedBy: marker.likedBy,
-                          likeCount: marker.likeCount,
-                          type: 'public'
-                      },
-                      geometry: {
-                          type: 'Point',
-                          coordinates: [marker.longitude, marker.latitude]
-                      }
-                  }))
-                : [])
-        ]
-    };
 
     const clusterLayer: CircleLayerSpecification = {
         id: 'cluster',
@@ -233,8 +184,6 @@ export default function Home() {
         }
     };
 
-    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
-
     return (
         <main className={classes.mainStyle}>
             <Filter
@@ -246,6 +195,8 @@ export default function Home() {
                 setShowPublic={setShowPublic}
             />
             <Map
+                ref={map}
+                onLoad={onMapLoad}
                 mapboxAccessToken={mapboxToken}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 style={{ width: '100%', height: '100%' }}
@@ -256,7 +207,6 @@ export default function Home() {
                 }}
                 maxZoom={30}
                 minZoom={3}
-                ref={map}
             >
                 <Source id="my-data" type="geojson" data={combinedMarkers} cluster={true} clusterMaxZoom={10} clusterRadius={100}>
                     <Layer {...clusterLayer} />

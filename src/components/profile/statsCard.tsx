@@ -1,10 +1,10 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import NumberTicker from '@/components/magicui/number-ticker';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
-import { useEffect } from 'react';
 import CheckoutStripe from '../stripe/buttonProducts';
 
 const products = [
@@ -23,23 +23,23 @@ const products = [
 ];
 
 export const StatsCard = () => {
-    const markers = useMarkerStore((state) => state.userMarkers);
-    const getMarkers = useMarkerStore((state) => state.getMarkers);
     const { currentUser } = useUserStore();
+    const { userMarkers, getMarkers } = useMarkerStore();
+
+    const userMarkersCount = useMemo(() => userMarkers?.length ?? 0, [userMarkers]);
+    const userSuperMarkersCount = useMemo(() => currentUser?.superMarkers ?? 0, [currentUser]);
 
     useEffect(() => {
-        if (currentUser) {
-            const loadMarkers = async () => {
-                await getMarkers(currentUser.uid);
-            };
+        if (!currentUser) return;
 
-            loadMarkers();
-        }
+        const loadMarkers = async () => {
+            await getMarkers(currentUser.uid);
+        };
+
+        loadMarkers();
     }, [getMarkers, currentUser]);
 
-    /**
-     * TODO: Add the SuperMarkers to the user store
-     */
+    // TODO: Add the SuperMarkers to the user store
 
     return (
         <div className="relative overflow-hidden mb-20 md:mb-28 mt-12 w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
@@ -58,17 +58,13 @@ export const StatsCard = () => {
                 <div className="text-center lg:h-24">
                     <p className="text-lg">Nombre de points posés</p>
                     <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
-                        {markers.length !== 0 ? <NumberTicker value={markers.length} /> : 0}
+                        {userMarkersCount > 0 ? <NumberTicker value={userMarkersCount} /> : 0}
                     </span>
                 </div>
                 <div className="text-center lg:h-24">
                     <p className="text-lg">Supers points restant</p>
                     <span className="whitespace-pre-wrap text-2xl font-bold tracking-tighter text-black">
-                        {currentUser && currentUser.superMarkers !== undefined && currentUser.superMarkers !== 0 ? (
-                            <NumberTicker value={currentUser.superMarkers} />
-                        ) : (
-                            0
-                        )}
+                        {userSuperMarkersCount > 0 ? <NumberTicker value={userSuperMarkersCount} /> : 0}
                     </span>
                 </div>
                 <div className="text-center lg:h-24">

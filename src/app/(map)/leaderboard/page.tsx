@@ -1,7 +1,7 @@
 'use client';
 import LeaderboardBanners from '@/components/leaderboard/leaderboardBanner';
 import LeaderboardList from '@/components/leaderboard/leaderboardList';
-import LeaderboardProfile from '@/components/leaderboard/leaderboardProfile';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser } from '@/types';
@@ -39,26 +39,36 @@ const Leaderboard = () => {
     }
 
     return (
-        <div className="w-full h-full px-2">
-            <Tabs defaultValue="global" className="w-full flex flex-col justify-center">
-                <TabsList className="mx-auto mt-4">
-                    <TabsTrigger value="global">Global</TabsTrigger>
-                    <TabsTrigger value="amis">Amis</TabsTrigger>
+        <section className="w-full h-[calc(100%-86px)] flex justify-center p-4">
+            <Tabs defaultValue="global" className="w-[1000px] h-full flex flex-col">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="global">Globale</TabsTrigger>
+                    <TabsTrigger value="friends">Amis</TabsTrigger>
                 </TabsList>
-                <TabsContent value="global" className="w-full md:w-2/3 mx-auto flex flex-col justify-center items-center mt-12">
-                    <h2>Classement Global</h2>
-                    <LeaderboardBanners players={topUsers} />
-                    <LeaderboardList players={otherUsers} />
-                    <LeaderboardProfile />
+                <TabsContent value="global" className="flex-grow overflow-hidden">
+                    <Card className="flex flex-col h-full">
+                        <CardContent className="space-y-2 flex-grow overflow-hidden flex flex-col">
+                            <CardHeader>
+                                <h2 className="text-center mb-4">Classement Global</h2>
+                            </CardHeader>
+                            <LeaderboardBanners players={topUsers} />
+                            <LeaderboardList players={otherUsers} />
+                        </CardContent>
+                    </Card>
                 </TabsContent>
-                <TabsContent value="amis" className="w-full md:w-2/3 mx-auto flex flex-col justify-center items-center mt-12">
-                    <h2>Classement Amis</h2>
-                    <LeaderboardBanners players={topFriends} />
-                    <LeaderboardList players={otherFriends} />
-                    <LeaderboardProfile />
+                <TabsContent value="friends" className="flex-grow overflow-hidden">
+                    <Card className="flex flex-col h-full">
+                        <CardContent className="space-y-2 flex-grow overflow-hidden flex flex-col">
+                            <CardHeader>
+                                <h2 className="text-center mb-4">Classement Amis</h2>
+                            </CardHeader>
+                            <LeaderboardBanners players={topFriends} />
+                            <LeaderboardList players={otherFriends} />
+                        </CardContent>
+                    </Card>
                 </TabsContent>
             </Tabs>
-        </div>
+        </section>
     );
 };
 

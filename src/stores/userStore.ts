@@ -34,16 +34,24 @@ const useUserStore = create<UserStore>((set) => ({
     },
     fetchUserByScores: async () => {
         const users = await getTopUsersByScore();
+        // const currentUser = useUserStore.getState().currentUser;
         set((state) => {
             const newUsers = users.filter((user) => !state.topUsersByScore.some((u) => u.uid === user.uid));
-            if (newUsers.length === 0) return state;
+            // if (currentUser && !state.topUsersByScore.some((u) => u.uid === currentUser.uid)) {
+            //     newUsers.push(currentUser);
+            // }
+            // if (newUsers.length === 0) return state;
             return { topUsersByScore: [...state.topUsersByScore, ...newUsers] };
         });
     },
     fetchFriendsUserByScores: async (userId: string) => {
         const users = await getFriendsTopUsersByScore(userId);
+        // const currentUser = useUserStore.getState().currentUser;
         set((state) => {
             const newUsers = users.filter((user) => !state.topFriendsUsersByScore.some((u) => u.uid === user.uid));
+            // if (currentUser && !state.topFriendsUsersByScore.some((u) => u.uid === currentUser.uid)) {
+            //     newUsers.push(currentUser);
+            // }
             if (newUsers.length === 0) return state;
             return {
                 topFriendsUsersByScore: [...state.topFriendsUsersByScore, ...newUsers]

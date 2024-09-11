@@ -29,7 +29,7 @@ export interface MarkerState {
     clearFriendsMarkers: () => void;
     clearGroupsMarkers: () => void;
     clearPublicMarkers: () => void;
-    getMarkers: (userUid: string) => void;
+    getUserMarkers: (userUid: string) => void;
     getFriendsMarkers: (userUid: string) => void;
     getGroupsMarkers: (userUid: string) => void;
     getPublicMarkers: (userUid: string) => void;
@@ -69,7 +69,7 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
     clearGroupsMarkers: () => set({ groupsMarkers: [] }),
     clearPublicMarkers: () => set({ publicMarkers: [] }),
 
-    getMarkers: async (userUid: string) => {
+    getUserMarkers: async (userUid: string) => {
         const userMarkers = await getUserMarkers(userUid);
         set({ userMarkers });
     },

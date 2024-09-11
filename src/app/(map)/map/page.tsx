@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import type { Feature, FeatureCollection, Point } from 'geojson';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
 import { Marker } from '@/types/index';
@@ -22,38 +22,34 @@ export default function Home() {
         groupsMarkers,
         publicMarkers,
         lastMarker,
-        getMarkers,
+        getUserMarkers,
         getFriendsMarkers,
         getGroupsMarkers,
         getPublicMarkers,
         clearLastMarker
     } = useMarkerStore();
 
-    const [modalMarker, setModalMarker] = useState<any>(null);
-    const [showFriends, setShowFriends] = useState(true);
-    const [showGroups, setShowGroups] = useState(true);
-    const [showPublic, setShowPublic] = useState(true);
+    const [modalMarker, setModalMarker] = useState<Marker | null>(null);
+    const [showFriends, setShowFriends] = useState<boolean>(true);
+    const [showGroups, setShowGroups] = useState<boolean>(true);
+    const [showPublic, setShowPublic] = useState<boolean>(true);
 
     const map = useRef<MapRef | null>(null);
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
 
-    const combinedMarkers = useMemo<FeatureCollection<Point>>(() => {
+    const allMarkersFiltered = useMemo<FeatureCollection<Point>>(() => {
         const getMarkerGeoJson = (markers: Marker[], markerType: string): Feature<Point>[] => {
             return markers.map((marker: Marker) => ({
                 type: 'Feature',
                 properties: {
-                    id: marker.id,
-                    name: marker.name,
-                    description: marker.description,
-                    likedBy: marker.likedBy,
-                    likeCount: marker.likeCount,
+                    ...marker,
                     type: markerType
                 },
                 geometry: {
                     type: 'Point',
                     coordinates: [marker.longitude, marker.latitude]
                 }
-            }))
+            }));
         };
 
         return {
@@ -64,12 +60,11 @@ export default function Home() {
                 ...(showGroups ? getMarkerGeoJson(groupsMarkers, 'group') : []),
                 ...(showPublic ? getMarkerGeoJson(publicMarkers, 'public') : [])
             ]
-        }
+        };
     }, [userMarkers, friendsMarkers, groupsMarkers, publicMarkers, showFriends, showGroups, showPublic]);
 
     const onMapLoad = useCallback(() => {
-        const currentMap = map.current;
-        if (!currentMap) return;
+        const currentMap = map.current!;
 
         const loadImage = (url: string, id: string) => {
             currentMap.loadImage(url, (error: any, image: any) => {
@@ -80,49 +75,35 @@ export default function Home() {
             });
         };
 
-        const handleClickUnclusteredPoint = (e: any) => {
-            const features = e.features[0];
-    
-            if (features && features.properties && map.current) {
-                const currentMap = map.current.getMap();
-                const properties = features.properties;
-                setModalMarker(
-                    userMarkers.find((marker) => marker.id === properties.id) ||
-                        friendsMarkers.find((marker) => marker.id === properties.id) ||
-                        groupsMarkers.find((marker) => marker.id === properties.id) ||
-                        publicMarkers.find((marker) => marker.id === properties.id)
-                );
-                currentMap.flyTo({
-                    center: features.geometry.coordinates,
-                    zoom: 15
-                });
-            }
-        };
-
         loadImage('images/logo-user.png', 'logo-user');
         loadImage('images/logo-friend.png', 'logo-friend');
         loadImage('images/logo-group.png', 'logo-group');
         loadImage('images/logo-public.png', 'logo-public');
+    }, []);
 
-        currentMap.on('click', 'unclustered-point', handleClickUnclusteredPoint);
+    const onMarkerClick = useCallback((e: any) => {
+        const clickedFeature = e.features[0];
+        if (!clickedFeature || !clickedFeature.properties || !map.current) return;
 
-        currentMap.on('mouseenter', 'unclustered-point', () => {
-            currentMap.getCanvas().style.cursor = 'pointer';
+        setModalMarker({
+            ...clickedFeature.properties,
+            user: JSON.parse(clickedFeature.properties.user)
         });
 
-        currentMap.on('mouseleave', 'unclustered-point', () => {
-            currentMap.getCanvas().style.cursor = '';
+        map.current.flyTo({
+            center: clickedFeature.geometry.coordinates,
+            zoom: 15
         });
     }, []);
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
-            getMarkers(currentUser.uid);
+            getUserMarkers(currentUser.uid);
             getFriendsMarkers(currentUser.uid);
             getGroupsMarkers(currentUser.uid);
             getPublicMarkers(currentUser.uid);
         }
-    }, [currentUser, getMarkers, getFriendsMarkers, getGroupsMarkers, getPublicMarkers]);
+    }, [currentUser, getUserMarkers, getFriendsMarkers, getGroupsMarkers, getPublicMarkers]);
 
     useEffect(() => {
         if (lastMarker && map.current) {
@@ -197,6 +178,10 @@ export default function Home() {
             <Map
                 ref={map}
                 onLoad={onMapLoad}
+                onClick={onMarkerClick}
+                onMouseEnter={() => (map.current!.getCanvas().style.cursor = 'pointer')}
+                onMouseLeave={() => (map.current!.getCanvas().style.cursor = '')}
+                interactiveLayerIds={['unclustered-point']}
                 mapboxAccessToken={mapboxToken}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 style={{ width: '100%', height: '100%' }}
@@ -208,7 +193,14 @@ export default function Home() {
                 maxZoom={30}
                 minZoom={3}
             >
-                <Source id="my-data" type="geojson" data={combinedMarkers} cluster={true} clusterMaxZoom={10} clusterRadius={100}>
+                <Source
+                    id="my-data"
+                    type="geojson"
+                    data={allMarkersFiltered}
+                    cluster={true}
+                    clusterMaxZoom={10}
+                    clusterRadius={100}
+                >
                     <Layer {...clusterLayer} />
                     <Layer {...clusterCountLayer} />
                     <Layer {...unclusteredPointLayer} />

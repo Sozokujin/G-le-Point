@@ -14,7 +14,7 @@ export interface UserStore {
 }
 
 export interface Marker {
-    id?: string;
+    id: string;
     name: string;
     description: string | null;
     tags: string | null;

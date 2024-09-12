@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import Contact from '@/components/contact/contact';
 import LandingFooter from '@/components/landingFooter';
 import LandingNavbar from '@/components/landingNavbar';
 import { BorderBeam } from '@/components/magicui/border-beam';
@@ -349,7 +350,7 @@ export default function Page() {
                         />
                     </div>
                     <div className="mx-auto max-w-2xl text-center my-36">
-                        <h2 id="contact" className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                             Boostez votre curiosité.
                             <br />
                             Commencer à explorer avec notre app aujourd'hui.
@@ -385,6 +386,7 @@ export default function Page() {
                         />
                     </div>
                 </div>
+                <Contact />
             </main>
             <LandingFooter />
             <ToastDeletedAccount />

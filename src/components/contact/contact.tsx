@@ -77,7 +77,7 @@ const Contact = () => {
     }, [form]);
 
     return (
-        <div className="mx-auto flex flex-col justify-center items-center max-w-5xl">
+        <div id="contact" className="mx-auto flex flex-col justify-center items-center max-w-5xl">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Nous contacter</h1>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full lg:w-2/3 space-y-6 p-4">

@@ -1,43 +1,33 @@
 'use client';
 
-import { FriendList } from '@/components/friends/friendList';
-import { GroupList } from '@/components/friends/groups/groupList';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Group, Marker } from '@/types/index';
-import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from '@/components/ui/drawer';
-import useIsMobile from '@/utils/isMobile';
-import { FirebaseUser } from '@/types';
 import { useState } from 'react';
-import markerStore from '@/stores/markerStore';
-import { getUserMarkers, getGroupMarkers } from '@/services/firebase/markers';
+import { useIsMobile } from '@/utils/isMobile';
+// import markerStore from '@/stores/markerStore';
+import { Group, Marker, FirebaseUser } from '@/types/index';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { getUserMarkers, getGroupMarkers } from '@/services/firebase/markers';
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from '@/components/ui/drawer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card } from '@/components/ui/card';
 import { MarkerList } from '@/components/marker/marker-list';
+import { FriendList } from '@/components/friends/friendList';
 import FriendHeader from '@/components/friends/friend-header';
+import { GroupList } from '@/components/friends/groups/groupList';
 import GroupHeader from '@/components/friends/groups/group-header';
 
 const Friends = () => {
-    const isMobile = useIsMobile();
+    const { isMobile } = useIsMobile();
     // const { friendsMarkers, getFriendsMarkers, groupMarkers, getGroupMarkers } = markerStore(); //FIXME: REFACTO MARKERSTORE !!!!!!
     const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
     const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const handleSelectedFriendChange = async (friend: FirebaseUser) => {
         setDisplayMarkers([]);
         setSelectedGroup(null);
         setSelectedFriend(friend);
-        if (friend) {
-            setDisplayMarkers(await getUserMarkers(friend.uid));
-        } else {
-            setDisplayMarkers([]);
-        }
-        if (isInitialLoad) {
-            setIsInitialLoad(false);
-            return;
-        }
+        setDisplayMarkers(friend ? await getUserMarkers(friend.uid) : []);
         setDrawerOpen(true);
     };
 
@@ -45,31 +35,20 @@ const Friends = () => {
         setDisplayMarkers([]);
         setSelectedFriend(null);
         setSelectedGroup(group);
-        if (group) {
-            setDisplayMarkers(await getGroupMarkers(group.id));
-        } else {
-            setDisplayMarkers([]);
-        }
-        if (isInitialLoad) {
-            setIsInitialLoad(false);
-            return;
-        }
+        setDisplayMarkers(group ? await getGroupMarkers(group.id) : []);
         setDrawerOpen(true);
     };
 
-    const resetDrawerState = () => {
+    const closeDrawer = () => {
         setDrawerOpen(false);
-        setIsInitialLoad(true);
-    };
-
-    const handleCloseDrawer = () => {
-        setDrawerOpen(false);
+        setSelectedFriend(null);
+        setSelectedGroup(null);
     };
 
     return (
         <div className="w-full h-full flex gap-2 p-2 bg-muted">
             <section className="sm:w-5/12 w-full h-full">
-                <Tabs defaultValue="friends" className="w-full h-full flex flex-col" onValueChange={() => resetDrawerState()}>
+                <Tabs onValueChange={closeDrawer} defaultValue="friends" className="w-full h-full flex flex-col">
                     <Card className="w-full">
                         <TabsList className="grid w-full grid-cols-2 bg-slate-200">
                             <TabsTrigger value="friends">Amis</TabsTrigger>
@@ -77,16 +56,16 @@ const Friends = () => {
                         </TabsList>
                     </Card>
                     <TabsContent className="grow" value="friends">
-                        <FriendList onSelectedFriendChange={handleSelectedFriendChange} />
+                        <FriendList selectedFriend={selectedFriend} setSelectedFriend={handleSelectedFriendChange} />
                     </TabsContent>
                     <TabsContent className="grow" value="groups">
-                        <GroupList onSelectGroupChange={handleSelectedGroupChange} />
+                        <GroupList selectedGroup={selectedGroup} setSelectedGroup={handleSelectedGroupChange} />
                     </TabsContent>
                 </Tabs>
             </section>
             {isMobile ? (
-                <Drawer open={drawerOpen} onClose={handleCloseDrawer}>
-                    {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SR */}
+                <Drawer open={drawerOpen} onClose={closeDrawer}>
+                    {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SCREEN READER */}
                     <VisuallyHidden.Root>
                         <DrawerTitle>Friends list</DrawerTitle>
                         <DrawerDescription>List of your friends</DrawerDescription>

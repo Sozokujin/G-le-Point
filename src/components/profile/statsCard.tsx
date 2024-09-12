@@ -1,11 +1,11 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import NumberTicker from '@/components/magicui/number-ticker';
+import CheckoutStripe from '@/components/stripe/buttonProducts';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
-import { useEffect, useMemo } from 'react';
-import CheckoutStripe from '../stripe/buttonProducts';
 
 export const StatsCard = () => {
     const { currentUser } = useUserStore();
@@ -67,7 +67,7 @@ interface StatItemProps {
     todo?: boolean;
 }
 
-const StatItem: React.FC<StatItemProps> = ({ label, value, icon, todo = false }) => (
+const StatItem = ({ label, value, icon, todo = false }: StatItemProps) => (
     <div className="text-center p-6 bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 text-green-700 flex flex-col items-center justify-center space-y-3 border border-green-100 select-none">
         <div className="text-4xl mb-2">{icon}</div>
         <p className="text-lg font-medium">{label}</p>

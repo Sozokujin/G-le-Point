@@ -1,19 +1,19 @@
 'use client';
 
-import Filter from '@/components/map/filter';
-import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import type { Feature, FeatureCollection, Point } from 'geojson';
+import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
 import ModalMarker from '@/components/modalMarker';
 import ListButtonsMaps from '@/components/stripe/listButtonsMap';
+import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import Filter from '@/components/map/filter';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
 import { Marker } from '@/types/index';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import type { Feature, FeatureCollection, Point } from 'geojson';
-import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
 import classes from '../../Page.module.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
     const { currentUser } = useUserStore();

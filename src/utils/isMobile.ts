@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
 
-const useIsMobile = () => {
-    const [isMobile, setIsMobile] = useState(false);
+interface UseIsMobile {
+    isMobile: boolean | null;
+    isPending: boolean;
+}
+
+export const useIsMobile = (): UseIsMobile => {
+    const [isMobile, setIsMobile] = useState<boolean | null>(null);
+    const [isPending, setIsPending] = useState<boolean>(true);
 
     useEffect(() => {
-        const mediaQuery = window.matchMedia('(max-width: 640px)');
         const handleMediaQueryChange = (event: MediaQueryListEvent) => {
             setIsMobile(event.matches);
         };
 
+        const mediaQuery = window.matchMedia('(max-width: 640px)');
         setIsMobile(mediaQuery.matches);
+        setIsPending(false);
 
         mediaQuery.addEventListener('change', handleMediaQueryChange);
 
@@ -18,7 +25,5 @@ const useIsMobile = () => {
         };
     }, []);
 
-    return isMobile;
+    return { isMobile, isPending };
 };
-
-export default useIsMobile;

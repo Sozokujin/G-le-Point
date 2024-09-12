@@ -39,7 +39,7 @@ const Leaderboard = () => {
     }
 
     return (
-        <section className="w-full h-[calc(100%-86px)] flex justify-center p-4">
+        <section className="w-full h-full pb-28 bg-muted flex justify-center p-4">
             <Tabs defaultValue="global" className="w-[1000px] h-full flex flex-col">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="global">Global</TabsTrigger>

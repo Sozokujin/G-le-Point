@@ -30,7 +30,7 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
             });
 
             if (!response.ok) {
-                const text = await response.text(); // Essayez de lire le texte en cas d'erreur
+                const text = await response.text();
                 throw new Error(`Error: ${response.statusText}. Details: ${text}`);
             }
 
@@ -45,9 +45,14 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
     };
 
     return (
-        <Button className="btn btn-primary btn-sm" onClick={handleSubmit}>
-            {description}
-        </Button>
+        <button
+            onClick={handleSubmit}
+            className="relative overflow-hidden bg-gradient-to-r from-green-400 to-glp-green hover:from-green-500 hover:to-glp-green-700 text-white font-semibold py-2 px-4 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 w-full group"
+        >
+            <span className="relative z-10">{description}</span>
+            <span className="absolute top-0 left-0 w-full h-full bg-white transform -translate-x-full group-hover:translate-x-full transition-transform duration-300 ease-in-out opacity-25 rotate-12" />
+            {/* DO NOT REMOVE SPAN, SHINE EFFECT ON HOVER */}
+        </button>
     );
 };
 

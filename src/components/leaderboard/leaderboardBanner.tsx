@@ -39,8 +39,10 @@ export default function LeaderboardBanners({ players }: LeaderboardProps) {
                         </Avatar>
                         <div className={`text-center ${index === 0 ? 'mb-20' : 'mb-20'} text-sm font-semibold text-gray-800`}>
                             <p className="pt-2">{player.username ?? player.displayName}</p>
-                            <div className={`mt-2 text-lg font-bold text-white ${colors[index]} px-2 py-1 rounded-xl w-fit mx-auto`}>
-                                {player.score > 0 ? <NumberTicker className='text-white' value={player.score} /> : <span>0</span>}
+                            <div
+                                className={`mt-2 text-lg font-bold text-white ${colors[index]} px-2 py-1 rounded-xl w-fit mx-auto`}
+                            >
+                                {player.score > 0 ? <NumberTicker className="text-white" value={player.score} /> : <span>0</span>}
                             </div>
                         </div>
                         {index === 0 && (

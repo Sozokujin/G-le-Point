@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
-import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
-import type { Feature, FeatureCollection, Point } from 'geojson';
+import Filter from '@/components/map/filter';
+import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import ModalMarker from '@/components/modalMarker';
+import ListButtonsMaps from '@/components/stripe/listButtonsMap';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
 import { Marker } from '@/types/index';
-import ModalMarker from '@/components/modalMarker';
-import { ModalListMarkers } from '@/components/map/modalListMarkers';
-import Filter from '@/components/map/filter';
-import classes from '../../Page.module.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import type { Feature, FeatureCollection, Point } from 'geojson';
+import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
+import classes from '../../Page.module.css';
 
 export default function Home() {
     const { currentUser } = useUserStore();
@@ -208,6 +209,7 @@ export default function Home() {
 
                 <GeolocateControl position="top-left" />
                 <ModalListMarkers />
+                <ListButtonsMaps />
                 {modalMarker && <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />}
             </Map>
         </main>

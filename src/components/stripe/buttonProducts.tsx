@@ -1,6 +1,7 @@
 'use client';
 import useUserStore from '@/stores/userStore';
 import { loadStripe } from '@stripe/stripe-js';
+import { Button } from '../ui/button';
 
 type props = {
     priceId: string;
@@ -44,9 +45,9 @@ const CheckoutStripe = ({ priceId, price, description }: props) => {
     };
 
     return (
-        <div className="text-primary ring-1 ring-inset hover:bg-glp-green-800 hover:text-white ring-current duration-300 mb-6 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-            <button onClick={handleSubmit}>{description}</button>
-        </div>
+        <Button className="btn btn-primary btn-sm" onClick={handleSubmit}>
+            {description}
+        </Button>
     );
 };
 

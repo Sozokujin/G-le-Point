@@ -70,16 +70,16 @@ const Checkout = () => {
     }
 
     return (
-        <div className="min-h-[100svh] w-full lg:w-2/3 flex flex-col justify-start items-center md:items-baseline container p-6">
-            <div className="relative mx-auto w-32 h-32 lg:w-48 lg:h-48 ">
+        <div className="h-full w-full max-w-xl flex flex-col justify-center items-center container p-4 md:p-6 pb-12">
+            <div className="max-w-xl relative mx-auto w-24 h-24 md:w-32 md:h-32 ">
                 <Image src={'/images/order_success.svg'} fill={true} alt="" />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold mb-6">Merci pour votre achat !</h1>
             <div className="w-full bg-white shadow-md rounded-lg p-6">
-                <h2 className="text-xl font-semibold mb-4">Détails de votre commande :</h2>
+                <h2 className="text-sm md:text-lg font-semibold mb-2 md:mb-4">Détails de votre commande :</h2>
                 {sessionData.line_items.map((item, index) => (
                     <div key={index} className="mb-4">
-                        <p className="text-lg font-medium">{item.description}</p>
+                        <p>{item.description}</p>
                         <p>Quantité : {item.quantity}</p>
                         <p>
                             Prix unitaire : {(item.price.unit_amount / 100).toFixed(2)} {sessionData.currency.toUpperCase()}
@@ -87,15 +87,15 @@ const Checkout = () => {
                     </div>
                 ))}
 
-                <div className="mt-6">
-                    <p className="text-lg font-bold">
+                <div className="mt-2 md:mt-6">
+                    <p className="text-sm md:text-lg font-bold">
                         Total payé : {(sessionData.amount_total / 100).toFixed(2)} {sessionData.currency.toUpperCase()}
                     </p>
                     <p>Statut du paiement : Réussi</p>
                 </div>
             </div>
 
-            <div className="text-center mt-6">
+            <div className="text-center mt-2 md:mt-6 mb-4 md:mb-12">
                 <p className="text-slate-700 text-sm font-medium mb-4">
                     Nous vous remercions pour votre achat. Si vous avez des questions, n&apos;hésitez pas à nous contacter par
                     mail :{' '}

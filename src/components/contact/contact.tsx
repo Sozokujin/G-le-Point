@@ -117,7 +117,7 @@ const Contact = () => {
                                     <Input placeholder="exemple@exemple.com" {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    Il s&apos;agit de l'adresse mail à laquelle nous vous recontacterons.
+                                    Il s&apos;agit de l&apos;adresse mail à laquelle nous vous recontacterons.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

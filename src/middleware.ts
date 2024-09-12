@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { authMiddleware, redirectToHome, redirectToLogin } from 'next-firebase-auth-edge';
 import { clientConfig } from '@/services/firebase/config';
+import { authMiddleware, redirectToHome, redirectToLogin } from 'next-firebase-auth-edge';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/', '/team', '/mentions-legales', '/politique-de-confidentialite', '/cgu', '/login'];
+const PUBLIC_PATHS = ['/', '/team', '/mentions-legales', '/politique-de-confidentialite', '/cgu', '/login', '/contact'];
 const PUBLIC_ONLY_PATHS = ['/login'];
 
 const serverConfig = {

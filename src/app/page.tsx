@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import Contact from '@/components/contact/contact';
 import LandingFooter from '@/components/landingFooter';
 import LandingNavbar from '@/components/landingNavbar';
 import { BorderBeam } from '@/components/magicui/border-beam';
@@ -385,6 +386,7 @@ export default function Page() {
                         />
                     </div>
                 </div>
+                <Contact />
             </main>
             <LandingFooter />
             <ToastDeletedAccount />

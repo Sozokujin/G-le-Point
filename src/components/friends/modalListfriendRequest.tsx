@@ -1,10 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { acceptFriendRequest, declineFriendRequest } from '@/services/firebase/friends';
 import { useFriendStore } from '@/stores/friendStore';
+import useUserStore from '@/stores/userStore';
+import { CheckIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
-import useUserStore from '@/stores/userStore';
 
 export const ModalListFriendRequest = () => {
     const { friendRequests, getFriendRequests } = useFriendStore();
@@ -32,7 +34,7 @@ export const ModalListFriendRequest = () => {
                 {friendRequests.length !== 0 ? (
                     <>
                         <h2 className="text-primary text-xl font-bold">Vos demandes d&apos;amis</h2>
-                        <ul className="flex flex-col gap-3">
+                        <ul className="max-h-96 overflow-y-auto flex flex-col gap-3">
                             {friendRequests.map((friendRequest, key) => (
                                 <FriendRequestLine key={key} friendRequest={friendRequest} />
                             ))}
@@ -73,18 +75,29 @@ const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
     );
 
     return (
-        <li className="h-24 w-full border-primary border-y-2 p-2 rounded-sm">
-            <div className="text-primary font-semibold">{friendRequest.displayName}</div>
-            <div className="w-full">
-                <Button onClick={() => handleAcceptFriendRequest(friendRequest.uid)} className="bg-glp-green text-white">
-                    Accepter
+        <li className="h-20 flex justify-between items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200">
+            <div className="flex justify-center items-center gap-4">
+                <Avatar className="h-9 w-9 flex">
+                    <AvatarImage src={friendRequest.photoURL!} alt={`${friendRequest.username}'s avatar`} />
+                    <AvatarFallback>{friendRequest.username?.slice(0, 1) || '??'}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                    <p className="text-sm font-medium leading-none truncate">{friendRequest.username}</p>
+                    <p className="text-sm text-muted-foreground truncate">{friendRequest.email}</p>
+                </div>
+            </div>
+            <div className="flex gap-4">
+                <Button onClick={() => handleAcceptFriendRequest(friendRequest.uid)} className="rounded-full p-2">
+                    <CheckIcon />
+                    <span className="sr-only">Accepter</span>
                 </Button>
                 <Button
                     onClick={() => handleDeclineFriendRequest(friendRequest.uid)}
                     variant={'secondary'}
-                    className="bg-red-500 text-white"
+                    className="rounded-full p-2"
                 >
-                    Refuser
+                    <XIcon />
+                    <span className="sr-only">Refuser</span>
                 </Button>
             </div>
         </li>

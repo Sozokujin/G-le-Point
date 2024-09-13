@@ -71,7 +71,7 @@ const StatItem = ({ label, value, icon, todo = false }: StatItemProps) => (
     <div className="text-center p-6 bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 text-green-700 flex flex-col items-center justify-center space-y-3 border border-green-100 select-none">
         <div className="text-4xl mb-2">{icon}</div>
         <p className="text-lg font-medium">{label}</p>
-        <span className="whitespace-pre-wrap text-3xl font-bold tracking-tighter">
+        <span className="text-black whitespace-pre-wrap text-3xl font-bold tracking-tighter">
             {todo ? <span className="text-gray-400">À venir</span> : value > 0 ? <NumberTicker value={value} /> : 0}
         </span>
     </div>

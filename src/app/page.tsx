@@ -365,12 +365,12 @@ export default function Page() {
                                     Commencer maintenant
                                 </PulsatingButton>
                             </Link>
-                            <a
-                                href="mailto:team.glepoint@gmail.com"
+                            <Link
+                                href="#contact"
                                 className="text-sm font-semibold leading-6 text-gray-900 hover:scale-110 duration-300"
                             >
                                 Nous contacter <span aria-hidden="true">→</span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                     <div

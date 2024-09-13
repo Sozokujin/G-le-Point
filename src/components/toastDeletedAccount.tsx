@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { toast } from 'sonner';
-import { Toaster } from './ui/sonner';
 
 function ToastDeletedAccountComponent() {
     const params = useSearchParams();
@@ -18,7 +17,7 @@ function ToastDeletedAccountComponent() {
         }
     }, [params]);
 
-    return <Toaster position="top-right" />;
+    return null;
 }
 
 export default function ToastDeletedAccount() {

@@ -34,9 +34,14 @@ export default function Home() {
     const [showFriends, setShowFriends] = useState<boolean>(true);
     const [showGroups, setShowGroups] = useState<boolean>(true);
     const [showPublic, setShowPublic] = useState<boolean>(true);
+    const [satelliteMap, setSatelliteMap] = useState<boolean>(true);
 
     const map = useRef<MapRef | null>(null);
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
+
+    const mapStyle = useMemo<string>(() => {
+        return satelliteMap ? 'mapbox://styles/mapbox/satellite-streets-v12' : 'mapbox://styles/mapbox/streets-v12';
+    }, [satelliteMap]);
 
     const allMarkersFiltered = useMemo<FeatureCollection<Point>>(() => {
         const getMarkerGeoJson = (markers: Marker[], markerType: string): Feature<Point>[] => {
@@ -65,21 +70,10 @@ export default function Home() {
     }, [userMarkers, friendsMarkers, groupsMarkers, publicMarkers, showFriends, showGroups, showPublic]);
 
     const onMapLoad = useCallback(() => {
-        const currentMap = map.current!;
+        if (!map.current) return;
 
-        const loadImage = (url: string, id: string) => {
-            currentMap.loadImage(url, (error: any, image: any) => {
-                if (error) throw error;
-                if (!currentMap.hasImage(id)) {
-                    currentMap.addImage(id, image);
-                }
-            });
-        };
-
-        loadImage('images/logo-user.png', 'logo-user');
-        loadImage('images/logo-friend.png', 'logo-friend');
-        loadImage('images/logo-group.png', 'logo-group');
-        loadImage('images/logo-public.png', 'logo-public');
+        addMarkerImages();
+        map.current.on('styledata', addMarkerImages);
     }, []);
 
     const onMarkerClick = useCallback((e: any) => {
@@ -117,6 +111,24 @@ export default function Home() {
             clearLastMarker();
         }
     }, [lastMarker, clearLastMarker]);
+
+    const addMarkerImages = () => {
+        const currentMap = map.current!;
+
+        const loadImage = (url: string, id: string) => {
+            currentMap.loadImage(url, (error: any, image: any) => {
+                if (error) throw error;
+                if (!currentMap.hasImage(id)) {
+                    currentMap.addImage(id, image);
+                }
+            });
+        };
+
+        loadImage('images/logo-user.png', 'logo-user');
+        loadImage('images/logo-friend.png', 'logo-friend');
+        loadImage('images/logo-group.png', 'logo-group');
+        loadImage('images/logo-public.png', 'logo-public');
+    };
 
     const clusterLayer: CircleLayerSpecification = {
         id: 'cluster',
@@ -175,6 +187,8 @@ export default function Home() {
                 setShowGroups={setShowGroups}
                 showPublic={showPublic}
                 setShowPublic={setShowPublic}
+                satelliteMap={satelliteMap}
+                setSatelliteMap={setSatelliteMap}
             />
             <Map
                 ref={map}
@@ -184,7 +198,7 @@ export default function Home() {
                 onMouseLeave={() => (map.current!.getCanvas().style.cursor = '')}
                 interactiveLayerIds={['unclustered-point']}
                 mapboxAccessToken={mapboxToken}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
+                mapStyle={mapStyle}
                 style={{ width: '100%', height: '100%' }}
                 initialViewState={{
                     latitude: 45.75208233358573,

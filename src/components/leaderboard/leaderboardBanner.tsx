@@ -1,61 +1,70 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FirebaseUser } from '@/types';
-import NumberTicker from '../magicui/number-ticker';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import NumberTicker from '@/components/magicui/number-ticker';
 
 const colors = ['bg-yellow-500', 'bg-slate-400', 'bg-amber-600'];
-const sizes = ['h-72 md:h-64 w-36 md:w-48 pt-4', 'h-64 md:h-52 w-32 md:w-44 pt-4', 'h-64 md:h-52 w-32 md:w-44 pt-4'];
-const positions = ['order-2', 'order-1', 'order-3'];
-const bgColor = ['bg-slate-200', 'bg-slate-100', 'bg-slate-100'];
-const rounded = ['rounded-t-xl', 'rounded-l-xl', 'rounded-r-xl'];
 
 interface LeaderboardProps {
     players: FirebaseUser[];
 }
 
-//FIXME: This component is not fully responsive
 export default function LeaderboardBanners({ players }: LeaderboardProps) {
+    const getBannerClasses = (index: number) => {
+        const common = 'flex flex-col gap-4 items-center justify-between relative pb-4';
+
+        switch (index) {
+            case 0:
+                return common + ' basis-[36%] h-64 sm:h-72 order-2 bg-slate-200 rounded-t-xl pt-6';
+            case 1:
+                return common + ' basis-[32%] h-60 sm:h-64 order-1 bg-slate-100 rounded-l-xl pt-4';
+            case 2:
+                return common + ' basis-[32%] h-56 sm:h-60 order-3 bg-slate-100 rounded-r-xl pt-4';
+            default:
+                return '';
+        }
+    };
+
+    const getAvatarClasses = (index: number) => {
+        switch (index) {
+            case 0:
+                return `w-14 h-14 sm:w-16 sm:h-16 ring-4 ring-offset-2 ring-yellow-500 ${colors[index]}`;
+            case 1:
+                return `w-10 h-10 sm:w-12 sm:h-12 ring-2 ring-offset-2 ring-slate-400 ${colors[index]}`;
+            case 2:
+                return `w-10 h-10 sm:w-12 sm:h-12 ring-2 ring-offset-2 ring-amber-600 ${colors[index]}`;
+            default:
+                return '';
+        }
+    };
+
     if (players.length === 0) {
         return <div>Pas de joueurs</div>;
     }
 
     return (
-        <div className="w-full flex items-end justify-center p-8 rounded-lg">
+        <div className="mx-auto w-full max-w-2xl flex gap items-end justify-center xs:px-4 sm:px-8 py-2 rounded-lg">
             {players.map((player, index) => (
-                <div key={index} className={`relative flex flex-col items-center ${positions[index]}`}>
+                <div key={index} className={getBannerClasses(index)}>
+                    <Avatar className={getAvatarClasses(index)}>
+                        <AvatarImage src={player.photoURL ?? ''} alt={player.username ?? ''} />
+                        <AvatarFallback>{player.username?.slice(0, 1) ?? player.displayName?.slice(0, 1)}</AvatarFallback>
+                    </Avatar>
+                    <p className="leading-5 text-sm text-center font-semibold text-gray-800">
+                        {player.username ?? player.displayName}
+                    </p>
                     <div
-                        className={`${sizes[index]} ${bgColor[index]} ${rounded[index]} flex flex-col items-center justify-around relative`}
+                        className={`text-base sm:text-lg font-bold text-white px-2 py-1 rounded-xl w-fit mx-auto ${colors[index]}`}
                     >
-                        <Avatar
-                            className={`${
-                                index === 0
-                                    ? 'w-16 h-16 ring-4 ring-yellow-500'
-                                    : index === 1
-                                      ? 'w-12 h-12 ring-2 ring-slate-400'
-                                      : 'w-12 h-12 ring-2 ring-amber-600'
-                            } ${colors[index]} ring-offset-2`}
-                        >
-                            <AvatarImage src={player.photoURL ?? ''} alt={player.username ?? ''} />
-                            <AvatarFallback>{player.username?.slice(0, 1) ?? player.displayName?.slice(0, 1)}</AvatarFallback>
-                        </Avatar>
-                        <div className={`text-center ${index === 0 ? 'mb-20' : 'mb-20'} text-sm font-semibold text-gray-800`}>
-                            <p className="pt-2">{player.username ?? player.displayName}</p>
-                            <div className={`mt-2 text-lg font-bold text-white ${colors[index]} px-2 py-1 rounded-xl w-fit mx-auto`}>
-                                {player.score > 0 ? <NumberTicker className='text-white' value={player.score} /> : <span>0</span>}
-                            </div>
-                        </div>
-                        {index === 0 && (
-                            <div className="absolute -top-10">
-                                <span className="text-5xl">👑</span>
-                            </div>
-                        )}
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                            <div
-                                className={`flex items-center justify-center ${index === 0 ? 'text-5xl' : 'text-4xl'} font-bold`}
-                            >
-                                {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
-                            </div>
-                        </div>
+                        {player.score > 0 ? <NumberTicker className="text-white" value={player.score} /> : <span>0</span>}
                     </div>
+                    <span className={`block font-bold ${index === 0 ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>
+                        {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                    </span>
+                    {index === 0 && (
+                        <div className="absolute -top-10">
+                            <span className="text-5xl">👑</span>
+                        </div>
+                    )}
                 </div>
             ))}
         </div>

@@ -15,6 +15,7 @@ export default function ListButtonsMaps() {
             description: 'Acheter 5 Super Points'
         }
     ];
+
     return (
         <div className="absolute top-16 right-4 flex flex-col gap-1">
             {products.map((product) => (

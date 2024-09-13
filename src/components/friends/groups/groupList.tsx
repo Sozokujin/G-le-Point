@@ -1,35 +1,35 @@
-import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
-import { Card } from '@/components/ui/card';
-import { useGroupStore } from '@/stores/groupStore';
-import { useCallback, useEffect, useState } from 'react';
-import { ModalCreateGroup } from './ModalCreateGroup';
-import { FirebaseUser, Group } from '@/types';
-import useUserStore from '@/stores/userStore';
-import { Separator } from '@/components/ui/separator';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { useGroupStore } from '@/stores/groupStore';
+import useUserStore from '@/stores/userStore';
+import { useIsMobile } from '@/utils/isMobile';
+import { FirebaseUser, Group } from '@/types/index';
+import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { set } from 'react-hook-form';
+import { Separator } from '@/components/ui/separator';
+import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
+import { ModalCreateGroup } from '@/components/friends/groups/ModalCreateGroup';
 
 interface GroupListProps {
-    onSelectGroupChange?: (group: Group) => void;
+    selectedGroup: Group | null;
+    setSelectedGroup?: (group: Group) => void;
 }
 
-export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => {
+export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) => {
+    const { isMobile, isPending } = useIsMobile();
     const { groups, getGroups } = useGroupStore();
-    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
-    const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
-    const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
     const { users, fetchUsersByIds, currentUser } = useUserStore();
 
-    const selectGroup = useCallback(
-        (group: Group | null) => {
-            setSelectedGroup(group);
-            if (onSelectGroupChange) {
-                onSelectGroupChange(group as Group);
-            }
-        },
-        [onSelectGroupChange]
-    );
+    const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
+    const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
+
+    const selectGroup = (group: Group | null) => {
+        if (!setSelectedGroup) return;
+
+        setSelectedGroup(group as Group);
+    };
 
     const transformToAvatarUser = (user: FirebaseUser): AvatarUser => ({
         id: user.uid,
@@ -38,18 +38,20 @@ export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => 
     });
 
     useEffect(() => {
-        if (!currentUser) return; // currentUser is not loaded yet so we can't fetch groups. Avoid infinite loop
+        if (!currentUser) return;
+
         if (groups.length === 0) {
             getGroups();
         } else {
             setFilteredGroups(groups);
-            if (groups.length > 0) {
-                selectGroup(groups[0]);
-            } else {
-                selectGroup(null);
-            }
         }
     }, [groups, getGroups, currentUser]);
+
+    useEffect(() => {
+        if (selectedGroup || groups.length === 0 || isMobile || isPending) return;
+
+        selectGroup(groups[0]);
+    }, [groups, selectedGroup, isMobile, isPending]);
 
     useEffect(() => {
         const groupMembersIds = groups.reduce((acc, group) => [...acc, ...group.members], [] as string[]);
@@ -57,25 +59,25 @@ export const GroupList: React.FC<GroupListProps> = ({ onSelectGroupChange }) => 
     }, [groups, fetchUsersByIds]);
 
     useEffect(() => {
-        if (users) {
-            const newGroupUsers = groups.reduce(
-                (acc, group) => {
-                    acc[group.id] = group.members
-                        .map((memberId) => users.find((user) => user.uid === memberId))
-                        .filter((user): user is FirebaseUser => user !== undefined)
-                        .map(transformToAvatarUser);
-                    return acc;
-                },
-                {} as { [key: string]: AvatarUser[] }
-            );
+        if (!users) return;
 
-            setGroupUsers((prevGroupUsers) => {
-                if (JSON.stringify(prevGroupUsers) !== JSON.stringify(newGroupUsers)) {
-                    return newGroupUsers;
-                }
-                return prevGroupUsers;
-            });
-        }
+        const newGroupUsers = groups.reduce(
+            (acc, group) => {
+                acc[group.id] = group.members
+                    .map((memberId) => users.find((user) => user.uid === memberId))
+                    .filter((user): user is FirebaseUser => user !== undefined)
+                    .map(transformToAvatarUser);
+                return acc;
+            },
+            {} as { [key: string]: AvatarUser[] }
+        );
+
+        setGroupUsers((prevGroupUsers) => {
+            if (JSON.stringify(prevGroupUsers) !== JSON.stringify(newGroupUsers)) {
+                return newGroupUsers;
+            }
+            return prevGroupUsers;
+        });
     }, [groups, users]);
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

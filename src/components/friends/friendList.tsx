@@ -1,55 +1,35 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 import { ClipboardDocumentIcon, MagnifyingGlassIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useFriendStore } from '@/stores/friendStore';
-import { ModalListFriendRequest } from './modalListfriendRequest';
-import { ModalSendFriendRequest } from './modalSendFriendRequest';
-import { FirebaseUser } from '@/types';
-import { Card } from '../ui/card';
 import useUserStore from '@/stores/userStore';
+import { useIsMobile } from '@/utils/isMobile';
+import { FirebaseUser } from '@/types/index';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ModalListFriendRequest } from '@/components/friends/modalListfriendRequest';
+import { ModalSendFriendRequest } from '@/components/friends/modalSendFriendRequest';
 
 interface FriendListProps {
-    onSelectedFriendChange?: (friend: FirebaseUser) => void;
+    selectedFriend: FirebaseUser | null;
+    setSelectedFriend?: (friend: FirebaseUser) => void;
 }
 
-export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }) => {
+export const FriendList = ({ selectedFriend, setSelectedFriend }: FriendListProps) => {
+    const { isMobile, isPending } = useIsMobile();
+    const { currentUser } = useUserStore();
     const { getFriends, friends, invitationCode, getInvitationCode, filteredFriends, setFilteredFriends } = useFriendStore();
-    const user = useUserStore((state) => state.currentUser);
-    const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
+
     const [showPopupCopy, setShowPopupCopy] = useState(false);
 
-    const selectFriend = useCallback(
-        (friend: FirebaseUser | null) => {
-            setSelectedFriend(friend);
-            if (onSelectedFriendChange) {
-                onSelectedFriendChange(friend as FirebaseUser);
-            }
-        },
-        [onSelectedFriendChange, setSelectedFriend]
-    );
+    const selectFriend = (friend: FirebaseUser | null) => {
+        if (!setSelectedFriend) return;
 
-    useEffect(() => {
-        if (user) {
-            getFriends();
-            getInvitationCode();
-        }
-
-        if (friends.length > 0) {
-            selectFriend(friends[0]);
-        } else {
-            selectFriend(null);
-        }
-    }, [user, getFriends, getInvitationCode, friends.length]); //DO NOT ADD selectFriend OR friends DEPENDENCIES (infinte loop)
-
-    useEffect(() => {
-        if (!selectedFriend && friends.length > 0) {
-            selectFriend(friends[0]);
-        }
-    }, [friends, selectedFriend, selectFriend]);
+        setSelectedFriend(friend as FirebaseUser);
+    };
 
     const handleSearchChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,18 +38,33 @@ export const FriendList: React.FC<FriendListProps> = ({ onSelectedFriendChange }
                 (friend) =>
                     friend.displayName?.toLowerCase().includes(searchQuery) || friend.email?.toLowerCase().includes(searchQuery)
             );
+
             setFilteredFriends(filtered);
         },
         [friends, setFilteredFriends]
     );
 
     const copyToClipboard = useCallback(() => {
-        if (invitationCode) {
-            navigator.clipboard.writeText(invitationCode);
-            setShowPopupCopy(true);
-            setTimeout(() => setShowPopupCopy(false), 3000);
-        }
+        if (!invitationCode) return;
+
+        navigator.clipboard.writeText(invitationCode);
+        setShowPopupCopy(true);
+        setTimeout(() => setShowPopupCopy(false), 3000);
     }, [invitationCode]);
+
+    useEffect(() => {
+        if (!currentUser) return;
+
+        getFriends();
+        getInvitationCode();
+    }, [currentUser, getFriends, getInvitationCode]);
+
+    useEffect(() => {
+        console.log('isMobile', isMobile);
+        if (selectedFriend || friends.length === 0 || isMobile || isPending) return;
+
+        selectFriend(friends[0]);
+    }, [friends, selectedFriend, isMobile, isPending]);
 
     return (
         <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
@@ -127,10 +122,10 @@ export const FriendLine = React.memo(
     ({ friend, selected, onSelect }: { friend: FirebaseUser; selected: boolean; onSelect: () => void }) => {
         return (
             <div
+                onClick={onSelect}
                 className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
                     selected ? 'bg-slate-100' : ''
                 }`}
-                onClick={onSelect}
             >
                 <Avatar className="h-9 w-9 flex">
                     <AvatarImage src={friend.photoURL!} alt={`${friend.displayName}'s avatar`} />

@@ -1,5 +1,10 @@
-'use client';
-
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
+import { toast } from 'sonner';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import {
     AlertDialog,
@@ -15,20 +20,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { auth } from '@/services/firebase/config';
 import { deleteAccount, updateUser } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signOut } from 'firebase/auth';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { Avatar, AvatarFallback } from '../ui/avatar';
+import { AvatarImage } from '@radix-ui/react-avatar';
+import { TrashIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/20/solid';
 
 const FormSchema = z.object({
     username: z.string().min(2, {
@@ -87,7 +86,7 @@ export const ProfileCard = () => {
         }
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (currentUser) {
             form.reset({
                 username: currentUser.username || currentUser.displayName || '',
@@ -97,23 +96,14 @@ export const ProfileCard = () => {
     }, [currentUser, form]);
 
     return (
-        <div className="relative overflow-hidden w-full flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-6">
-            {currentUser?.photoURL ? (
-                <Image
-                    src={currentUser?.photoURL ?? ''}
-                    alt={'Photo de profil de ' + (currentUser?.displayName ?? "l'utilisateur")}
-                    width={96}
-                    height={96}
-                    className="rounded-full shadow-md"
-                />
-            ) : (
-                <div className="flex justify-center items-center w-16 h-16 bg-primary text-white rounded-full shadow-md">
-                    <span className="text-xl">{currentUser?.displayName?.charAt(0)}</span>
-                </div>
-            )}
-            <h1 className="text-2xl">Mon compte</h1>
+        <div className="relative overflow-hidden w-full max-w-3xl flex flex-col justify-center items-center bg-white border border-gray-200 rounded-lg shadow p-4 sm:p-6">
+            <Avatar className="h-24 w-24">
+                <AvatarImage src={currentUser?.photoURL ?? ''} alt={currentUser?.username ?? ''} />
+                <AvatarFallback>{currentUser?.username?.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <h1 className="text-2xl mb-6">Mon compte</h1>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full lg:w-2/3 space-y-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full px-0 sm:px-24 space-y-4">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -170,57 +160,32 @@ export const ProfileCard = () => {
                         )}
                     />
                     <div className="w-full flex justify-center items-center">
-                        <Button type="submit" className="w-64 rounded-full" disabled={isFormUnchanged}>
+                        <Button type="submit" className="w-full sm:w-64 rounded-full" disabled={isFormUnchanged}>
                             Enregistrer
                         </Button>
                     </div>
                 </form>
             </Form>
 
-            <div className="flex flex-row justify-center items-center w-full mt-4 gap-4">
+            <div className="flex flex-col sm:flex-row justify-center items-center w-full mt-6 gap-4">
                 <Button
                     onClick={handleLogout}
                     variant="destructive"
-                    className="bg-slate-500 text-white hover:bg-slate-600 p-4 rounded-full"
+                    className="w-full sm:w-auto bg-slate-500 text-white hover:bg-slate-600 p-4 rounded-full"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-4"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
-                        />
-                    </svg>
-                    <span className="text-sm px-1">Se déconnecter</span>
+                    <ArrowLeftStartOnRectangleIcon className="w-4 h-4 mr-2" />
+                    <span className="text-sm">Se déconnecter</span>
                 </Button>
                 <AlertDialog>
-                    <AlertDialogTrigger className="bg-destructive text-white hover:bg-red-600 p-3 rounded-full">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="size-4"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                            />
-                        </svg>
+                    <AlertDialogTrigger className="w-full sm:w-auto bg-destructive text-white hover:bg-red-600 p-4 rounded-full flex justify-center items-center h-10">
+                        <TrashIcon className="w-4 h-4 mr-2" />
+                        <span className="text-sm">Supprimer le compte</span>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
                             <AlertDialogTitle>Etes-vous absolument sûr ?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte et supprimez
+                                Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte et supprimera
                                 vos données de nos serveurs.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
@@ -233,7 +198,6 @@ export const ProfileCard = () => {
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
-            <Toaster richColors position="top-right" />
             <BorderBeam size={800} duration={12} delay={18} colorFrom="#9FCF6D" colorTo="#7CC772" />
         </div>
     );

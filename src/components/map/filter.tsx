@@ -12,7 +12,7 @@ interface FilterProps {
     setShowPublic: (value: boolean) => void;
 }
 
-const Filter: React.FC<FilterProps> = ({ showFriends, setShowFriends, showGroups, setShowGroups, showPublic, setShowPublic }) => {
+const Filter = ({ showFriends, setShowFriends, showGroups, setShowGroups, showPublic, setShowPublic }: FilterProps) => {
     return (
         <div className="absolute top-2 left-12 flex flex-row bg-white p-2 rounded-md z-10 gap-4">
             <Switch id="showPublic" checked={showPublic} onCheckedChange={() => setShowPublic(!showPublic)} />

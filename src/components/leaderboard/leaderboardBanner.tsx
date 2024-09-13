@@ -22,7 +22,7 @@ export default function LeaderboardBanners({ players }: LeaderboardProps) {
             default:
                 return '';
         }
-    }
+    };
 
     const getAvatarClasses = (index: number) => {
         switch (index) {
@@ -35,8 +35,8 @@ export default function LeaderboardBanners({ players }: LeaderboardProps) {
             default:
                 return '';
         }
-    }
-    
+    };
+
     if (players.length === 0) {
         return <div>Pas de joueurs</div>;
     }
@@ -52,7 +52,9 @@ export default function LeaderboardBanners({ players }: LeaderboardProps) {
                     <p className="leading-5 text-sm text-center font-semibold text-gray-800">
                         {player.username ?? player.displayName}
                     </p>
-                    <div className={`text-base sm:text-lg font-bold text-white px-2 py-1 rounded-xl w-fit mx-auto ${colors[index]}`}>
+                    <div
+                        className={`text-base sm:text-lg font-bold text-white px-2 py-1 rounded-xl w-fit mx-auto ${colors[index]}`}
+                    >
                         {player.score > 0 ? <NumberTicker className="text-white" value={player.score} /> : <span>0</span>}
                     </div>
                     <span className={`block font-bold ${index === 0 ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>

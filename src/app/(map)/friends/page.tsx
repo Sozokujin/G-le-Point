@@ -46,8 +46,8 @@ const Friends = () => {
     };
 
     return (
-        <div className="w-full h-full flex gap-2 p-2 bg-muted">
-            <section className="sm:w-5/12 w-full h-full">
+        <div className="h-svh bg-muted p-2 sm:p-4 flex gap-2">
+            <section className="sm:w-5/12 w-full">
                 <Tabs onValueChange={closeDrawer} defaultValue="friends" className="w-full h-full flex flex-col">
                     <Card className="w-full">
                         <TabsList className="grid w-full grid-cols-2 bg-slate-200">
@@ -85,7 +85,7 @@ const Friends = () => {
                     </DrawerContent>
                 </Drawer>
             ) : (
-                <section className="sm:w-7/12 sm:flex flex-col hidden h-full bg-white rounded shadow p-2">
+                <section className="sm:w-7/12 sm:flex flex-col hidden bg-white rounded shadow p-2">
                     {selectedFriend && (
                         <FriendHeader
                             friendId={selectedFriend?.uid}

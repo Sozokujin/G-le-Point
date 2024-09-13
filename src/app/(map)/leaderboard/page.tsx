@@ -1,4 +1,5 @@
 'use client';
+
 import LeaderboardBanners from '@/components/leaderboard/leaderboardBanner';
 import LeaderboardList from '@/components/leaderboard/leaderboardList';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -32,15 +33,15 @@ const Leaderboard = () => {
 
     if (loading) {
         return (
-            <div className="h-full w-full flex items-center justify-center">
+            <div className="h-svh w-full flex items-center justify-center">
                 <BarLoader color="#37b978" />
             </div>
         );
     }
 
     return (
-        <section className="w-full h-full pb-28 bg-muted flex justify-center p-4">
-            <Tabs defaultValue="global" className="w-full h-full max-w-5xl flex flex-col">
+        <div className="h-svh bg-muted p-2 sm:p-4 flex justify-center">
+            <Tabs defaultValue="global" className="w-full h-full max-w-5xl flex flex-col navbar-padding">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="global">Global</TabsTrigger>
                     <TabsTrigger value="friends">Amis</TabsTrigger>
@@ -49,7 +50,7 @@ const Leaderboard = () => {
                     <Card className="flex flex-col h-full">
                         <CardContent className="space-y-2 flex-grow overflow-hidden flex flex-col">
                             <CardHeader>
-                                <h2 className="text-center">Classement Global</h2>
+                                <h2 className="text-2xl sm:text-3xl text-center">Classement Global</h2>
                             </CardHeader>
                             <LeaderboardBanners players={topUsers} />
                             <LeaderboardList players={otherUsers} />
@@ -60,7 +61,7 @@ const Leaderboard = () => {
                     <Card className="flex flex-col h-full">
                         <CardContent className="space-y-2 flex-grow overflow-hidden flex flex-col">
                             <CardHeader>
-                                <h2 className="text-center">Classement Amis</h2>
+                                <h2 className="text-2xl sm:text-3xl text-center">Classement Amis</h2>
                             </CardHeader>
                             <LeaderboardBanners players={topFriends} />
                             <LeaderboardList players={otherFriends} />
@@ -68,7 +69,7 @@ const Leaderboard = () => {
                     </Card>
                 </TabsContent>
             </Tabs>
-        </section>
+        </div>
     );
 };
 

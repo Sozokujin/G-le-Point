@@ -5,8 +5,8 @@ import { StatsCard } from '@/components/profile/statsCard';
 
 const Profile = () => {
     return (
-        <div className="flex justify-center items-center min-h-screen w-full bg-muted p-4 pb-28">
-            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full max-w-7xl">
+        <div className="min-h-svh bg-muted p-2 sm:p-4 flex justify-center items-center w-full">
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full max-w-7xl navbar-padding">
                 <div className="w-full h-full flex justify-center">
                     <ProfileCard />
                 </div>

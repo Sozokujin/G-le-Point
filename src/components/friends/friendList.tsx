@@ -60,7 +60,6 @@ export const FriendList = ({ selectedFriend, setSelectedFriend }: FriendListProp
     }, [currentUser, getFriends, getInvitationCode]);
 
     useEffect(() => {
-        console.log('isMobile', isMobile);
         if (selectedFriend || friends.length === 0 || isMobile || isPending) return;
 
         selectFriend(friends[0]);

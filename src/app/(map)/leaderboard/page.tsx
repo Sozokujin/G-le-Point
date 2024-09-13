@@ -42,7 +42,7 @@ const Leaderboard = () => {
     return (
         <div className="h-svh bg-muted p-2 sm:p-4 flex justify-center">
             <Tabs defaultValue="global" className="w-full h-full max-w-5xl flex flex-col navbar-padding">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-2 bg-slate-200">
                     <TabsTrigger value="global">Global</TabsTrigger>
                     <TabsTrigger value="friends">Amis</TabsTrigger>
                 </TabsList>

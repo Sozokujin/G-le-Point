@@ -14,7 +14,7 @@ import useUserStore from '@/stores/userStore';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { GroupLine } from './friends/groups/groupList';
 import AutocompleteMapbox from './map/autocompleteMapbox';
 import { Button } from './ui/button';
@@ -240,7 +240,6 @@ const ModalCreateMarker = () => {
                     </DialogClose>
                 )}
             </DialogContent>
-            <Toaster position="top-right" />
         </Dialog>
     );
 };

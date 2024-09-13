@@ -1,4 +1,5 @@
 import Cookies from '@/components/cookies';
+import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
@@ -47,6 +48,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 {children}
                 <Cookies />
+                <Toaster richColors position="top-right" />
             </body>
         </html>
     );

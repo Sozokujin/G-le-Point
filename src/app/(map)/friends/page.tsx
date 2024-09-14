@@ -38,6 +38,7 @@ const Friends = () => {
     };
 
     const closeDrawer = () => {
+        setDisplayMarkers([]);
         setDrawerOpen(false);
         setSelectedFriend(null);
         setSelectedGroup(null);

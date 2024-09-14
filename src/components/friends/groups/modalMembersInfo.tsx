@@ -8,21 +8,25 @@ import { FirebaseUser } from '@/types';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import useUserStore from '@/stores/userStore';
+import { kickUserFromGroup } from '@/services/firebase/groups';
 
 interface MembersInfoModalProps {
+    groupId: string;
     groupName: string;
     groupOwnerId: string;
     members: FirebaseUser[];
 }
 
-const MembersInfoModal= ({ groupName, members, groupOwnerId }: MembersInfoModalProps) => {
+const MembersInfoModal= ({ groupId, groupName, members, groupOwnerId }: MembersInfoModalProps) => {
     const { currentUser } = useUserStore();
     const isCurrentUserOwner = currentUser?.uid === groupOwnerId;
 
     const handleKickMember = async (memberId: string) => {
-        try {
+      try {
+        await kickUserFromGroup(groupId, memberId);
             toast.success('Member kicked successfully');
         } catch (error) {
+            console.error("error:", error);
             toast.error('Failed to kick member');
         }
     };

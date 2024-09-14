@@ -93,7 +93,7 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <MembersInfoModal groupName={group.name} members={groupUsers} groupOwnerId={group.groupOwner} />
+                    <MembersInfoModal groupId={group.id} groupName={group.name} members={groupUsers} groupOwnerId={group.groupOwner} />
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={

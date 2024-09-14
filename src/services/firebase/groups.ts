@@ -101,3 +101,39 @@ export const leaveGroup = async (groupId: string): Promise<void> => {
         throw error;
     }
 };
+
+export const kickUserFromGroup = async (groupId: string, userId: string): Promise<void> => {
+    try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser?.uid) {
+            throw new Error('User not authenticated');
+        }
+
+        const groupRef = doc(db, 'groups', groupId);
+        const groupSnapshot = await getDoc(groupRef);
+
+        if (!groupSnapshot.exists()) {
+            throw new Error('Group not found');
+        }
+
+        const groupData = groupSnapshot.data() as Group;
+        if (groupData.groupOwner !== currentUser.uid) {
+            throw new Error('Only the group owner can kick members');
+        }
+
+        if (userId === groupData.groupOwner) {
+            throw new Error('Cannot kick the group owner');
+        }
+
+        await updateDoc(groupRef, {
+            members: arrayRemove(userId)
+        });
+
+        // Update the local store
+        useGroupStore.getState().updateGroupMembers(groupId, userId);
+
+    } catch (error) {
+        console.error('Error kicking user from group:', error);
+        throw error;
+    }
+};

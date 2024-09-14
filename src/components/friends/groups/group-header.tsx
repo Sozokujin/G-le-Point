@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { DoorOpen, Info, MoreHorizontal } from 'lucide-react';
+import { DoorOpen, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FirebaseUser, Group } from '@/types';
 import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
@@ -11,6 +11,8 @@ import { leaveGroup } from '@/services/firebase/groups';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import MembersInfoModal from './modalMembersInfo';
+import { set } from 'react-hook-form';
 
 interface GroupProps {
     group: Group;
@@ -19,13 +21,14 @@ interface GroupProps {
 }
 
 export default function GroupHeader({ group, onGroupRemoved, className }: GroupProps) {
-    const [groupUsers, setGroupUsers] = useState<AvatarUser[]>([]);
+    const [groupAvatarUsers, setGroupAvatarUsers] = useState<AvatarUser[]>([]);
+    const [groupUsers, setGroupUsers] = useState<FirebaseUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { users } = useUserStore();
 
     const transformToAvatarUser = (user: FirebaseUser): AvatarUser => ({
         id: user.uid,
-        name: user.displayName || user.email || 'Unknown User',
+        name: user.username || user.displayName || user.email || 'Sans nom',
         image: user.photoURL
     });
 
@@ -41,7 +44,7 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
             toast.error('Une erreur est survenue.');
         }
         setIsOpen(false);
-        document.body.style.pointerEvents = ''; //XXX: lifehack
+        document.body.style.pointerEvents = '';
     };
 
     const handleCancel = () => {
@@ -51,12 +54,13 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
 
     useEffect(() => {
         setIsLoading(true);
-        const avatarUsers = group.members
-            .map((memberId) => users.find((user) => user.uid === memberId))
-            .filter((user): user is FirebaseUser => user !== undefined)
+        const groupMembers = group.members
+            .map((memberId) => users.find((user: { uid: string; }) => user.uid === memberId))
+            .filter((user): user is FirebaseUser => user !== undefined);
+        setGroupUsers(groupMembers);
+        const avatarUsers = groupMembers
             .map(transformToAvatarUser);
-
-        setGroupUsers(avatarUsers);
+        setGroupAvatarUsers(avatarUsers);
         setIsLoading(false);
     }, [group.members, users]);
 
@@ -73,7 +77,7 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
                     </div>
                 ) : (
                     <>
-                        <GroupAvatar users={groupUsers} size="md" />
+                        <GroupAvatar users={groupAvatarUsers} size="md" />
                         <div>
                             <p className="text-lg font-semibold">{group.name || 'Groupe sans nom'}</p>
                             <p className="text-sm text-muted-foreground">{group.members.length} Membres</p>
@@ -89,10 +93,7 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                        <Info className="mr-2 h-4 w-4" />
-                        Voir les membres
-                    </DropdownMenuItem>
+                    <MembersInfoModal groupName={group.name} members={groupUsers} groupOwnerId={group.groupOwner} />
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={

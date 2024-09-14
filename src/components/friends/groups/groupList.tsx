@@ -31,7 +31,7 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
 
     const transformToAvatarUser = useCallback((user: FirebaseUser): AvatarUser => ({
         id: user.uid,
-        name: user.displayName || user.email || 'Unknown User',
+        name: user.username || user.displayName || user.email || 'Unknown User',
         image: user.photoURL
     }), []);
 
@@ -141,9 +141,7 @@ export const GroupLine = React.memo(({ group, groupUsers, selected, onSelect }: 
                 <p className="text-sm font-medium leading-none truncate">{group.name || 'Groupe sans nom'}</p>
                 <p className="text-xs text-muted-foreground truncate">{groupUsers.length} Membres</p>
             </div>
-            <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">
-                POINT NBR
-            </span>
+            {/* <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto"></span> */}
         </div>
     );
 });

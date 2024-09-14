@@ -55,7 +55,7 @@ const SeeProfileModal = ({ user, trigger }: SeeProfileModalProps) => {
                     </div>
                     <div className="p-8">
                         <h2 className="text-2xl font-bold text-center text-gray-800 mb-1">
-                            {user.username || user.displayName || 'No Name'}
+                            {user.username || user.displayName || 'Sans nom'}
                         </h2>
                         <p className="text-center text-gray-600 mb-6">{user.email}</p>
                         <div className="grid grid-cols-2 gap-6 mb-6">
@@ -129,10 +129,10 @@ const ProfileItem = ({ icon, label, value, color, fullWidth = false }: ProfileIt
                     value > 0 ? (
                         <NumberTicker className="text-white line-clamp-2" value={value} />
                     ) : (
-                        <p className="text-white line-clamp-2">N/A</p>
+                        <p className="text-white line-clamp-2">0</p>
                     )
                 ) : (
-                    <p className="text-white line-clamp-2">{value || 'N/A'}</p>
+                    <p className="text-white line-clamp-2">{value || 'Non fourni'}</p>
                 )}
             </div>
         </div>

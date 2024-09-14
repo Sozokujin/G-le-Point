@@ -13,7 +13,6 @@ export const ModalListFriendRequest = () => {
     const user = useUserStore((state) => state.currentUser);
 
     useEffect(() => {
-        //XXX: maybe fetch from store and refresh the page for new requests
         if (!user) return;
         getFriendRequests();
     }, [getFriendRequests, user]);

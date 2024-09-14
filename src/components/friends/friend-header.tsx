@@ -45,8 +45,8 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
         <div className={cn('flex items-center justify-between p-4 bg-background rounded-lg shadow min-h-24', className)}>
             <div className="flex items-center space-x-4">
                 <Avatar>
-                    <AvatarImage src={friend.photoURL ?? ''} alt={friend.displayName ?? ''} />
-                    <AvatarFallback>{friend.displayName?.slice(0, 1) ?? friend.email?.slice(0, 1) ?? '?'}</AvatarFallback>
+                    <AvatarImage src={friend.photoURL ?? ''} alt={friend.username ?? ''} />
+                    <AvatarFallback>{friend.username?.slice(0, 1) ?? friend.email?.slice(0, 1) ?? '?'}</AvatarFallback>
                 </Avatar>
                 <div>
                     <h2 className="text-lg font-semibold">{friend.displayName ?? friend.username ?? 'Sans Nom'}</h2>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useIsMobile } from '@/utils/isMobile';
-// import markerStore from '@/stores/markerStore';
 import { Group, Marker, FirebaseUser } from '@/types/index';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { getUserMarkers, getGroupMarkers } from '@/services/firebase/markers';
@@ -17,7 +16,6 @@ import GroupHeader from '@/components/friends/groups/group-header';
 
 const Friends = () => {
     const { isMobile } = useIsMobile();
-    // const { friendsMarkers, getFriendsMarkers, groupMarkers, getGroupMarkers } = markerStore(); //FIXME: REFACTO MARKERSTORE !!!!!!
     const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
     const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
     const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);

@@ -84,7 +84,7 @@ const ModalCreateMarker = () => {
         (latitude: number, longitude: number, address = '') => {
             const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
 
-            if (currentUser?.uid && currentUser?.displayName) {
+            if (currentUser?.uid && currentUser?.username) {
                 addMarker({
                     id: idMarker,
                     name: pointNameRef.current?.value || 'Point',

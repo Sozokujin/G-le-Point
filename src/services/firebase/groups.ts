@@ -1,89 +1,88 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { useGroupStore } from '@/stores/groupStore';
-import { use } from 'react';
+import { Group } from '@/types';
 
-export const getAllGroups = async () => {
-    const currentUser = useUserStore.getState().currentUser;
-
-    if (!currentUser?.uid) return [];
-
-    const groupsCollectionRef = collection(db, 'groups');
-
-    const q = query(groupsCollectionRef, where('members', 'array-contains', currentUser.uid));
-
-    const q2 = query(groupsCollectionRef, where('groupOwner', '==', currentUser.uid));
-
-    const [querySnapshot, querySnapshot2] = await Promise.all([getDocs(q), getDocs(q2)]);
-    const memberGroups = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-    }));
-    const ownerGroups = querySnapshot2.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-    }));
-
-    const allGroups: { id: string }[] = [...memberGroups, ...ownerGroups];
-
-    const uniqueGroups = allGroups.reduce((acc: { id: string }[], group) => {
-        if (!acc.some((g) => g.id === group.id)) {
-            acc.push(group);
-        }
-        return acc;
-    }, []);
-
-    return uniqueGroups;
-};
-
-export const createGroup = async (name: string, members: string[]) => {
-    const currentUser = useUserStore.getState().currentUser;
-
-    if (!currentUser?.uid) return;
-
-    const groupsCollectionRef = collection(db, 'groups');
-    const groupDocRef = doc(groupsCollectionRef);
-    const groupId = groupDocRef.id;
-
-    const docRef = await addDoc(groupsCollectionRef, {
-        name,
-        groupOwner: currentUser.uid,
-        members: members.concat(currentUser.uid),
-        markers: [],
-        uid: groupId
-    });
-    useGroupStore.getState().clearGroups(); //TODO: Add group to the store instead of fetching all groups again
-    return docRef.id;
-};
-
-export const leaveGroup = async (groupId: string) => {
-    const currentUser = useUserStore.getState().currentUser;
-
-    if (!currentUser?.uid) {
-        throw new Error('User not authenticated');
-    }
-
-    const groupRef = doc(db, 'groups', groupId);
-
+export const getAllGroups = async (): Promise<Group[]> => {
     try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser) {
+            console.error('User not authenticated');
+            return [];
+        }
+
+        const groupsCollectionRef = collection(db, 'groups');
+        const memberQuery = query(groupsCollectionRef, where('members', 'array-contains', currentUser.uid));
+        const ownerQuery = query(groupsCollectionRef, where('groupOwner', '==', currentUser.uid));
+
+        const [memberSnapshot, ownerSnapshot] = await Promise.all([getDocs(memberQuery), getDocs(ownerQuery)]);
+
+        const groups = [...memberSnapshot.docs, ...ownerSnapshot.docs].map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        } as Group));
+
+        return groups.filter((group, index, self) =>
+            index === self.findIndex((t) => t.id === group.id)
+        );
+    } catch (error) {
+        console.error('Error fetching groups:', error);
+        return [];
+    }
+};
+
+export const createGroup = async (name: string, members: string[]): Promise<string | null> => {
+    try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser?.uid) {
+            console.error('User not authenticated');
+            return null;
+        }
+
+        const groupsCollectionRef = collection(db, 'groups');
+        const newGroup: Omit<Group, 'id'> = {
+            name,
+            groupOwner: currentUser.uid,
+            members: [...members, currentUser.uid],
+            markers: []
+        };
+
+        const docRef = await addDoc(groupsCollectionRef, newGroup);
+
+        const createdGroup: Group = { id: docRef.id, ...newGroup };
+        useGroupStore.getState().addGroup(createdGroup);
+
+        return docRef.id;
+    } catch (error) {
+        console.error('Error creating group:', error);
+        return null;
+    }
+};
+
+export const leaveGroup = async (groupId: string): Promise<void> => {
+    try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser?.uid) {
+            throw new Error('User not authenticated');
+        }
+
+        const groupRef = doc(db, 'groups', groupId);
         const groupSnapshot = await getDoc(groupRef);
 
         if (!groupSnapshot.exists()) {
             throw new Error('Group not found');
         }
 
-        const groupData = groupSnapshot.data();
+        const groupData = groupSnapshot.data() as Group;
         const isOwner = groupData.groupOwner === currentUser.uid;
-        const updatedMembers = groupData.members.filter((memberId: string) => memberId !== currentUser.uid);
+        const updatedMembers = groupData.members.filter(memberId => memberId !== currentUser.uid);
 
         if (isOwner) {
             if (updatedMembers.length === 0) {
-                // Delete the group if there are no other members
                 await deleteDoc(groupRef);
                 console.warn('Group deleted, owner was the last member');
             } else {
-                // Transfer ownership to the next member in the list
                 const newOwner = updatedMembers[0];
                 await updateDoc(groupRef, {
                     groupOwner: newOwner,
@@ -92,15 +91,79 @@ export const leaveGroup = async (groupId: string) => {
                 console.warn('Ownership transferred and left the group');
             }
         } else {
-            // If not the owner, remove the user from the members list
             await updateDoc(groupRef, {
                 members: arrayRemove(currentUser.uid)
             });
         }
+
+        useGroupStore.getState().removeGroup(groupId);
     } catch (error) {
-        console.error('Error leaving group: ', error);
+        console.error('Error leaving group:', error);
         throw error;
     }
+};
 
-    useGroupStore.getState().clearGroups(); //TODO: Remove the group from the store
+export const sendGroupInvitation = async (groupId: string, userId: string): Promise<void> => {
+    try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser?.uid) {
+            throw new Error('User not authenticated');
+        }
+
+        const groupInvitationsRef = collection(db, 'groupInvitations');
+        await addDoc(groupInvitationsRef, {
+            groupId,
+            from: currentUser.uid,
+            to: userId,
+            status: 'pending'
+        });
+    } catch (error) {
+        console.error('Error sending group invitation:', error);
+        throw error;
+    }
+};
+
+export const acceptGroupInvitation = async (invitationId: string): Promise<void> => {
+    try {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser?.uid) {
+            throw new Error('User not authenticated');
+        }
+
+        const invitationRef = doc(db, 'groupInvitations', invitationId);
+        const invitationSnapshot = await getDoc(invitationRef);
+
+        if (!invitationSnapshot.exists()) {
+            throw new Error('Invitation not found');
+        }
+
+        const invitationData = invitationSnapshot.data();
+        const groupRef = doc(db, 'groups', invitationData.groupId);
+
+        await updateDoc(groupRef, {
+            members: arrayUnion(currentUser.uid)
+        });
+
+        await updateDoc(invitationRef, { status: 'accepted' });
+
+        const groupSnapshot = await getDoc(groupRef);
+        if (groupSnapshot.exists()) {
+            const groupData = groupSnapshot.data() as Group;
+            const { id, ...restGroupData } = groupData;
+            useGroupStore.getState().addGroup({ id: groupSnapshot.id, ...restGroupData });
+        }
+    } catch (error) {
+        console.error('Error accepting group invitation:', error);
+        throw error;
+    }
+};
+
+export const declineGroupInvitation = async (invitationId: string): Promise<void> => {
+    try {
+        const invitationRef = doc(db, 'groupInvitations', invitationId);
+        await updateDoc(invitationRef, { status: 'declined' });
+    } catch (error) {
+        console.error('Error declining group invitation:', error);
+        throw error;
+    }
 };

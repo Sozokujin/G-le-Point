@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useGroupStore } from '@/stores/groupStore';
 import useUserStore from '@/stores/userStore';
@@ -19,39 +19,31 @@ interface GroupListProps {
 
 export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) => {
     const { isMobile, isPending } = useIsMobile();
-    const { groups, getGroups } = useGroupStore();
+    const { groups, filteredGroups, getGroups, setFilteredGroups } = useGroupStore();
     const { users, fetchUsersByIds, currentUser } = useUserStore();
 
-    const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
     const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
 
-    const selectGroup = (group: Group | null) => {
+    const selectGroup = useCallback((group: Group | null) => {
         if (!setSelectedGroup) return;
-
         setSelectedGroup(group as Group);
-    };
+    }, [setSelectedGroup]);
 
-    const transformToAvatarUser = (user: FirebaseUser): AvatarUser => ({
+    const transformToAvatarUser = useCallback((user: FirebaseUser): AvatarUser => ({
         id: user.uid,
         name: user.displayName || user.email || 'Unknown User',
         image: user.photoURL
-    });
+    }), []);
 
     useEffect(() => {
         if (!currentUser) return;
-
-        if (groups.length === 0) {
-            getGroups();
-        } else {
-            setFilteredGroups(groups);
-        }
-    }, [groups, getGroups, currentUser]);
+        getGroups();
+    }, [getGroups, currentUser]);
 
     useEffect(() => {
         if (selectedGroup || groups.length === 0 || isMobile || isPending) return;
-
         selectGroup(groups[0]);
-    }, [groups, selectedGroup, isMobile, isPending]);
+    }, [groups, selectedGroup, isMobile, isPending, selectGroup]);
 
     useEffect(() => {
         const groupMembersIds = groups.reduce((acc, group) => [...acc, ...group.members], [] as string[]);
@@ -78,16 +70,17 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
             }
             return prevGroupUsers;
         });
-    }, [groups, users]);
+    }, [groups, users, transformToAvatarUser]);
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const searchQuery = event.target.value.toLowerCase();
         if (searchQuery === '') {
             setFilteredGroups(groups);
         } else {
-            setFilteredGroups(groups.filter((group) => group.name.toLowerCase().includes(searchQuery)));
+            const filtered = groups.filter((group) => group.name.toLowerCase().includes(searchQuery));
+            setFilteredGroups(filtered);
         }
-    };
+    }, [groups, setFilteredGroups]);
 
     return (
         <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">
@@ -134,6 +127,7 @@ interface GroupLineProps {
     selected: boolean;
     onSelect?: () => void;
 }
+
 export const GroupLine = React.memo(({ group, groupUsers, selected, onSelect }: GroupLineProps) => {
     return (
         <div

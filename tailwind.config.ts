@@ -89,13 +89,18 @@ const config = {
                     to: {
                         backgroundPosition: 'var(--bg-size) 0'
                     }
+                },
+                'pulse-button': {
+                    '0%, 100%': { boxShadow: '0 0 0 0 var(--pulse-color)' },
+                    '50%': { boxShadow: '0 0 0 8px var(--pulse-color)', opacity: '0.7' }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
                 'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
-                gradient: 'gradient 8s linear infinite'
+                gradient: 'gradient 8s linear infinite',
+                'pulse-button': 'pulse-button var(--duration) ease-out infinite'
             }
         }
     },
@@ -103,11 +108,3 @@ const config = {
 } satisfies Config;
 
 export default config;
-
-// FIXME: LEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-// pulse: {
-//   "0%, 100%": { boxShadow: "0 0 0 0 var(--pulse-color)" },
-//   "50%": { boxShadow: "0 0 0 8px var(--pulse-color)" },
-// },
-
-// pulse: "pulse var(--duration) ease-out infinite",

@@ -30,9 +30,12 @@ import { AvatarImage } from '@radix-ui/react-avatar';
 import { TrashIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/20/solid';
 
 const FormSchema = z.object({
-    username: z.string().min(2, {
-        message: "Le nom d'utilisateur doit comporter au moins 2 caractères."
-    }),
+    username: z
+        .string()
+        .min(2, {
+            message: "Le nom d'utilisateur doit comporter au moins 2 caractères."
+        })
+        .max(50, { message: "Le nom d'utilisateur ne peut pas dépasser 50 caractères." }),
     bio: z.string().optional()
 });
 

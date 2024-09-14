@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
@@ -78,7 +77,7 @@ const Contact = () => {
 
     return (
         <div id="contact" className="mx-auto flex flex-col justify-center items-center max-w-5xl">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Nous contacter</h1>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Contactez-nous</h2>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full lg:w-2/3 space-y-6 p-4">
                     <div className="flex flex-row w-full gap-4">
@@ -147,7 +146,6 @@ const Contact = () => {
                     </div>
                 </form>
             </Form>
-            <Toaster position="top-right" />
         </div>
     );
 };

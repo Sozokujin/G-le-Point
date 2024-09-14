@@ -5,7 +5,6 @@ import { useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Toaster } from '../ui/sonner';
 
 export const ModalSendFriendRequest = () => {
     const invitationCodeRef = useRef<HTMLInputElement>(null);
@@ -38,7 +37,6 @@ export const ModalSendFriendRequest = () => {
                     </DialogClose>
                 </DialogContent>
             </Dialog>
-            <Toaster position="top-right" />
         </>
     );
 };

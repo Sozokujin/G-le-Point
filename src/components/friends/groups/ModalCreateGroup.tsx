@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 import { createGroup } from '@/services/firebase/groups';
 import { useFriendStore } from '@/stores/friendStore';
 import { FirebaseUser } from '@/types';
@@ -86,7 +85,6 @@ export const ModalCreateGroup = () => {
                     </div>
                 </DialogContent>
             </Dialog>
-            <Toaster position="top-right" />
         </>
     );
 };

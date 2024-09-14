@@ -2,7 +2,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/sonner';
 import { auth, db } from '@/services/firebase/config';
 import { getBio, getSuperMarkers, getScore, getUsername } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
@@ -164,7 +163,6 @@ const Login = () => {
                     </div>
                 )}
             </div>
-            <Toaster richColors position="top-right" />
         </div>
     );
 };

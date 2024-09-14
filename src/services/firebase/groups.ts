@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { useGroupStore } from '@/stores/groupStore';
@@ -99,71 +99,6 @@ export const leaveGroup = async (groupId: string): Promise<void> => {
         useGroupStore.getState().removeGroup(groupId);
     } catch (error) {
         console.error('Error leaving group:', error);
-        throw error;
-    }
-};
-
-export const sendGroupInvitation = async (groupId: string, userId: string): Promise<void> => {
-    try {
-        const currentUser = useUserStore.getState().currentUser;
-        if (!currentUser?.uid) {
-            throw new Error('User not authenticated');
-        }
-
-        const groupInvitationsRef = collection(db, 'groupInvitations');
-        await addDoc(groupInvitationsRef, {
-            groupId,
-            from: currentUser.uid,
-            to: userId,
-            status: 'pending'
-        });
-    } catch (error) {
-        console.error('Error sending group invitation:', error);
-        throw error;
-    }
-};
-
-export const acceptGroupInvitation = async (invitationId: string): Promise<void> => {
-    try {
-        const currentUser = useUserStore.getState().currentUser;
-        if (!currentUser?.uid) {
-            throw new Error('User not authenticated');
-        }
-
-        const invitationRef = doc(db, 'groupInvitations', invitationId);
-        const invitationSnapshot = await getDoc(invitationRef);
-
-        if (!invitationSnapshot.exists()) {
-            throw new Error('Invitation not found');
-        }
-
-        const invitationData = invitationSnapshot.data();
-        const groupRef = doc(db, 'groups', invitationData.groupId);
-
-        await updateDoc(groupRef, {
-            members: arrayUnion(currentUser.uid)
-        });
-
-        await updateDoc(invitationRef, { status: 'accepted' });
-
-        const groupSnapshot = await getDoc(groupRef);
-        if (groupSnapshot.exists()) {
-            const groupData = groupSnapshot.data() as Group;
-            const { id, ...restGroupData } = groupData;
-            useGroupStore.getState().addGroup({ id: groupSnapshot.id, ...restGroupData });
-        }
-    } catch (error) {
-        console.error('Error accepting group invitation:', error);
-        throw error;
-    }
-};
-
-export const declineGroupInvitation = async (invitationId: string): Promise<void> => {
-    try {
-        const invitationRef = doc(db, 'groupInvitations', invitationId);
-        await updateDoc(invitationRef, { status: 'declined' });
-    } catch (error) {
-        console.error('Error declining group invitation:', error);
         throw error;
     }
 };

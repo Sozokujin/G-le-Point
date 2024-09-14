@@ -15,7 +15,7 @@ interface MembersInfoModalProps {
     members: FirebaseUser[];
 }
 
-const MembersInfoModal: React.FC<MembersInfoModalProps> = ({ groupName, members, groupOwnerId }) => {
+const MembersInfoModal= ({ groupName, members, groupOwnerId }: MembersInfoModalProps) => {
     const { currentUser } = useUserStore();
     const isCurrentUserOwner = currentUser?.uid === groupOwnerId;
 
@@ -56,7 +56,7 @@ const MembersInfoModal: React.FC<MembersInfoModalProps> = ({ groupName, members,
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center space-x-2">
                                         <p className="text-lg font-medium text-gray-900 truncate">
-                                            {member.username ?? 'Sans nom'}
+                                            {member.username || member.displayName || 'Sans nom'}
                                         </p>
                                         {member.uid === groupOwnerId && <Crown className="h-4 w-4 text-yellow-500" />}
                                     </div>

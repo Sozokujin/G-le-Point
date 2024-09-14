@@ -36,7 +36,7 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
     }), []);
 
     useEffect(() => {
-        if (!currentUser) return;
+        if (!currentUser || groups.length > 0) return;
         getGroups();
     }, [getGroups, currentUser]);
 
@@ -47,7 +47,7 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
 
     useEffect(() => {
         const groupMembersIds = groups.reduce((acc, group) => [...acc, ...group.members], [] as string[]);
-        fetchUsersByIds(groupMembersIds);
+        fetchUsersByIds(groupMembersIds); //XXX: ALways fetch all users (store bypass)
     }, [groups, fetchUsersByIds]);
 
     useEffect(() => {

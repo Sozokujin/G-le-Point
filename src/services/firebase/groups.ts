@@ -22,10 +22,9 @@ export const getAllGroups = async (): Promise<Group[]> => {
             id: doc.id,
             ...doc.data()
         } as Group));
-
-        return groups.filter((group, index, self) =>
+        return Array.from(new Set(groups.filter((group, index, self) =>
             index === self.findIndex((t) => t.id === group.id)
-        );
+        )));
     } catch (error) {
         console.error('Error fetching groups:', error);
         return [];

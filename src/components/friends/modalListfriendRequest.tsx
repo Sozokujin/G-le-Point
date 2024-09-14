@@ -14,7 +14,7 @@ export const ModalListFriendRequest = () => {
 
     useEffect(() => {
         if (!user) return;
-        getFriendRequests();
+        getFriendRequests(); // XXX: Always fetch friend requests (store bypass)
     }, [getFriendRequests, user]);
 
     return (

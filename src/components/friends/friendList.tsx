@@ -132,7 +132,7 @@ export const FriendLine = React.memo(
                     <AvatarFallback>{friend.username?.slice(0, 1) || '?'}</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none truncate">{friend.username || 'Sans Nom'}</p>
+                    <p className="text-sm font-medium leading-none truncate">{friend.username || friend.displayName || 'Sans Nom'}</p>
                     <p className="text-sm text-muted-foreground truncate">{friend.email}</p>
                 </div>
                 {/* <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">{markerCount}</span> */}

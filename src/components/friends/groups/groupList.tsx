@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useGroupStore } from '@/stores/groupStore';
 import useUserStore from '@/stores/userStore';
@@ -128,17 +128,13 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
     );
 };
 
-export const GroupLine = ({
-    group,
-    groupUsers,
-    selected,
-    onSelect
-}: {
+interface GroupLineProps {
     group: Group;
     groupUsers: AvatarUser[];
     selected: boolean;
     onSelect?: () => void;
-}) => {
+}
+export const GroupLine = React.memo(({ group, groupUsers, selected, onSelect }: GroupLineProps) => {
     return (
         <div
             className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
@@ -156,4 +152,6 @@ export const GroupLine = ({
             </span>
         </div>
     );
-};
+});
+
+GroupLine.displayName = 'GroupLine';

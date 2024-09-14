@@ -133,8 +133,6 @@ export const acceptFriendRequest = async (from: string) => {
     await updateDoc(friendUserDocRef, {
         friends: arrayUnion(currentUser.uid)
     });
-
-    useFriendStore.getState().clearFriends();
 };
 
 export const declineFriendRequest = async (from: string) => {
@@ -198,7 +196,7 @@ export const unfriend = async (friendId: string) => {
         friends: arrayRemove(currentUser.uid)
     });
 
-    useFriendStore.getState().clearFriends();
+    useFriendStore.getState().removeFriend(friendId);
     // useMarkerStore.getState().clearMarkers(); TODO
 };
 

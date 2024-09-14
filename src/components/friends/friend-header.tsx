@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { FirebaseUser } from '@/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,30 +9,30 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { Flag, Info, MoreHorizontal, UserMinus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ConfirmationDialog from '../ui/confirmation-dialog';
-import { useState } from 'react';
 import { unfriend } from '@/services/firebase/friends';
 import { toast } from 'sonner';
+import SeeProfileModal from '../modalSeeProfile';
 
-interface FriendProps {
-    friendId: string;
-    name: string | null | undefined;
-    email?: string | null | undefined;
-    photoUrl?: string | null | undefined;
+interface FriendHeaderProps {
+    friend: FirebaseUser;
+    onFriendRemoved: () => void;
     className?: string;
 }
 
-export default function FriendHeader({ friendId, name = 'No Name', email = 'No Email', photoUrl, className }: FriendProps) {
+export default function FriendHeader({ friend, onFriendRemoved, className }: FriendHeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleConfirm = async () => {
         try {
-            await unfriend(friendId);
-            toast.success('Successfully unfriended!');
+            await unfriend(friend.uid);
+            onFriendRemoved();
+            toast.success('Ami supprimé!');
         } catch (error) {
-            toast.error('Failed to unfriend.');
+            console.error("error:", error);
+            toast.error('Une erreur est survenue.');
         }
         setIsOpen(false);
     };
@@ -43,12 +45,12 @@ export default function FriendHeader({ friendId, name = 'No Name', email = 'No E
         <div className={cn('flex items-center justify-between p-4 bg-background rounded-lg shadow min-h-24', className)}>
             <div className="flex items-center space-x-4">
                 <Avatar>
-                    <AvatarImage src={photoUrl ?? ''} alt={name ?? ''} />
-                    <AvatarFallback>{name?.slice(0, 1) ?? '?'}</AvatarFallback>
+                    <AvatarImage src={friend.photoURL ?? ''} alt={friend.displayName ?? ''} />
+                    <AvatarFallback>{friend.displayName?.slice(0, 1) ?? friend.email?.slice(0, 1) ?? '?'}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h2 className="text-lg font-semibold">{name}</h2>
-                    <p className="text-sm text-muted-foreground">{email}</p>
+                    <h2 className="text-lg font-semibold">{friend.displayName ?? friend.username ?? 'Sans Nom'}</h2>
+                    <p className="text-sm text-muted-foreground">{friend.email}</p>
                 </div>
             </div>
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -59,16 +61,30 @@ export default function FriendHeader({ friendId, name = 'No Name', email = 'No E
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Signaler</DropdownMenuItem>
+                    <SeeProfileModal
+                        user={friend}
+                        trigger={
+                            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                                <Info className="mr-2 h-4 w-4" />
+                                Voir le profil
+                            </DropdownMenuItem>
+                        }
+                    />
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                        <Flag className="mr-2 h-4 w-4" />
+                        Signaler
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={
                             <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                                Supprimer l&apos;amis
+                                <UserMinus className="mr-2 h-4 w-4" />
+                                Supprimer l&apos;ami
                             </DropdownMenuItem>
                         }
                         title="Etes-vous sûr(e)?"
-                        description={`Voulez-vous vraiment supprimer ${name} de vos amis? Vous ne pourrez pas annuler cette action.`}
+                        description={`Voulez-vous vraiment supprimer ${friend.displayName ?? friend.username ?? 'cet ami'} de vos amis? Vous ne pourrez pas annuler cette action.`}
                         destructive
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}

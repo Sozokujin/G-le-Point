@@ -45,6 +45,14 @@ const Friends = () => {
         setSelectedGroup(null);
     };
 
+    const handleFriendRemoved = () => {
+        setSelectedFriend(null);
+    };
+
+    const handleGroupRemoved = () => {
+        setSelectedGroup(null);
+    };
+
     return (
         <div className="h-svh bg-muted p-2 sm:p-4 flex gap-2">
             <section className="sm:w-5/12 w-full">
@@ -74,13 +82,13 @@ const Friends = () => {
                         {selectedFriend && (
                             <FriendHeader
                                 className="m-4 bg-slate-100"
-                                friendId={selectedFriend?.uid}
-                                name={selectedFriend?.displayName}
-                                email={selectedFriend?.email}
-                                photoUrl={selectedFriend?.photoURL}
+                                friend={selectedFriend}
+                                onFriendRemoved={handleFriendRemoved}
                             />
                         )}
-                        {selectedGroup && <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} />}
+                        {selectedGroup && (
+                            <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
+                        )}
                         <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
                     </DrawerContent>
                 </Drawer>
@@ -88,14 +96,14 @@ const Friends = () => {
                 <section className="sm:w-7/12 sm:flex flex-col hidden bg-white rounded shadow p-2">
                     {selectedFriend && (
                         <FriendHeader
-                            friendId={selectedFriend?.uid}
                             className="mb-4 bg-slate-100"
-                            name={selectedFriend?.displayName}
-                            email={selectedFriend?.email}
-                            photoUrl={selectedFriend?.photoURL}
+                            friend={selectedFriend}
+                            onFriendRemoved={handleFriendRemoved}
                         />
                     )}
-                    {selectedGroup && <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} />}
+                    {selectedGroup && (
+                        <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
+                    )}
                     <div className="flex grow overflow-y-auto mb-[4.5rem]">
                         <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
                     </div>

@@ -61,7 +61,6 @@ export const FriendList = ({ selectedFriend, setSelectedFriend }: FriendListProp
 
     useEffect(() => {
         if (selectedFriend || friends.length === 0 || isMobile || isPending) return;
-
         selectFriend(friends[0]);
     }, [friends, selectedFriend, isMobile, isPending]);
 

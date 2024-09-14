@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { DoorOpen, Info, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FirebaseUser, Group } from '@/types';
 import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
@@ -14,10 +14,11 @@ import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 
 interface GroupProps {
     group: Group;
+    onGroupRemoved: () => void;
     className?: string;
 }
 
-export default function GroupHeader({ group, className }: GroupProps) {
+export default function GroupHeader({ group, onGroupRemoved, className }: GroupProps) {
     const [groupUsers, setGroupUsers] = useState<AvatarUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { users } = useUserStore();
@@ -33,15 +34,19 @@ export default function GroupHeader({ group, className }: GroupProps) {
     const handleConfirm = async () => {
         try {
             await leaveGroup(group.id);
-            toast.success('Successfully unfriended!');
+            onGroupRemoved();
+            toast.success('Vous avez quitté le groupe.');
         } catch (error) {
-            toast.error('Failed to unfriend.');
+            console.error('error:', error);
+            toast.error('Une erreur est survenue.');
         }
         setIsOpen(false);
+        document.body.style.pointerEvents = ''; //XXX: lifehack
     };
 
     const handleCancel = () => {
         setIsOpen(false);
+        document.body.style.pointerEvents = '';
     };
 
     useEffect(() => {
@@ -84,12 +89,20 @@ export default function GroupHeader({ group, className }: GroupProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Voir les membres</DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Info className="mr-2 h-4 w-4" />
+                        Voir les membres
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
-                        trigger={<DropdownMenuItem onSelect={(event) => event.preventDefault()}>Quitter</DropdownMenuItem>}
+                        trigger={
+                            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                                <DoorOpen className="mr-2 h-4 w-4" />
+                                Quitter le groupe
+                            </DropdownMenuItem>
+                        }
                         title="Etes-vous sûr(e)?"
-                        description={`Voulez-vous vraiment quitter ${group.name}? Vous ne pourrez pas annuler cette action.`}
+                        description={`Voulez-vous vraiment quitter ${group.name ?? 'ce groupe'}? Vous ne pourrez pas annuler cette action.`}
                         destructive
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}

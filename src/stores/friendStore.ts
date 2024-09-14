@@ -31,7 +31,7 @@ export const useFriendStore = create<FriendState>((set, get) => ({
         if (fetchedRequests) set({ friendRequests: fetchedRequests });
     },
     setFilteredFriends: (friends) => set({ filteredFriends: friends }),
-    addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend] })),
+    addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend], filteredFriends: [...state.friends, friend] })),
     removeFriend: (friendId) =>
         set((state) => ({
             friends: state.friends.filter((f) => f.uid !== friendId),

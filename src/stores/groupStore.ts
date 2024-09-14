@@ -11,6 +11,7 @@ interface GroupState {
     removeGroup: (groupId: string) => void;
     clearGroups: () => void;
     updateGroupMembers: (groupId: string, removedUserId: string) => void;
+    updateGroup: (groupId: string, updates: Partial<Group>) => void;
 }
 
 export const useGroupStore = create<GroupState>((set, get) => ({
@@ -40,6 +41,14 @@ export const useGroupStore = create<GroupState>((set, get) => ({
             group.id === groupId
                 ? { ...group, members: group.members.filter(memberId => memberId !== removedUserId) }
                 : group
+        )
+    })),
+    updateGroup: (groupId: string, updates: Partial<Group>) => set((state) => ({
+        groups: state.groups.map(group =>
+            group.id === groupId ? { ...group, ...updates } : group
+        ),
+        filteredGroups: state.filteredGroups.map(group =>
+            group.id === groupId ? { ...group, ...updates } : group
         )
     })),
 }));

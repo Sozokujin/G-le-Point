@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import MembersInfoModal from './modalMembersInfo';
-import { set } from 'react-hook-form';
+import {ModalEditGroup} from './modalEditGroup';
 
 interface GroupProps {
     group: Group;
@@ -55,11 +55,10 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
     useEffect(() => {
         setIsLoading(true);
         const groupMembers = group.members
-            .map((memberId) => users.find((user: { uid: string; }) => user.uid === memberId))
+            .map((memberId) => users.find((user: { uid: string }) => user.uid === memberId))
             .filter((user): user is FirebaseUser => user !== undefined);
         setGroupUsers(groupMembers);
-        const avatarUsers = groupMembers
-            .map(transformToAvatarUser);
+        const avatarUsers = groupMembers.map(transformToAvatarUser);
         setGroupAvatarUsers(avatarUsers);
         setIsLoading(false);
     }, [group.members, users]);
@@ -93,7 +92,13 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <MembersInfoModal groupId={group.id} groupName={group.name} members={groupUsers} groupOwnerId={group.groupOwner} />
+                    <ModalEditGroup group={group} />
+                    <MembersInfoModal
+                        groupId={group.id}
+                        groupName={group.name}
+                        members={groupUsers}
+                        groupOwnerId={group.groupOwner}
+                    />
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={

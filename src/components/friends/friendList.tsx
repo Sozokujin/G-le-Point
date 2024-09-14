@@ -117,28 +117,32 @@ export const FriendList = ({ selectedFriend, setSelectedFriend }: FriendListProp
     );
 };
 
-export const FriendLine = React.memo(
-    ({ friend, selected, onSelect }: { friend: FirebaseUser; selected: boolean; onSelect: () => void }) => {
-        // const markerCount = useMarkerStore.getState().getUserMarkerCount(friend.uid);
-        return (
-            <div
-                onClick={onSelect}
-                className={`flex items-center gap-4 p-2 rounded cursor-pointer border border-transparent sm:hover:bg-slate-200 ${
-                    selected ? 'bg-slate-100' : ''
-                }`}
-            >
-                <Avatar className="h-9 w-9 flex">
-                    <AvatarImage src={friend.photoURL!} alt={`${friend.username}'s avatar`} />
-                    <AvatarFallback>{friend.username?.slice(0, 1) || '?'}</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none truncate">{friend.username || friend.displayName || 'Sans Nom'}</p>
-                    <p className="text-sm text-muted-foreground truncate">{friend.email}</p>
-                </div>
-                {/* <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">{markerCount}</span> */}
+export interface FriendLineProps {
+    friend: FirebaseUser;
+    selected?: boolean;
+    disabled?: boolean;
+    onSelect: () => void;
+}
+export const FriendLine = React.memo(({ friend, selected, disabled, onSelect }: FriendLineProps) => {
+    // const markerCount = useMarkerStore.getState().getUserMarkerCount(friend.uid);
+    return (
+        <div
+            onClick={!disabled ? onSelect : undefined}
+            className={`flex items-center gap-4 p-2 rounded border border-transparent sm:hover:bg-slate-200 ${
+                selected ? 'bg-slate-100' : ''
+            } ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+        >
+            <Avatar className="h-9 w-9 flex">
+                <AvatarImage src={friend.photoURL!} alt={`${friend.username}'s avatar`} />
+                <AvatarFallback>{friend.username?.slice(0, 1) || '?'}</AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+                <p className="text-sm font-medium leading-none truncate">{friend.username || friend.displayName || 'Sans Nom'}</p>
+                <p className="text-sm text-muted-foreground truncate">{friend.email}</p>
             </div>
-        );
-    }
-);
+            {/* <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full ml-auto">{markerCount}</span> */}
+        </div>
+    );
+});
 
 FriendLine.displayName = 'FriendLine'; // For ReactMemo

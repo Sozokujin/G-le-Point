@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
-import { ModalCreateGroup } from '@/components/friends/groups/ModalCreateGroup';
+import { ModalCreateGroup } from './modalCreateGroup';
 
 interface GroupListProps {
     selectedGroup: Group | null;

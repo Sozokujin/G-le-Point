@@ -1,4 +1,4 @@
-import { addDoc, arrayRemove, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { useGroupStore } from '@/stores/groupStore';
@@ -134,6 +134,36 @@ export const kickUserFromGroup = async (groupId: string, userId: string): Promis
 
     } catch (error) {
         console.error('Error kicking user from group:', error);
+        throw error;
+    }
+};
+
+export const updateGroupName = async (groupId: string, newName: string): Promise<void> => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        await updateDoc(groupRef, { name: newName });
+    } catch (error) {
+        console.error('Error updating group name:', error);
+        throw error;
+    }
+};
+
+export const addUserToGroup = async (groupId: string, userId: string): Promise<void> => {
+    try {
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('uid', '==', userId));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            throw new Error('User not found');
+        }
+
+        const groupRef = doc(db, 'groups', groupId);
+        await updateDoc(groupRef, {
+            members: arrayUnion(userId)
+        });
+    } catch (error) {
+        console.error('Error adding user to group:', error);
         throw error;
     }
 };

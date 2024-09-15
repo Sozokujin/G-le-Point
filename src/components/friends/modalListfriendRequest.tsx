@@ -62,7 +62,7 @@ const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
             await getFriendRequests();
             removeFriendRequest(friendRequest.id);
             addFriend(friendRequest);
-            toast("Demande d'ami acceptée");
+            toast.success("Demande d'ami acceptée");
         },
         [friendRequest, getFriendRequests, removeFriendRequest, addFriend]
     );
@@ -72,7 +72,7 @@ const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
             await declineFriendRequest(uid);
             await getFriendRequests();
             removeFriendRequest(friendRequest.id);
-            toast("Demande d'ami refusée");
+            toast.info("Demande d'ami refusée");
         },
         [friendRequest, getFriendRequests, removeFriendRequest]
     );

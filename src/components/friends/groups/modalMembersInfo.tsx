@@ -24,10 +24,10 @@ const MembersInfoModal = ({ groupId, groupName, members, groupOwnerId }: Members
     const handleKickMember = async (memberId: string) => {
         try {
             await kickUserFromGroup(groupId, memberId);
-            toast.success('Member kicked successfully');
+            toast.success('Le membre a été expulsé');
         } catch (error) {
             console.error('error:', error);
-            toast.error('Failed to kick member');
+            toast.error('Une erreur est survenue.');
         }
     };
 

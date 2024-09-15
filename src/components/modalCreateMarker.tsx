@@ -111,7 +111,7 @@ const ModalCreateMarker = () => {
             setPointVisibility(null);
             setSelectedTag(null);
             setSelectedGroups([]);
-            toast('Point ajouté avec succès');
+            toast.success('Point ajouté avec succès');
         },
 
         [currentUser, selectedTag, pointVisibility, addMarker]

@@ -41,7 +41,7 @@ export const ModalCreateGroup = () => {
         setSelectedFriends([]);
         setGroupName('');
         await createGroup(groupName, selectedFriendsUids);
-        toast('Groupe créé !');
+        toast.success('Groupe créé !');
     };
 
     return (

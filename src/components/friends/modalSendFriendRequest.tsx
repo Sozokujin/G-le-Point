@@ -12,7 +12,7 @@ export const ModalSendFriendRequest = () => {
 
     const handleSendFriendRequest = async (invitationCode: string | undefined) => {
         await sendFriendRequest(invitationCode);
-        toast("Demande d'ami envoyée !");
+        toast.success("Demande d'ami envoyée !");
     };
 
     return (

@@ -24,16 +24,22 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
 
     const [groupUsers, setGroupUsers] = useState<{ [key: string]: AvatarUser[] }>({});
 
-    const selectGroup = useCallback((group: Group | null) => {
-        if (!setSelectedGroup) return;
-        setSelectedGroup(group as Group);
-    }, [setSelectedGroup]);
+    const selectGroup = useCallback(
+        (group: Group | null) => {
+            if (!setSelectedGroup) return;
+            setSelectedGroup(group as Group);
+        },
+        [setSelectedGroup]
+    );
 
-    const transformToAvatarUser = useCallback((user: FirebaseUser): AvatarUser => ({
-        id: user.uid,
-        name: user.username || user.displayName || user.email || 'Unknown User',
-        image: user.photoURL
-    }), []);
+    const transformToAvatarUser = useCallback(
+        (user: FirebaseUser): AvatarUser => ({
+            id: user.uid,
+            name: user.username || user.displayName || user.email || 'Unknown User',
+            image: user.photoURL
+        }),
+        []
+    );
 
     useEffect(() => {
         if (!currentUser || groups.length > 0) return;
@@ -72,15 +78,18 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
         });
     }, [groups, users, transformToAvatarUser]);
 
-    const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const searchQuery = event.target.value.toLowerCase();
-        if (searchQuery === '') {
-            setFilteredGroups(groups);
-        } else {
-            const filtered = groups.filter((group) => group.name.toLowerCase().includes(searchQuery));
-            setFilteredGroups(filtered);
-        }
-    }, [groups, setFilteredGroups]);
+    const handleSearchChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            const searchQuery = event.target.value.toLowerCase();
+            if (searchQuery === '') {
+                setFilteredGroups(groups);
+            } else {
+                const filtered = groups.filter((group) => group.name.toLowerCase().includes(searchQuery));
+                setFilteredGroups(filtered);
+            }
+        },
+        [groups, setFilteredGroups]
+    );
 
     return (
         <Card className="relative p-5 flex flex-col gap-4 h-full overflow-y-auto">

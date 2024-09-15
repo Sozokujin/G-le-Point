@@ -31,7 +31,7 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
             onFriendRemoved();
             toast.success('Ami supprimé!');
         } catch (error) {
-            console.error("error:", error);
+            console.error('error:', error);
             toast.error('Une erreur est survenue.');
         }
         setIsOpen(false);

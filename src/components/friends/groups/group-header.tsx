@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import MembersInfoModal from './modalMembersInfo';
-import {ModalEditGroup} from './modalEditGroup';
+import { ModalEditGroup } from './modalEditGroup';
 
 interface GroupProps {
     group: Group;

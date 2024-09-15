@@ -17,16 +17,16 @@ interface MembersInfoModalProps {
     members: FirebaseUser[];
 }
 
-const MembersInfoModal= ({ groupId, groupName, members, groupOwnerId }: MembersInfoModalProps) => {
+const MembersInfoModal = ({ groupId, groupName, members, groupOwnerId }: MembersInfoModalProps) => {
     const { currentUser } = useUserStore();
     const isCurrentUserOwner = currentUser?.uid === groupOwnerId;
 
     const handleKickMember = async (memberId: string) => {
-      try {
-        await kickUserFromGroup(groupId, memberId);
+        try {
+            await kickUserFromGroup(groupId, memberId);
             toast.success('Member kicked successfully');
         } catch (error) {
-            console.error("error:", error);
+            console.error('error:', error);
             toast.error('Failed to kick member');
         }
     };

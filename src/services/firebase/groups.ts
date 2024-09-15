@@ -1,4 +1,16 @@
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import {
+    addDoc,
+    arrayRemove,
+    arrayUnion,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    updateDoc,
+    where
+} from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { useGroupStore } from '@/stores/groupStore';
@@ -18,13 +30,14 @@ export const getAllGroups = async (): Promise<Group[]> => {
 
         const [memberSnapshot, ownerSnapshot] = await Promise.all([getDocs(memberQuery), getDocs(ownerQuery)]);
 
-        const groups = [...memberSnapshot.docs, ...ownerSnapshot.docs].map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as Group));
-        return Array.from(new Set(groups.filter((group, index, self) =>
-            index === self.findIndex((t) => t.id === group.id)
-        )));
+        const groups = [...memberSnapshot.docs, ...ownerSnapshot.docs].map(
+            (doc) =>
+                ({
+                    id: doc.id,
+                    ...doc.data()
+                }) as Group
+        );
+        return Array.from(new Set(groups.filter((group, index, self) => index === self.findIndex((t) => t.id === group.id))));
     } catch (error) {
         console.error('Error fetching groups:', error);
         return [];
@@ -75,7 +88,7 @@ export const leaveGroup = async (groupId: string): Promise<void> => {
 
         const groupData = groupSnapshot.data() as Group;
         const isOwner = groupData.groupOwner === currentUser.uid;
-        const updatedMembers = groupData.members.filter(memberId => memberId !== currentUser.uid);
+        const updatedMembers = groupData.members.filter((memberId) => memberId !== currentUser.uid);
 
         if (isOwner) {
             if (updatedMembers.length === 0) {
@@ -131,7 +144,6 @@ export const kickUserFromGroup = async (groupId: string, userId: string): Promis
 
         // Update the local store
         useGroupStore.getState().updateGroupMembers(groupId, userId);
-
     } catch (error) {
         console.error('Error kicking user from group:', error);
         throw error;

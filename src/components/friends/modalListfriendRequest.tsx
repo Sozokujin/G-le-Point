@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { acceptFriendRequest, declineFriendRequest } from '@/services/firebase/friends';
 import { useFriendStore } from '@/stores/friendStore';
 import useUserStore from '@/stores/userStore';
@@ -7,6 +7,7 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export const ModalListFriendRequest = () => {
     const { friendRequests, getFriendRequests } = useFriendStore();
@@ -30,6 +31,9 @@ export const ModalListFriendRequest = () => {
                 </Button>
             </DialogTrigger>
             <DialogContent>
+                <VisuallyHidden.Root>
+                    <DialogTitle> Demandes d&apos;amis</DialogTitle>
+                </VisuallyHidden.Root>
                 {friendRequests.length !== 0 ? (
                     <>
                         <h2 className="text-primary text-xl font-bold">Vos demandes d&apos;amis</h2>

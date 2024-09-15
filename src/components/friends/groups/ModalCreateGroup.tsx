@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { createGroup } from '@/services/firebase/groups';
 import { useFriendStore } from '@/stores/friendStore';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { FriendLine } from '../friendList';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export const ModalCreateGroup = () => {
     const { friends, getFriends } = useFriendStore();
@@ -52,6 +53,9 @@ export const ModalCreateGroup = () => {
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
+                    <VisuallyHidden.Root>
+                        <DialogTitle>Créer un groupe </DialogTitle>
+                    </VisuallyHidden.Root>
                     <div className="flex flex-col gap-2">
                         <h2 className="text-primary text-xl font-bold">Créer un groupe</h2>
                         <Input

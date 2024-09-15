@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { updateGroupName, addUserToGroup } from '@/services/firebase/groups';
 import { useFriendStore } from '@/stores/friendStore';
@@ -10,6 +10,7 @@ import { FriendLine } from '../friendList';
 import { Edit } from 'lucide-react';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useGroupStore } from '@/stores/groupStore';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 interface EditGroupModalProps {
     group: Group;
@@ -79,6 +80,9 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
                 </DropdownMenuItem>
             </DialogTrigger>
             <DialogContent>
+                <VisuallyHidden.Root>
+                    <DialogTitle> Modifier le groupe </DialogTitle>
+                </VisuallyHidden.Root>
                 <div className="flex flex-col gap-2">
                     <h2 className="text-primary text-xl font-bold">Modifier le groupe</h2>
                     <Input

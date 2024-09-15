@@ -53,15 +53,18 @@ export default function GroupHeader({ group, onGroupRemoved, className }: GroupP
     };
 
     useEffect(() => {
-        setIsLoading(true);
+        if (!group) return;
+
         const groupMembers = group.members
-            .map((memberId) => users.find((user: { uid: string }) => user.uid === memberId))
+            .map((memberId) => users.find((user) => user.uid === memberId))
             .filter((user): user is FirebaseUser => user !== undefined);
         setGroupUsers(groupMembers);
         const avatarUsers = groupMembers.map(transformToAvatarUser);
         setGroupAvatarUsers(avatarUsers);
         setIsLoading(false);
-    }, [group.members, users]);
+    }, [group, users]);
+
+    if (!group) return null;
 
     return (
         <div className={cn('flex items-center justify-between p-4 bg-background rounded-lg shadow h-24', className)}>

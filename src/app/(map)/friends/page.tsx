@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIsMobile } from '@/utils/isMobile';
 import { Group, Marker, FirebaseUser } from '@/types/index';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -13,17 +13,31 @@ import { FriendList } from '@/components/friends/friendList';
 import FriendHeader from '@/components/friends/friend-header';
 import { GroupList } from '@/components/friends/groups/groupList';
 import GroupHeader from '@/components/friends/groups/group-header';
+import { useGroupStore } from '@/stores/groupStore';
 
 const Friends = () => {
     const { isMobile } = useIsMobile();
     const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
-    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
     const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
 
+    const groups = useGroupStore((state) => state.groups);
+    const selectedGroup = groups.find((g) => g.id === selectedGroupId) || null;
+
+    useEffect(() => {
+        if (selectedGroupId) {
+            const updatedGroup = groups.find((g) => g.id === selectedGroupId);
+            if (updatedGroup) {
+                setSelectedGroupId(updatedGroup.id);
+                updateGroupMarkers(updatedGroup);
+            }
+        }
+    }, [groups, selectedGroupId]);
+
     const handleSelectedFriendChange = async (friend: FirebaseUser) => {
         setDisplayMarkers([]);
-        setSelectedGroup(null);
+        setSelectedGroupId(null);
         setSelectedFriend(friend);
         setDisplayMarkers(friend ? await getUserMarkers(friend.uid) : []);
         setDrawerOpen(true);
@@ -32,16 +46,20 @@ const Friends = () => {
     const handleSelectedGroupChange = async (group: Group) => {
         setDisplayMarkers([]);
         setSelectedFriend(null);
-        setSelectedGroup(group);
-        setDisplayMarkers(group ? await getGroupMarkers(group.id) : []);
+        setSelectedGroupId(group.id);
+        updateGroupMarkers(group);
         setDrawerOpen(true);
+    };
+
+    const updateGroupMarkers = async (group: Group) => {
+        setDisplayMarkers(group ? await getGroupMarkers(group.id) : []);
     };
 
     const closeDrawer = () => {
         setDisplayMarkers([]);
         setDrawerOpen(false);
         setSelectedFriend(null);
-        setSelectedGroup(null);
+        setSelectedGroupId(null);
     };
 
     const handleFriendRemoved = () => {
@@ -49,7 +67,7 @@ const Friends = () => {
     };
 
     const handleGroupRemoved = () => {
-        setSelectedGroup(null);
+        setSelectedGroupId(null);
     };
 
     return (

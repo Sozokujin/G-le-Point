@@ -58,12 +58,14 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
                 }
             }
 
+            const updatedMembers = Array.from(new Set([...group.members, ...selectedFriends.map((f) => f.uid)]));
+
             updateGroup(group.id, {
                 name: groupName,
-                members: selectedFriends.map((f) => f.uid)
+                members: updatedMembers
             });
 
-            toast('Groupe mis à jour !');
+            toast.success('Groupe mis à jour !');
             setIsOpen(false);
         } catch (error) {
             console.error('error:', error);

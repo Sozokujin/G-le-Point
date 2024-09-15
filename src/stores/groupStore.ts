@@ -48,11 +48,7 @@ export const useGroupStore = create<GroupState>((set, get) => ({
         })),
     updateGroup: (groupId: string, updates: Partial<Group>) =>
         set((state) => ({
-            groups: state.groups.map((group) =>
-                group.id === groupId ? { ...group, ...updates } : group
-            ),
-            filteredGroups: state.filteredGroups.map((group) =>
-                group.id === groupId ? { ...group, ...updates } : group
-            ),
-        })),
+            groups: state.groups.map((group) => (group.id === groupId ? { ...group, ...updates } : group)),
+            filteredGroups: state.filteredGroups.map((group) => (group.id === groupId ? { ...group, ...updates } : group))
+        }))
 }));

@@ -1,23 +1,21 @@
 import React, { useEffect } from 'react';
-import { FirebaseUser } from '@/types';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card } from '@/components/ui/card';
-import { BookOpen, Compass, UserMinus, Flag, MapPin } from 'lucide-react';
-import useMarkerStore from '@/stores/markerStore';
-import NumberTicker from './magicui/number-ticker';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { Button } from '@/components/ui/button';
-import { unfriend } from '@/services/firebase/friends';
 import { toast } from 'sonner';
-import ConfirmationDialog from '@/components/ui/confirmation-dialog';
+import { FirebaseUser } from '@/types';
+import { BookOpen, Compass, MapPin } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import NumberTicker from '@/components/magicui/number-ticker';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { unfriend } from '@/services/firebase/friends';
+import useMarkerStore from '@/stores/markerStore';
 
-interface SeeProfileModalProps {
+interface ModalSeeProfileProps {
     user: FirebaseUser;
     trigger: React.ReactNode;
 }
 
-const SeeProfileModal = ({ user, trigger }: SeeProfileModalProps) => {
+const ModalSeeProfile = ({ user, trigger }: ModalSeeProfileProps) => {
     const { userMarkers, getUserMarkers } = useMarkerStore();
 
     useEffect(() => {
@@ -139,4 +137,4 @@ const ProfileItem = ({ icon, label, value, color, fullWidth = false }: ProfileIt
     </div>
 );
 
-export default SeeProfileModal;
+export default ModalSeeProfile;

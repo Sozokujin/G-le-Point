@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Flag, Info, MoreHorizontal, UserMinus } from 'lucide-react';
+import { Info, MoreHorizontal, UserMinus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ConfirmationDialog from '../ui/confirmation-dialog';
 import { unfriend } from '@/services/firebase/friends';
@@ -70,11 +70,6 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
                             </DropdownMenuItem>
                         }
                     />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <Flag className="mr-2 h-4 w-4" />
-                        Signaler
-                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={

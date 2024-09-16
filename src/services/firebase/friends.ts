@@ -3,7 +3,6 @@ import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser } from '@/types';
 import { useFriendStore } from '@/stores/friendStore';
-import useMarkerStore from '@/stores/markerStore';
 export const getAllFriends = async () => {
     try {
         const currentUser = useUserStore.getState().currentUser;
@@ -34,21 +33,47 @@ export const getAllFriends = async () => {
     }
 };
 
-export const sendFriendRequest = async (invitationCode: string | undefined) => {
-    if (!invitationCode) return alert("Code d'invitation non fourni");
+export const sendFriendRequest = async (invitationCode: string | null) => {
+    if (!invitationCode) {
+        throw new Error("Code d'invitation non fourni");
+    }
 
     const usersCollectionRef = collection(db, 'users');
     const q = query(usersCollectionRef, where('invitationCode', '==', invitationCode));
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert("Code d'invitation invalide");
+    if (querySnapshot.empty) {
+        throw new Error('Utilisateur introuvable');
+    }
 
     const currentUser = useUserStore.getState().currentUser;
-    if (!currentUser?.uid) return alert('Utilisateur non authentifié');
-    const friendRequest = collection(db, 'friendRequests');
-    await addDoc(friendRequest, {
+    if (!currentUser?.uid) {
+        throw new Error('Utilisateur non authentifié');
+    }
+
+    const friendUid = querySnapshot.docs[0].data().uid;
+    // Check if they are already friends
+    if (currentUser.friends.includes(friendUid)) {
+        throw new Error("Cet utilisateur est déjà votre ami");
+    }
+
+    // Check if a friend request already exists
+    const friendRequestRef = collection(db, 'friendRequests');
+    const existingRequestQuery = query(
+        friendRequestRef,
+        where('from', '==', currentUser.uid),
+        where('to', '==', friendUid),
+        where('status', '==', 'pending')
+    );
+    const existingRequestSnapshot = await getDocs(existingRequestQuery);
+
+    if (!existingRequestSnapshot.empty) {
+        throw new Error("Une demande d'ami a déjà été envoyée à cet utilisateur");
+    }
+
+    await addDoc(friendRequestRef, {
         from: currentUser.uid,
-        to: querySnapshot.docs[0].data().uid,
+        to: friendUid,
         status: 'pending'
     });
 };

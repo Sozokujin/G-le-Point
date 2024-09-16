@@ -65,6 +65,20 @@ export const getUsername = async (user: string): Promise<string> => {
     return '';
 };
 
+export const getFriends = async (user: string): Promise<string[]> => {
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let friends: string[] = [];
+        querySnapshot.forEach((doc) => {
+            friends = doc.data().friends;
+        });
+        return friends;
+    }
+    return [];
+}
+
 export const getSuperMarkers = async (user: string): Promise<number> => {
     const currentUser = collection(db, 'users');
     const currentUserQuery = query(currentUser, where('uid', '==', user));

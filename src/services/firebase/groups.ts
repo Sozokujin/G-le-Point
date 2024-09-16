@@ -46,6 +46,12 @@ export const getAllGroups = async (): Promise<Group[]> => {
 
 export const createGroup = async (name: string, members: string[]): Promise<string | null> => {
     try {
+        if (members.length === 0) {
+            throw new Error('Group must have at least one member');
+        }
+        if (name.trim() === '') {
+            throw new Error('Group name cannot be empty');
+        }
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser?.uid) {
             console.error('User not authenticated');
@@ -152,6 +158,9 @@ export const kickUserFromGroup = async (groupId: string, userId: string): Promis
 
 export const updateGroupName = async (groupId: string, newName: string): Promise<void> => {
     try {
+        if (newName.trim() === '') {
+            throw new Error('Group name cannot be empty');
+        }
         const groupRef = doc(db, 'groups', groupId);
         await updateDoc(groupRef, { name: newName });
     } catch (error) {
@@ -162,6 +171,12 @@ export const updateGroupName = async (groupId: string, newName: string): Promise
 
 export const addUserToGroup = async (groupId: string, userId: string): Promise<void> => {
     try {
+        if (!userId) {
+            throw new Error('User ID is required');
+        }
+        if (!groupId) {
+            throw new Error('Group ID is required');
+        }
         const usersRef = collection(db, 'users');
         const q = query(usersRef, where('uid', '==', userId));
         const querySnapshot = await getDocs(q);

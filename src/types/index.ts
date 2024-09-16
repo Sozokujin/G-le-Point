@@ -40,6 +40,7 @@ export interface FirebaseUser {
     photoURL: string | null | undefined;
     bio: string | null;
     username: string | null;
+    friends: string[];
     superMarkers: number;
     score: number;
 }

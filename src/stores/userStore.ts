@@ -1,6 +1,6 @@
 import { auth } from '@/services/firebase/config';
 import { getFriendsTopUsersByScore, getTopUsersByScore } from '@/services/firebase/leaderboard';
-import { getBio, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
+import { getBio, getFriends, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
 import { onAuthStateChanged } from 'firebase/auth';
 import { create } from 'zustand';
 import { getUserById, getUsersByIds } from '@/services/firebase/user';
@@ -68,6 +68,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
             email: firebaseUser.email,
             photoURL: firebaseUser.photoURL,
             username: await getUsername(firebaseUser.uid),
+            friends: await getFriends(firebaseUser.uid),
             bio: await getBio(firebaseUser.uid),
             superMarkers: await getSuperMarkers(firebaseUser.uid),
             score: await getScore(firebaseUser.uid)

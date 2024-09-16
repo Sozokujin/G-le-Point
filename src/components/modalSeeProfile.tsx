@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { toast } from 'sonner';
 import { FirebaseUser } from '@/types';
 import { BookOpen, Compass, MapPin } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -7,7 +6,6 @@ import NumberTicker from '@/components/magicui/number-ticker';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { unfriend } from '@/services/firebase/friends';
 import useMarkerStore from '@/stores/markerStore';
 
 interface ModalSeeProfileProps {
@@ -21,17 +19,6 @@ const ModalSeeProfile = ({ user, trigger }: ModalSeeProfileProps) => {
     useEffect(() => {
         getUserMarkers(user.uid);
     }, [user.uid, getUserMarkers]);
-
-    const handleUnfriend = async () => {
-        try {
-            await unfriend(user.uid);
-            toast.success('Ami supprimé!');
-        } catch (error) {
-            toast.error('Une erreur est survenue.');
-        }
-    };
-
-    const handleReport = () => {};
 
     return (
         <Dialog>
@@ -77,25 +64,6 @@ const ModalSeeProfile = ({ user, trigger }: ModalSeeProfileProps) => {
                                 color="from-purple-500 to-indigo-500"
                             />
                         </div>
-                        {/* XXX: Maybe redundant */}
-                        {/* <div className="flex justify-center space-x-4">
-                            <ConfirmationDialog
-                                trigger={
-                                    <Button variant="outline" className="flex items-center">
-                                        <UserMinus className="mr-2 h-4 w-4" />
-                                        Unfriend
-                                    </Button>
-                                }
-                                title="Etes-vous sûr(e)?"
-                                description={`Voulez-vous vraiment supprimer ${user.displayName ?? user.username ?? 'cet ami'} de vos amis? Vous ne pourrez pas annuler cette action.`}
-                                destructive
-                                onConfirm={handleUnfriend}
-                            />
-                            <Button variant="outline" className="flex items-center" onClick={handleReport}>
-                                <Flag className="mr-2 h-4 w-4" />
-                                Report
-                            </Button>
-                        </div> */}
                     </div>
                 </Card>
             </DialogContent>

@@ -1,12 +1,12 @@
 'use client';
 
-import type { Feature, FeatureCollection, Point } from 'geojson';
-import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
-import ModalMarker from '@/components/modalMarker';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 import ListButtonsMaps from '@/components/stripe/listButtonsMap';
 import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import MarkerPopup from '@/components/map/markerPopup';
 import Filter from '@/components/map/filter';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
@@ -30,11 +30,11 @@ export default function Home() {
         clearLastMarker
     } = useMarkerStore();
 
-    const [modalMarker, setModalMarker] = useState<Marker | null>(null);
+    const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
     const [showFriends, setShowFriends] = useState<boolean>(true);
     const [showGroups, setShowGroups] = useState<boolean>(true);
     const [showPublic, setShowPublic] = useState<boolean>(true);
-    const [satelliteMap, setSatelliteMap] = useState<boolean>(true);
+    const [satelliteMap, setSatelliteMap] = useState<boolean>(false);
 
     const map = useRef<MapRef | null>(null);
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
@@ -78,18 +78,22 @@ export default function Home() {
 
     const onMarkerClick = useCallback((e: any) => {
         const clickedFeature = e.features[0];
-        if (!clickedFeature || !clickedFeature.properties || !map.current) return;
+        if (
+            !clickedFeature
+            || !clickedFeature.properties
+            || clickedFeature.properties.id === selectedMarker?.id
+        ) return;
 
-        setModalMarker({
+        setSelectedMarker({
             ...clickedFeature.properties,
             user: JSON.parse(clickedFeature.properties.user)
         });
 
-        map.current.flyTo({
+        map.current!.flyTo({
             center: clickedFeature.geometry.coordinates,
             zoom: 15
         });
-    }, []);
+    }, [selectedMarker]);
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
@@ -194,6 +198,7 @@ export default function Home() {
                 ref={map}
                 onLoad={onMapLoad}
                 onClick={onMarkerClick}
+                doubleClickZoom={false}
                 onMouseEnter={() => (map.current!.getCanvas().style.cursor = 'pointer')}
                 onMouseLeave={() => (map.current!.getCanvas().style.cursor = '')}
                 interactiveLayerIds={['unclustered-point']}
@@ -224,7 +229,7 @@ export default function Home() {
                 <GeolocateControl position="top-left" />
                 <ModalListMarkers />
                 <ListButtonsMaps />
-                {modalMarker && <ModalMarker marker={modalMarker} setModalMarker={setModalMarker} />}
+                { selectedMarker && <MarkerPopup marker={selectedMarker} setSelectedMarker={setSelectedMarker} /> }
             </Map>
         </main>
     );

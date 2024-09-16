@@ -1,8 +1,5 @@
-import { auth } from '@/services/firebase/config';
-import { getFriendsTopUsersByScore, getTopUsersByScore } from '@/services/firebase/leaderboard';
-import { getBio, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
-import { onAuthStateChanged } from 'firebase/auth';
 import { create } from 'zustand';
+import { getFriendsTopUsersByScore, getTopUsersByScore } from '@/services/firebase/leaderboard';
 import { getUserById, getUsersByIds } from '@/services/firebase/user';
 import { FirebaseUser, UserStore } from '@/types';
 
@@ -59,23 +56,5 @@ const useUserStore = create<UserStore>((set) => ({
         });
     }
 }));
-
-onAuthStateChanged(auth, async (firebaseUser) => {
-    if (firebaseUser) {
-        const user = {
-            uid: firebaseUser.uid,
-            displayName: firebaseUser.displayName,
-            email: firebaseUser.email,
-            photoURL: firebaseUser.photoURL,
-            username: await getUsername(firebaseUser.uid),
-            bio: await getBio(firebaseUser.uid),
-            superMarkers: await getSuperMarkers(firebaseUser.uid),
-            score: await getScore(firebaseUser.uid)
-        };
-        useUserStore.getState().setCurrentUser(user);
-    } else {
-        useUserStore.getState().clearCurrentUser();
-    }
-});
 
 export default useUserStore;

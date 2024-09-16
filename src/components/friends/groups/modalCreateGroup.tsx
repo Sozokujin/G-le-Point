@@ -12,7 +12,6 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export const ModalCreateGroup = () => {
     const { friends, getFriends } = useFriendStore();
-
     useEffect(() => {
         if (friends.length === 0) {
             getFriends();
@@ -21,7 +20,7 @@ export const ModalCreateGroup = () => {
 
     const [selectedFriends, setSelectedFriends] = useState<FirebaseUser[]>([]); // Gère la sélection des amis
     const [groupName, setGroupName] = useState<string>('');
-
+    const isButtonDisabled = groupName.trim() === '' || selectedFriends.length < 1;
     const toggleFriendSelection = (friend: FirebaseUser) => {
         setSelectedFriends((prevSelected) => {
             if (prevSelected.includes(friend)) {
@@ -65,7 +64,9 @@ export const ModalCreateGroup = () => {
                             value={groupName}
                             onChange={(e) => setGroupName(e.target.value)}
                         />
+                        {groupName === '' && <p className="text-red-500 text-sm">Le nom du groupe ne peut pas être vide</p>}
                         <h3 className="text-primary text-lg font-bold">Sélectionner des amis</h3>
+                        {selectedFriends.length === 0 && <p className="text-red-500 text-sm">Veuillez selectionner au moins un amis</p>}
                         <ul>
                             {friends.length !== 0 ? (
                                 friends.map((friend, index) => (
@@ -82,7 +83,7 @@ export const ModalCreateGroup = () => {
                         </ul>
 
                         <DialogClose asChild>
-                            <Button className="btn btn-primary" onClick={() => createGroupHandler()}>
+                            <Button className="btn btn-primary" disabled={isButtonDisabled} onClick={() => createGroupHandler()}>
                                 Créer
                             </Button>
                         </DialogClose>

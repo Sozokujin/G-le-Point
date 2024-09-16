@@ -94,11 +94,11 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
 
     toggleLikeMarker: async (markerId: string, userId: string) => {
         const state = get();
-        
+
         const marker =
-            state.friendsMarkers.find((m) => m.id === markerId)
-            || state.groupsMarkers.find((m) => m.id === markerId)
-            || state.publicMarkers.find((m) => m.id === markerId);
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
 
         if (!marker) return;
 
@@ -107,22 +107,14 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
         const updatedMarker = {
             ...marker,
             likeCount: hasLiked ? marker.likeCount - 1 : marker.likeCount + 1,
-            likedBy: hasLiked
-                ? marker.likedBy.filter((id) => id !== userId)
-                : [...marker.likedBy, userId],
+            likedBy: hasLiked ? marker.likedBy.filter((id) => id !== userId) : [...marker.likedBy, userId]
         };
 
         set((state) => {
             return {
-                friendsMarkers: state.friendsMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
-                groupsMarkers: state.groupsMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
-                publicMarkers: state.publicMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
             };
         });
 
@@ -137,9 +129,9 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
         const state = get();
 
         const marker =
-            state.friendsMarkers.find((m) => m.id === markerId) 
-            || state.groupsMarkers.find((m) => m.id === markerId)
-            || state.publicMarkers.find((m) => m.id === markerId);
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
 
         if (!marker) return;
 
@@ -148,22 +140,14 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
         const updatedMarker = {
             ...marker,
             reportCount: hasReported ? marker.reportCount - 1 : marker.reportCount + 1,
-            reportedBy: hasReported
-                ? marker.reportedBy.filter((id) => id !== userId)
-                : [...marker.reportedBy, userId],
+            reportedBy: hasReported ? marker.reportedBy.filter((id) => id !== userId) : [...marker.reportedBy, userId]
         };
 
         set((state) => {
             return {
-                friendsMarkers: state.friendsMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
-                groupsMarkers: state.groupsMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
-                publicMarkers: state.publicMarkers.map((m) =>
-                    m.id === markerId ? updatedMarker : m
-                ),
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
             };
         });
 

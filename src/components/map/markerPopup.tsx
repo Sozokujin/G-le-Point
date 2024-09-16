@@ -75,19 +75,17 @@ export default function MarkerPopup({
                     </div>
                     <p className="!leading-6">Par : {currentMarker.user.username}</p>
                 </div>
-                <p className="mt-1 text-sm !leading-5 text-gray-500">
-                    {currentMarker.description || 'Aucune description'}
-                </p>
+                <p className="mt-1 text-sm !leading-5 text-gray-500">{currentMarker.description || 'Aucune description'}</p>
                 <div className="mt-4 flex justify-around gap-4">
-                    <button onClick={handleLike} disabled={isUserMarker} className="inline-flex gap-2 text-glp-green disabled:text-slate-600">
-                        {isLiked ? (
-                            <HandThumbUpIcon className="h-6 w-6" />
-                        ) : (
-                            <HandThumbUpIconOutline className="h-6 w-6" />
-                        )}
+                    <button
+                        onClick={handleLike}
+                        disabled={isUserMarker}
+                        className="inline-flex gap-2 text-glp-green disabled:text-slate-600"
+                    >
+                        {isLiked ? <HandThumbUpIcon className="h-6 w-6" /> : <HandThumbUpIconOutline className="h-6 w-6" />}
                         <span>{currentMarker.likeCount}</span>
                     </button>
-                    { !isUserMarker && (
+                    {!isUserMarker && (
                         <button onClick={handleReport} className="inline-flex gap-2 text-red-500">
                             {isReported ? (
                                 <>

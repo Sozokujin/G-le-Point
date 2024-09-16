@@ -8,11 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 let timeoutId: NodeJS.Timeout;
 
 export function debounce(fn: Function, delay: number = 300) {
-    return function (...args: any[]) {
+    return (function (...args: any[]) {
         if (timeoutId) clearTimeout(timeoutId);
-        
+
         timeoutId = setTimeout(() => {
             fn(...args);
         }, delay);
-    }();
+    })();
 }

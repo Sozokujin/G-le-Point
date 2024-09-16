@@ -210,60 +210,64 @@ export default function Privacy() {
                     <table className="border-collapse border border-slate-500 shadow-sm">
                         <thead className="bg-slate-50">
                             <tr>
-                                <th className="border border-slate-600 text-center px-4">Nom</th>
-                                <th className="border border-slate-600 text-center px-4">Domaine</th>
-                                <th className="border border-slate-600 text-center px-4">Expiration</th>
-                                <th className="border border-slate-600 text-center px-4">Description</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Nom</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Domaine</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Expiration</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">cc_cookie</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">6 mois</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">cc_cookie</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">6 mois</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour enregistrer les préférences de l'utilisateur.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">__stripe_mid</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">12 mois</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">__stripe_mid</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">12 mois</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour la prévention de la fraude et pour évaluer les risques associés à une tentative
                                     de transaction​.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">__stripe_sid</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">Session</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">__stripe_sid</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">Session</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour la prévention de la fraude et pour vérifier les informations du navigateur
                                     pendant une transaction​.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">auth_token</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">12 jours</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">auth_token</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">12 jours</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Jeton d'authentification utilisateur.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">auth_token.sig</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">12 jours</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
+                                    auth_token.sig
+                                </td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">12 jours</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour vérifier l'intégrité du jeton d'authentification.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">auth_token.custom</td>
-                                <td className="border border-slate-600 text-center px-4">glepoint.fr</td>
-                                <td className="border border-slate-600 text-center px-4">12 jours</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
+                                    auth_token.custom
+                                </td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">glepoint.fr</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">12 jours</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour personnaliser l'expérience utilisateur.
                                 </td>
                             </tr>
@@ -276,29 +280,29 @@ export default function Privacy() {
                         données sont anonymisées et ne peuvent pas être utilisées pour vous identifier.
                     </p>
 
-                    <table className="border-collapse border border-slate-500 shadow-sm">
+                    <table className="border-collapse border border-slate-500 shadow-sm sm:text-sm">
                         <thead className="bg-slate-50">
                             <tr>
-                                <th className="border border-slate-600 text-center px-4">Nom</th>
-                                <th className="border border-slate-600 text-center px-4">Domaine</th>
-                                <th className="border border-slate-600 text-center px-4">Expiration</th>
-                                <th className="border border-slate-600 text-center px-4">Description</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Nom</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Domaine</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Expiration</th>
+                                <th className="border border-slate-600 text-center text-xs md:text-base md:px-4">Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">_vcn</td>
-                                <td className="border border-slate-600 text-center px-4">vercel.live</td>
-                                <td className="border border-slate-600 text-center px-4">6 mois</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">_vcn</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">vercel.live</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">6 mois</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour mesurer les performances et le comportement utilisateur.
                                 </td>
                             </tr>
                             <tr>
-                                <td className="border border-slate-600 text-center px-4">_vcnn</td>
-                                <td className="border border-slate-600 text-center px-4">vercel.live</td>
-                                <td className="border border-slate-600 text-center px-4">12 mois</td>
-                                <td className="border border-slate-600 text-center px-4">
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">_vcnn</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">vercel.live</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">12 mois</td>
+                                <td className="border border-slate-600 text-center text-xs md:text-base md:px-4">
                                     Utilisé pour collecter des statistiques anonymes à des fins d'analyse.
                                 </td>
                             </tr>

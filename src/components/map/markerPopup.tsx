@@ -30,6 +30,7 @@ export default function MarkerPopup({
 
     const isLiked = useMemo(() => currentMarker.likedBy.includes(currentUser?.uid ?? ''), [currentMarker, currentUser]);
     const isReported = useMemo(() => currentMarker.reportedBy.includes(currentUser?.uid ?? ''), [currentMarker, currentUser]);
+    const isUserMarker = useMemo(() => currentUser?.uid === currentMarker.user.uid, [currentUser, currentMarker]);
 
     useEffect(() => {
         // Keep the local marker data in sync with the store when the user likes or reports the marker
@@ -39,12 +40,12 @@ export default function MarkerPopup({
     }, [friendsMarkers, groupsMarkers, publicMarkers, marker.id]);
 
     const handleLike = () => {
-        if (!currentUser || !currentMarker) return;
+        if (!currentUser || !currentMarker || isUserMarker) return;
         debounce(() => toggleLikeMarker(currentMarker.id, currentUser.uid));
     };
 
     const handleReport = () => {
-        if (!currentUser || !currentMarker) return;
+        if (!currentUser || !currentMarker || isUserMarker) return;
         debounce(() => toggleReportMarker(currentMarker.id, currentUser.uid));
     };
 
@@ -77,31 +78,31 @@ export default function MarkerPopup({
                 <p className="mt-1 text-sm !leading-5 text-gray-500">
                     {currentMarker.description || 'Aucune description'}
                 </p>
-                { currentMarker.user.uid !== currentUser?.uid && (
-                    <div className="mt-4 flex justify-around gap-4">
-                        <button onClick={handleLike} className="inline-flex gap-2">
-                            {isLiked ? (
-                                <HandThumbUpIcon className="h-6 w-6 text-glp-green" />
-                            ) : (
-                                <HandThumbUpIconOutline className="h-6 w-6 text-glp-green" />
-                            )}
-                            <span className="text-glp-green">{currentMarker.likeCount}</span>
-                        </button>
-                        <button onClick={handleReport} className="inline-flex gap-2">
+                <div className="mt-4 flex justify-around gap-4">
+                    <button onClick={handleLike} disabled={isUserMarker} className="inline-flex gap-2 text-glp-green disabled:text-slate-600">
+                        {isLiked ? (
+                            <HandThumbUpIcon className="h-6 w-6" />
+                        ) : (
+                            <HandThumbUpIconOutline className="h-6 w-6" />
+                        )}
+                        <span>{currentMarker.likeCount}</span>
+                    </button>
+                    { !isUserMarker && (
+                        <button onClick={handleReport} className="inline-flex gap-2 text-red-500">
                             {isReported ? (
                                 <>
-                                    <ExclamationTriangleIcon className="h-6 w-6 text-red-500"></ExclamationTriangleIcon>
-                                    <span className="text-red-500">Annuler le signalement</span>
+                                    <ExclamationTriangleIcon className="h-6 w-6"></ExclamationTriangleIcon>
+                                    <span>Annuler le signalement</span>
                                 </>
                             ) : (
                                 <>
-                                    <ExclamationTriangleIconOutline className="h-6 w-6 text-red-500 text-md bg-white border-glp-red cursor-pointer"></ExclamationTriangleIconOutline>
-                                    <span className="text-red-500">Signaler</span>
+                                    <ExclamationTriangleIconOutline className="h-6 w-6 text-md bg-white border-glp-red cursor-pointer"></ExclamationTriangleIconOutline>
+                                    <span>Signaler</span>
                                 </>
                             )}
                         </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </Popup>
     );

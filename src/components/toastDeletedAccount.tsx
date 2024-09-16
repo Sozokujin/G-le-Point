@@ -11,7 +11,7 @@ function ToastDeletedAccountComponent() {
         if (params.get('account') === 'deleted') {
             // use setTimeout to avoid double rendering
             const timer = setTimeout(() => {
-                toast('Votre compte a été supprimé avec succès.');
+                toast.success('Votre compte a été supprimé avec succès.');
             }, 0);
             return () => clearTimeout(timer);
         }

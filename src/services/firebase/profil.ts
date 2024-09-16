@@ -98,7 +98,7 @@ export const deleteAccount = async () => {
     const { clearCurrentUser } = useUserStore.getState();
 
     if (!user) {
-        toast('Vous devez être connecté pour supprimer votre compte.');
+        toast.info('Vous devez être connecté pour supprimer votre compte.');
         return;
     }
 
@@ -198,6 +198,6 @@ export const deleteAccount = async () => {
         window.location.href = '/?account=deleted';
     } catch (error) {
         console.error("Erreur lors de la suppression de l'utilisateur:", error);
-        toast("Une erreur s'est produite lors de la suppression du compte.");
+        toast.error("Une erreur s'est produite lors de la suppression du compte.");
     }
 };

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { acceptFriendRequest, declineFriendRequest } from '@/services/firebase/friends';
 import { useFriendStore } from '@/stores/friendStore';
 import useUserStore from '@/stores/userStore';
@@ -7,15 +7,15 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export const ModalListFriendRequest = () => {
     const { friendRequests, getFriendRequests } = useFriendStore();
     const user = useUserStore((state) => state.currentUser);
 
     useEffect(() => {
-        //XXX: maybe fetch from store and refresh the page for new requests
         if (!user) return;
-        getFriendRequests();
+        getFriendRequests(); // XXX: Always fetch friend requests (store bypass)
     }, [getFriendRequests, user]);
 
     return (
@@ -31,6 +31,9 @@ export const ModalListFriendRequest = () => {
                 </Button>
             </DialogTrigger>
             <DialogContent>
+                <VisuallyHidden.Root>
+                    <DialogTitle> Demandes d&apos;amis</DialogTitle>
+                </VisuallyHidden.Root>
                 {friendRequests.length !== 0 ? (
                     <>
                         <h2 className="text-primary text-xl font-bold">Vos demandes d&apos;amis</h2>
@@ -59,7 +62,7 @@ const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
             await getFriendRequests();
             removeFriendRequest(friendRequest.id);
             addFriend(friendRequest);
-            toast("Demande d'ami acceptée");
+            toast.success("Demande d'ami acceptée");
         },
         [friendRequest, getFriendRequests, removeFriendRequest, addFriend]
     );
@@ -69,7 +72,7 @@ const FriendRequestLine = ({ friendRequest }: { friendRequest: any }) => {
             await declineFriendRequest(uid);
             await getFriendRequests();
             removeFriendRequest(friendRequest.id);
-            toast("Demande d'ami refusée");
+            toast.info("Demande d'ami refusée");
         },
         [friendRequest, getFriendRequests, removeFriendRequest]
     );

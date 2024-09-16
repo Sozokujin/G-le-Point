@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { DoorOpen, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FirebaseUser, Group } from '@/types';
 import GroupAvatar, { AvatarUser } from '@/components/ui/group-avatar';
@@ -11,20 +11,24 @@ import { leaveGroup } from '@/services/firebase/groups';
 import { toast } from 'sonner';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import MembersInfoModal from './modalMembersInfo';
+import { ModalEditGroup } from './modalEditGroup';
 
 interface GroupProps {
     group: Group;
+    onGroupRemoved: () => void;
     className?: string;
 }
 
-export default function GroupHeader({ group, className }: GroupProps) {
-    const [groupUsers, setGroupUsers] = useState<AvatarUser[]>([]);
+export default function GroupHeader({ group, onGroupRemoved, className }: GroupProps) {
+    const [groupAvatarUsers, setGroupAvatarUsers] = useState<AvatarUser[]>([]);
+    const [groupUsers, setGroupUsers] = useState<FirebaseUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { users } = useUserStore();
 
     const transformToAvatarUser = (user: FirebaseUser): AvatarUser => ({
         id: user.uid,
-        name: user.displayName || user.email || 'Unknown User',
+        name: user.username || user.displayName || user.email || 'Sans nom',
         image: user.photoURL
     });
 
@@ -33,27 +37,34 @@ export default function GroupHeader({ group, className }: GroupProps) {
     const handleConfirm = async () => {
         try {
             await leaveGroup(group.id);
-            toast.success('Successfully unfriended!');
+            onGroupRemoved();
+            toast.success('Vous avez quitté le groupe.');
         } catch (error) {
-            toast.error('Failed to unfriend.');
+            console.error('error:', error);
+            toast.error('Une erreur est survenue.');
         }
         setIsOpen(false);
+        document.body.style.pointerEvents = '';
     };
 
     const handleCancel = () => {
         setIsOpen(false);
+        document.body.style.pointerEvents = '';
     };
 
     useEffect(() => {
-        setIsLoading(true);
-        const avatarUsers = group.members
-            .map((memberId) => users.find((user) => user.uid === memberId))
-            .filter((user): user is FirebaseUser => user !== undefined)
-            .map(transformToAvatarUser);
+        if (!group) return;
 
-        setGroupUsers(avatarUsers);
+        const groupMembers = group.members
+            .map((memberId) => users.find((user) => user.uid === memberId))
+            .filter((user): user is FirebaseUser => user !== undefined);
+        setGroupUsers(groupMembers);
+        const avatarUsers = groupMembers.map(transformToAvatarUser);
+        setGroupAvatarUsers(avatarUsers);
         setIsLoading(false);
-    }, [group.members, users]);
+    }, [group, users]);
+
+    if (!group) return null;
 
     return (
         <div className={cn('flex items-center justify-between p-4 bg-background rounded-lg shadow h-24', className)}>
@@ -68,7 +79,7 @@ export default function GroupHeader({ group, className }: GroupProps) {
                     </div>
                 ) : (
                     <>
-                        <GroupAvatar users={groupUsers} size="md" />
+                        <GroupAvatar users={groupAvatarUsers} size="md" />
                         <div>
                             <p className="text-lg font-semibold">{group.name || 'Groupe sans nom'}</p>
                             <p className="text-sm text-muted-foreground">{group.members.length} Membres</p>
@@ -84,12 +95,23 @@ export default function GroupHeader({ group, className }: GroupProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Voir les membres</DropdownMenuItem>
+                    <ModalEditGroup group={group} />
+                    <MembersInfoModal
+                        groupId={group.id}
+                        groupName={group.name}
+                        members={groupUsers}
+                        groupOwnerId={group.groupOwner}
+                    />
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
-                        trigger={<DropdownMenuItem onSelect={(event) => event.preventDefault()}>Quitter</DropdownMenuItem>}
+                        trigger={
+                            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                                <DoorOpen className="mr-2 h-4 w-4" />
+                                Quitter le groupe
+                            </DropdownMenuItem>
+                        }
                         title="Etes-vous sûr(e)?"
-                        description={`Voulez-vous vraiment quitter ${group.name}? Vous ne pourrez pas annuler cette action.`}
+                        description={`Voulez-vous vraiment quitter ${group.name ?? 'ce groupe'}? Vous ne pourrez pas annuler cette action.`}
                         destructive
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}

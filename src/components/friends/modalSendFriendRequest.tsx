@@ -1,17 +1,18 @@
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { UserPlusIcon } from '@heroicons/react/24/solid';
 import { sendFriendRequest } from '@/services/firebase/friends';
 import { useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
 export const ModalSendFriendRequest = () => {
     const invitationCodeRef = useRef<HTMLInputElement>(null);
 
     const handleSendFriendRequest = async (invitationCode: string | undefined) => {
         await sendFriendRequest(invitationCode);
-        toast("Demande d'ami envoyée !");
+        toast.success("Demande d'ami envoyée !");
     };
 
     return (
@@ -23,6 +24,10 @@ export const ModalSendFriendRequest = () => {
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
+                    {' '}
+                    <VisuallyHidden.Root>
+                        <DialogTitle> Ajouter un ami</DialogTitle>
+                    </VisuallyHidden.Root>
                     <h2 className="text-primary text-xl font-bold">Ajouter un ami</h2>
                     <Input
                         ref={invitationCodeRef}

@@ -61,7 +61,7 @@ export const ProfileCard = () => {
 
         try {
             await updateUser(currentUser);
-            toast('Vous avez mis à jour votre profil avec succès.');
+            toast.success('Vous avez mis à jour votre profil avec succès.');
         } catch (error) {
             toast.error("Une erreur s'est produite lors de la mise à jour de votre profil.");
         }
@@ -82,9 +82,9 @@ export const ProfileCard = () => {
         if (currentUser) {
             try {
                 await deleteAccount();
-                toast('Votre compte a été supprimé avec succès.');
+                toast.success('Votre compte a été supprimé avec succès.');
             } catch (error) {
-                toast("Une erreur s'est produite lors de la suppression du compte.");
+                toast.error("Une erreur s'est produite lors de la suppression du compte.");
             }
         }
     };

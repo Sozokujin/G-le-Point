@@ -56,7 +56,7 @@ const Contact = () => {
         if (response.ok) {
             form.reset();
             form.clearErrors();
-            toast('Votre message a bien été envoyé.');
+            toast.success('Votre message a bien été envoyé.');
             sendBtnRef.current!.disabled = false;
         } else {
             const error = await response.json();

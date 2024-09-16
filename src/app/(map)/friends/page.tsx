@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIsMobile } from '@/utils/isMobile';
-// import markerStore from '@/stores/markerStore';
 import { Group, Marker, FirebaseUser } from '@/types/index';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { getUserMarkers, getGroupMarkers } from '@/services/firebase/markers';
@@ -14,18 +13,31 @@ import { FriendList } from '@/components/friends/friendList';
 import FriendHeader from '@/components/friends/friend-header';
 import { GroupList } from '@/components/friends/groups/groupList';
 import GroupHeader from '@/components/friends/groups/group-header';
+import { useGroupStore } from '@/stores/groupStore';
 
 const Friends = () => {
     const { isMobile } = useIsMobile();
-    // const { friendsMarkers, getFriendsMarkers, groupMarkers, getGroupMarkers } = markerStore(); //FIXME: REFACTO MARKERSTORE !!!!!!
     const [selectedFriend, setSelectedFriend] = useState<FirebaseUser | null>(null);
-    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
     const [displayMarkers, setDisplayMarkers] = useState<Marker[]>([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
 
+    const groups = useGroupStore((state) => state.groups);
+    const selectedGroup = groups.find((g) => g.id === selectedGroupId) || null;
+
+    useEffect(() => {
+        if (selectedGroupId) {
+            const updatedGroup = groups.find((g) => g.id === selectedGroupId);
+            if (updatedGroup) {
+                setSelectedGroupId(updatedGroup.id);
+                updateGroupMarkers(updatedGroup);
+            }
+        }
+    }, [groups, selectedGroupId]);
+
     const handleSelectedFriendChange = async (friend: FirebaseUser) => {
         setDisplayMarkers([]);
-        setSelectedGroup(null);
+        setSelectedGroupId(null);
         setSelectedFriend(friend);
         setDisplayMarkers(friend ? await getUserMarkers(friend.uid) : []);
         setDrawerOpen(true);
@@ -34,15 +46,28 @@ const Friends = () => {
     const handleSelectedGroupChange = async (group: Group) => {
         setDisplayMarkers([]);
         setSelectedFriend(null);
-        setSelectedGroup(group);
-        setDisplayMarkers(group ? await getGroupMarkers(group.id) : []);
+        setSelectedGroupId(group.id);
+        updateGroupMarkers(group);
         setDrawerOpen(true);
     };
 
+    const updateGroupMarkers = async (group: Group) => {
+        setDisplayMarkers(group ? await getGroupMarkers(group.id) : []);
+    };
+
     const closeDrawer = () => {
+        setDisplayMarkers([]);
         setDrawerOpen(false);
         setSelectedFriend(null);
-        setSelectedGroup(null);
+        setSelectedGroupId(null);
+    };
+
+    const handleFriendRemoved = () => {
+        setSelectedFriend(null);
+    };
+
+    const handleGroupRemoved = () => {
+        setSelectedGroupId(null);
     };
 
     return (
@@ -74,13 +99,13 @@ const Friends = () => {
                         {selectedFriend && (
                             <FriendHeader
                                 className="m-4 bg-slate-100"
-                                friendId={selectedFriend?.uid}
-                                name={selectedFriend?.displayName}
-                                email={selectedFriend?.email}
-                                photoUrl={selectedFriend?.photoURL}
+                                friend={selectedFriend}
+                                onFriendRemoved={handleFriendRemoved}
                             />
                         )}
-                        {selectedGroup && <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} />}
+                        {selectedGroup && (
+                            <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
+                        )}
                         <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
                     </DrawerContent>
                 </Drawer>
@@ -88,14 +113,14 @@ const Friends = () => {
                 <section className="sm:w-7/12 sm:flex flex-col hidden bg-white rounded shadow p-2">
                     {selectedFriend && (
                         <FriendHeader
-                            friendId={selectedFriend?.uid}
                             className="mb-4 bg-slate-100"
-                            name={selectedFriend?.displayName}
-                            email={selectedFriend?.email}
-                            photoUrl={selectedFriend?.photoURL}
+                            friend={selectedFriend}
+                            onFriendRemoved={handleFriendRemoved}
                         />
                     )}
-                    {selectedGroup && <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} />}
+                    {selectedGroup && (
+                        <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
+                    )}
                     <div className="flex grow overflow-y-auto mb-[4.5rem]">
                         <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
                     </div>

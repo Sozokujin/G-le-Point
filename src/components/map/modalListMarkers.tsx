@@ -16,7 +16,7 @@ export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProp
 
     return isMobile ? (
         <Drawer open={open} onClose={() => setOpen(false)}>
-            <DrawerContent>
+            <DrawerContent className="max-h-[90%]">
                 <DrawerTitle className="text-xl text-center font-bold mb-0">Tous vos points</DrawerTitle>
                 {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SCREEN READER */}
                 <VisuallyHidden.Root>
@@ -27,7 +27,7 @@ export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProp
         </Drawer>
     ) : (
         <Dialog open={open} onOpenChange={() => setOpen(false)}>
-            <DialogContent>
+            <DialogContent className="max-h-[90%] overflow-y-auto">
                 <DialogTitle className="text-xl text-center font-bold">Tous vos points</DialogTitle>
                 {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SCREEN READER */}
                 <VisuallyHidden.Root>

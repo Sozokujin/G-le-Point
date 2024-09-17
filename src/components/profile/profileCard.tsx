@@ -25,7 +25,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { auth } from '@/services/firebase/config';
 import { deleteAccount, updateUser } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { TrashIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/20/solid';
 import { clearAllStores } from '@/stores/clearStores';

@@ -6,7 +6,7 @@ import { useFriendStore } from '@/stores/friendStore';
 import { FirebaseUser } from '@/types';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { FriendLine } from '../friendList';
+import { FriendLine } from '@/components/friends/friendList';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 

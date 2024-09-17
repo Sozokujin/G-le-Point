@@ -13,8 +13,8 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import ConfirmationDialog from '../ui/confirmation-dialog';
-import ModalSeeProfile from '../modalSeeProfile';
+import ConfirmationDialog from '@/components/ui/confirmation-dialog';
+import ModalSeeProfile from '@/components/modalSeeProfile';
 
 interface FriendHeaderProps {
     friend: FirebaseUser;

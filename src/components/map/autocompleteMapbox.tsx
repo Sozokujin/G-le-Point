@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Input } from '../ui/input';
+import { Input } from '@/components/ui/input';
 
 const AutocompleteMapbox = ({
     onAddressCoordinatesSelected

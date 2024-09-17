@@ -6,7 +6,7 @@ import { useFriendStore } from '@/stores/friendStore';
 import { FirebaseUser, Group } from '@/types';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { FriendLine } from '../friendList';
+import { FriendLine } from '@/components/friends/friendList';
 import { Edit } from 'lucide-react';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useGroupStore } from '@/stores/groupStore';

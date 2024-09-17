@@ -1,10 +1,11 @@
+import { deepEqual } from '@/lib/utils';
 import { getAllFriends, getFriendRequests, getInvitationCode } from '@/services/firebase/friends';
-import { FirebaseUser } from '@/types';
+import { FirebaseUser, FriendRequest } from '@/types';
 import { create } from 'zustand';
 
 interface FriendState {
     friends: FirebaseUser[];
-    friendRequests: any[];
+    friendRequests: FriendRequest[];
     invitationCode: string | null;
     filteredFriends: FirebaseUser[];
     getFriends: () => Promise<void>;
@@ -28,19 +29,23 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     },
     getFriendRequests: async () => {
         const fetchedRequests = await getFriendRequests();
-        if (fetchedRequests) set({ friendRequests: fetchedRequests });
+        const currentRequests = get().friendRequests;
+        if (fetchedRequests && !deepEqual(fetchedRequests, currentRequests)) {
+            set({ friendRequests: fetchedRequests });
+        }
     },
     setFilteredFriends: (friends) => set({ filteredFriends: friends }),
     addFriend: (friend) => set((state) => ({ friends: [...state.friends, friend], filteredFriends: [...state.friends, friend] })),
-    removeFriend: (friendId) =>
+    removeFriend: (friendId: string) =>
         set((state) => ({
             friends: state.friends.filter((f) => f.uid !== friendId),
             filteredFriends: state.filteredFriends.filter((f) => f.uid !== friendId)
         })),
-    removeFriendRequest: (requestId) =>
+    removeFriendRequest: (requestId: string) => {
         set((state) => ({
-            friendRequests: state.friendRequests.filter((r) => r.id !== requestId)
-        })),
+            friendRequests: state.friendRequests.filter((r) => r.uid !== requestId)
+        }));
+    },
     clearFriends: () => set({ friends: [], filteredFriends: [] }),
     getInvitationCode: async () => {
         const code = await getInvitationCode();

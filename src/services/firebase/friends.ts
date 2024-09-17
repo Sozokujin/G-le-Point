@@ -1,13 +1,12 @@
 import { collection, getDocs, query, where, addDoc, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
-import { FirebaseUser } from '@/types';
+import { FirebaseUser, FriendRequest } from '@/types';
 import { useFriendStore } from '@/stores/friendStore';
 export const getAllFriends = async () => {
     try {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) {
-            console.error('Utilisateur non authentifié');
             return [];
         }
         const usersCollectionRef = collection(db, 'users');
@@ -71,37 +70,44 @@ export const sendFriendRequest = async (invitationCode: string | null) => {
         throw new Error("Une demande d'ami a déjà été envoyée à cet utilisateur");
     }
 
-    await addDoc(friendRequestRef, {
+    const docRef = await addDoc(friendRequestRef, {
         from: currentUser.uid,
         to: friendUid,
-        status: 'pending'
+        status: 'pending',
     });
+
+    return docRef.id;
 };
 
-export const getFriendRequests = async () => {
+export const getFriendRequests = async (): Promise<FriendRequest[]> => {
     const currentUser = useUserStore.getState().currentUser;
-    const friendRequestsCollectionRef = collection(db, 'friendRequests');
     if (!currentUser) {
-        console.error('Utilisateur non authentifié');
-        return null;
+        console.error('User not authenticated');
+        return [];
     }
-    const q = query(friendRequestsCollectionRef, where('to', '==', currentUser.uid), where('status', '==', 'pending'));
 
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return [];
-
-    const q2 = query(
-        collection(db, 'users'),
-        where(
-            'uid',
-            'in',
-            querySnapshot.docs.map((doc) => doc.data().from)
-        )
+    const friendRequestsCollectionRef = collection(db, 'friendRequests');
+    const q = query(
+        friendRequestsCollectionRef,
+        where('to', '==', currentUser.uid),
+        where('status', '==', 'pending')
     );
 
-    const querySnapshot2 = await getDocs(q2);
+    try {
+        const querySnapshot = await getDocs(q);
 
-    return querySnapshot2.docs.map((doc) => doc.data());
+        if (querySnapshot.empty) {
+            return [];
+        }
+
+        return querySnapshot.docs.map((doc) => ({
+            uid: doc.id,
+            ...doc.data()
+        })) as FriendRequest[];
+    } catch (error) {
+        console.error('Error fetching friend requests:', error);
+        return [];
+    }
 };
 
 export const acceptFriendRequest = async (from: string) => {

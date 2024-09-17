@@ -20,7 +20,6 @@ export const getAllGroups = async (): Promise<Group[]> => {
     try {
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser) {
-            console.error('User not authenticated');
             return [];
         }
 
@@ -54,7 +53,6 @@ export const createGroup = async (name: string, members: string[]): Promise<stri
         }
         const currentUser = useUserStore.getState().currentUser;
         if (!currentUser?.uid) {
-            console.error('User not authenticated');
             return null;
         }
 

@@ -7,6 +7,7 @@ export interface UserStore {
     users: FirebaseUser[];
     topUsersByScore: FirebaseUser[];
     topFriendsUsersByScore: FirebaseUser[];
+    fetchUserById: (id: string) => void;
     setCurrentUser: (user: FirebaseUser) => void;
     clearCurrentUser: () => void;
     setUsers: (users: FirebaseUser[]) => void;

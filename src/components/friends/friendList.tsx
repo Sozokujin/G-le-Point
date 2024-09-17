@@ -124,7 +124,6 @@ export interface FriendLineProps {
     onSelect: () => void;
 }
 export const FriendLine = React.memo(({ friend, selected, disabled, onSelect }: FriendLineProps) => {
-    // const markerCount = useMarkerStore.getState().getUserMarkerCount(friend.uid);
     return (
         <div
             onClick={!disabled ? onSelect : undefined}

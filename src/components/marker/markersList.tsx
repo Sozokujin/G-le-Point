@@ -23,15 +23,13 @@ interface MarkerListProps {
     showUser?: boolean;
     forceMobileDisplay?: boolean;
     allowDelete?: boolean;
-    className?: string;
 }
 
 export const MarkersList = ({
     markers,
     showUser = false,
     forceMobileDisplay = false,
-    allowDelete = false,
-    className = ''
+    allowDelete = false
 }: MarkerListProps) => {
     const { isMobile } = useIsMobile();
     const { deleteMarker } = useMarkerStore();

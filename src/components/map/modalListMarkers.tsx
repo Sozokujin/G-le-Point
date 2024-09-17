@@ -33,7 +33,7 @@ export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProp
                 <VisuallyHidden.Root>
                     <DialogDescription>List of your markers</DialogDescription>
                 </VisuallyHidden.Root>
-                <MarkersList markers={userMarkers} forceMobileDisplay={true} allowDelete={true} className="!p-0" />
+                <MarkersList markers={userMarkers} forceMobileDisplay={true} allowDelete={true} />
             </DialogContent>
         </Dialog>
     );

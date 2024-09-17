@@ -10,7 +10,7 @@ import ModalActions from '@/components/map/modalActions';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
 import { Marker } from '@/types/index';
-import classes from '../../Page.module.css';
+import classes from '@/app/Page.module.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 

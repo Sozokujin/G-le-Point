@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { FirebaseUser } from '@/types';
-import { BookOpen, Compass, MapPin } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import NumberTicker from '@/components/magicui/number-ticker';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card } from '@/components/ui/card';
+import { BookOpen, Compass, MapPin } from 'lucide-react';
+import NumberTicker from './magicui/number-ticker';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import useMarkerStore from '@/stores/markerStore';
 

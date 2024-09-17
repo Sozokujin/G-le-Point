@@ -1,7 +1,6 @@
 'use client';
 import useUserStore from '@/stores/userStore';
 import { loadStripe } from '@stripe/stripe-js';
-import { Button } from '../ui/button';
 
 type props = {
     priceId: string;

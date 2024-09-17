@@ -3,7 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { auth, db } from '@/services/firebase/config';
-import { getBio, getSuperMarkers, getScore, getUsername } from '@/services/firebase/profil';
+import { getBio, getSuperMarkers, getScore, getUsername, getFriends } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser } from '@/types/index';
 import { FacebookAuthProvider, GoogleAuthProvider, OAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -87,7 +87,8 @@ const Login = () => {
                     username: await getUsername(result.user.uid),
                     bio: await getBio(result.user.uid),
                     superMarkers: await getSuperMarkers(result.user.uid),
-                    score: await getScore(result.user.uid)
+                    score: await getScore(result.user.uid),
+                    friends: await getFriends(result.user.uid)
                 };
 
                 addToDbIfNewUser(firebaseUser);

@@ -25,9 +25,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { auth } from '@/services/firebase/config';
 import { deleteAccount, updateUser } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { TrashIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/20/solid';
+import { clearAllStores } from '@/stores/clearStores';
 
 const FormSchema = z.object({
     username: z
@@ -41,7 +42,7 @@ const FormSchema = z.object({
 
 export const ProfileCard = () => {
     const router = useRouter();
-    const { currentUser, clearCurrentUser } = useUserStore();
+    const { currentUser } = useUserStore();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -70,7 +71,7 @@ export const ProfileCard = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            clearCurrentUser();
+            clearAllStores();
             await fetch('/api/logout');
             router.push('/');
         } catch (error) {
@@ -79,13 +80,12 @@ export const ProfileCard = () => {
     };
 
     const handleDelete = async () => {
-        if (currentUser) {
-            try {
-                await deleteAccount();
-                toast.success('Votre compte a été supprimé avec succès.');
-            } catch (error) {
-                toast.error("Une erreur s'est produite lors de la suppression du compte.");
-            }
+        if (!currentUser) return;
+        try {
+            await deleteAccount();
+            toast.success('Votre compte a été supprimé avec succès.');
+        } catch (error) {
+            toast.error((error as any).message);
         }
     };
 

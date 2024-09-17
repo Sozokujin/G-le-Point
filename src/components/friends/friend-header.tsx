@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { FirebaseUser } from '@/types';
 import { unfriend } from '@/services/firebase/friends';
-import { Flag, Info, MoreHorizontal, UserMinus } from 'lucide-react';
+import { Info, MoreHorizontal, UserMinus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -49,7 +49,7 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
                     <AvatarFallback>{friend.username?.slice(0, 1) ?? friend.email?.slice(0, 1) ?? '?'}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h2 className="text-lg font-semibold">{friend.displayName ?? friend.username ?? 'Sans Nom'}</h2>
+                    <h2 className="text-lg font-semibold">{friend.username ?? friend.displayName ?? 'Sans Nom'}</h2>
                     <p className="text-sm text-muted-foreground">{friend.email}</p>
                 </div>
             </div>
@@ -70,11 +70,6 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
                             </DropdownMenuItem>
                         }
                     />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <Flag className="mr-2 h-4 w-4" />
-                        Signaler
-                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <ConfirmationDialog
                         trigger={

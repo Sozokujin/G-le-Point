@@ -53,12 +53,11 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
 
     useEffect(() => {
         const groupMembersIds = groups.reduce((acc, group) => [...acc, ...group.members], [] as string[]);
-        fetchUsersByIds(groupMembersIds); //XXX: ALways fetch all users (store bypass)
-    }, [groups, fetchUsersByIds]);
+        useUserStore.getState().fetchUsersByIds(groupMembersIds); //XXX: ALways fetch all users (store bypass)
+    }, [groups, fetchUsersByIds, users]);
 
     useEffect(() => {
-        if (!users) return;
-
+        if (!users || users.length === 0) return;
         const newGroupUsers = groups.reduce(
             (acc, group) => {
                 acc[group.id] = group.members
@@ -69,7 +68,6 @@ export const GroupList = ({ selectedGroup, setSelectedGroup }: GroupListProps) =
             },
             {} as { [key: string]: AvatarUser[] }
         );
-
         setGroupUsers((prevGroupUsers) => {
             if (JSON.stringify(prevGroupUsers) !== JSON.stringify(newGroupUsers)) {
                 return newGroupUsers;

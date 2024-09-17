@@ -71,7 +71,8 @@ export const getTopUsersByScore = async () => {
             username: doc.data().username,
             bio: doc.data().bio,
             score: doc.data().score,
-            superMarkers: doc.data().superMarkers
+            superMarkers: doc.data().superMarkers,
+            friends: doc.data().friends || []
         }));
         return users;
     } catch (error) {
@@ -108,7 +109,8 @@ export const getFriendsTopUsersByScore = async (currentUserId: string) => {
             username: doc.data().username,
             bio: doc.data().bio,
             score: doc.data().score,
-            superMarkers: doc.data().superMarkers
+            superMarkers: doc.data().superMarkers,
+            friends: doc.data().friends || []
         }));
 
         return friends;

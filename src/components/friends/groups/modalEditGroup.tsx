@@ -6,7 +6,7 @@ import { useFriendStore } from '@/stores/friendStore';
 import { FirebaseUser, Group } from '@/types';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { FriendLine } from '../friendList';
+import { FriendLine } from '@/components/friends/friendList';
 import { Edit } from 'lucide-react';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { useGroupStore } from '@/stores/groupStore';
@@ -24,6 +24,7 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
     const [members, setMembers] = useState<FirebaseUser[]>([]);
     const [groupName, setGroupName] = useState<string>(group.name);
     const [isOpen, setIsOpen] = useState(false);
+    const isButtonDisabled = groupName.trim() === '' || groupName === group.name
 
     useEffect(() => {
         if (friends.length === 0) {
@@ -94,6 +95,7 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
                         value={groupName}
                         onChange={(e) => setGroupName(e.target.value)}
                     />
+                    {groupName === '' && <p className="text-red-500 text-sm">Le nom du groupe ne peut pas être vide</p>}
                     <h3 className="text-primary text-lg font-bold">Ajoutez des amis</h3>
                     <ul>
                         {friends.length !== 0 ? (
@@ -112,7 +114,7 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
                     </ul>
 
                     <DialogClose asChild>
-                        <Button className="btn btn-primary" onClick={updateGroupHandler}>
+                        <Button className="btn btn-primary" disabled={isButtonDisabled} onClick={updateGroupHandler}>
                             Mettre à jour
                         </Button>
                     </DialogClose>

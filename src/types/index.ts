@@ -1,17 +1,3 @@
-//Store types
-export interface UserStore {
-    fetchUsersByIds: any;
-    fetchUserByScores: any;
-    fetchFriendsUserByScores: any;
-    currentUser: FirebaseUser | null;
-    users: FirebaseUser[];
-    topUsersByScore: FirebaseUser[];
-    topFriendsUsersByScore: FirebaseUser[];
-    setCurrentUser: (user: FirebaseUser) => void;
-    clearCurrentUser: () => void;
-    setUsers: (users: FirebaseUser[]) => void;
-    clearUsers: () => void;
-}
 
 export interface Marker {
     id: string;
@@ -40,6 +26,7 @@ export interface FirebaseUser {
     photoURL: string | null | undefined;
     bio: string | null;
     username: string | null;
+    friends: string[];
     superMarkers: number;
     score: number;
 }

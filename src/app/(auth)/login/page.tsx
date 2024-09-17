@@ -15,6 +15,39 @@ import { useState } from 'react';
 import { DotLoader } from 'react-spinners';
 import { toast } from 'sonner';
 
+const tierceApps = [
+    {
+        name: 'Google',
+        icon: '/images/google-icon.svg',
+        provider: new GoogleAuthProvider(),
+        active: true
+    },
+    {
+        name: 'Facebook',
+        icon: '/images/facebook-icon.svg',
+        provider: new FacebookAuthProvider(),
+        active: true
+    },
+    {
+        name: 'Microsoft',
+        icon: '/images/microsoft-icon.svg',
+        provider: new OAuthProvider('microsoft.com'),
+        active: true
+    },
+    {
+        name: 'X',
+        icon: '/images/x-icon.svg',
+        provider: new OAuthProvider('twitter.com'),
+        active: true
+    },
+    {
+        name: 'Apple',
+        icon: '/images/apple-icon.svg',
+        provider: null,
+        active: false
+    }
+];
+
 const Login = () => {
     const router = useRouter();
     const { setCurrentUser } = useUserStore();
@@ -72,46 +105,15 @@ const Login = () => {
         } catch (error: Error | any) {
             setIsLoading(false);
             if (error.code === 'auth/account-exists-with-different-credential') {
-                toast.error("Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion.");
+                toast.error(
+                    'Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion.'
+                );
             } else {
                 console.error('Error during sign-in:', error);
                 toast.error("Une erreur s'est produite, veuillez réessayer plus tard.");
             }
         }
     };
-
-    const tierceApps = [
-        {
-            name: 'Google',
-            icon: '/images/google-icon.svg',
-            provider: new GoogleAuthProvider(),
-            active: true
-        },
-        {
-            name: 'Facebook',
-            icon: '/images/facebook-icon.svg',
-            provider: new FacebookAuthProvider(),
-            active: true
-        },
-        {
-            name: 'Microsoft',
-            icon: '/images/microsoft-icon.svg',
-            provider: new OAuthProvider('microsoft.com'),
-            active: true
-        },
-        {
-            name: 'X',
-            icon: '/images/x-icon.svg',
-            provider: new OAuthProvider('twitter.com'),
-            active: true
-        },
-        {
-            name: 'Apple',
-            icon: '/images/apple-icon.svg',
-            provider: null,
-            active: false
-        }
-    ];
 
     return (
         <div className="mx-auto grid w-[350px] gap-6">

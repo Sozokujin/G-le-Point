@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getBio, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
 
 export default function CheckAuth() {
     const auth = getAuth();
-    const {
-        currentUser,
-        setCurrentUser,
-        clearCurrentUser
-    } = useUserStore();
-    
+    const { currentUser, setCurrentUser, clearCurrentUser } = useUserStore();
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {

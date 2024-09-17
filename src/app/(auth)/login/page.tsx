@@ -135,7 +135,7 @@ const Login = () => {
             <div className="grid gap-4 relative">
                 {isLoading && (
                     <div className="absolute h-full w-full flex items-center justify-center z-10">
-                        <DotLoader color="#37b978" />
+                        <DotLoader color="#00a661" />
                     </div>
                 )}
                 {tierceApps.map((app) => (

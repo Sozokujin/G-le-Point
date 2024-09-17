@@ -11,7 +11,7 @@ export default function CheckoutPage() {
         <Suspense
             fallback={
                 <div className="min-h-[100svh] flex justify-center items-center">
-                    <BeatLoader color="#37b978" />
+                    <BeatLoader color="#00a661" />
                 </div>
             }
         >

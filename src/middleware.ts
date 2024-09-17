@@ -3,7 +3,7 @@ import { authMiddleware, redirectToHome, redirectToLogin } from 'next-firebase-a
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/', '/team', '/mentions-legales', '/politique-de-confidentialite', '/cgu', '/login', '/contact'];
+const PUBLIC_PATHS = ['/', '/team', '/mentions-legales', '/politique-de-confidentialite', '/cgu', '/login'];
 const PUBLIC_ONLY_PATHS = ['/login'];
 
 const serverConfig = {

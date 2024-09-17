@@ -19,7 +19,6 @@ const Login = () => {
     const router = useRouter();
     const { setCurrentUser } = useUserStore();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const addToDbIfNewUser = async (user: FirebaseUser) => {
         const usersCollectionRef = collection(db, 'users');
@@ -40,7 +39,6 @@ const Login = () => {
 
     const signInWithProvider = async (provider: any | null) => {
         if (!provider || isLoading) return;
-        setErrorMessage(null);
         setIsLoading(true);
 
         try {
@@ -74,9 +72,7 @@ const Login = () => {
         } catch (error: Error | any) {
             setIsLoading(false);
             if (error.code === 'auth/account-exists-with-different-credential') {
-                setErrorMessage(
-                    'Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion'
-                );
+                toast.error("Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion.");
             } else {
                 console.error('Error during sign-in:', error);
                 toast.error("Une erreur s'est produite, veuillez réessayer plus tard.");
@@ -157,11 +153,6 @@ const Login = () => {
                 <Link href="/" className="text-center text-xs underline">
                     Retourner sur la page d'accueil
                 </Link>
-                {errorMessage && (
-                    <div className="absolute top-4 right-4 h-auto w-48 bg-glp-green-600 p-5 rounded-sm flex justify-center items-center text-white">
-                        {errorMessage}
-                    </div>
-                )}
             </div>
         </div>
     );

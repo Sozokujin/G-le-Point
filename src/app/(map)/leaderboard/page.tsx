@@ -34,7 +34,7 @@ const Leaderboard = () => {
     if (loading) {
         return (
             <div className="h-svh w-full flex items-center justify-center">
-                <BarLoader color="#37b978" />
+                <BarLoader color="#00a661" />
             </div>
         );
     }

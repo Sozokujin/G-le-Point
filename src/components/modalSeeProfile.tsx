@@ -4,36 +4,21 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Compass, MapPin } from 'lucide-react';
-import useMarkerStore from '@/stores/markerStore';
 import NumberTicker from './magicui/number-ticker';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { Button } from '@/components/ui/button';
-import { unfriend } from '@/services/firebase/friends';
-import { toast } from 'sonner';
-import ConfirmationDialog from '@/components/ui/confirmation-dialog';
+import useMarkerStore from '@/stores/markerStore';
 
-interface SeeProfileModalProps {
+interface ModalSeeProfileProps {
     user: FirebaseUser;
     trigger: React.ReactNode;
 }
 
-const SeeProfileModal = ({ user, trigger }: SeeProfileModalProps) => {
+const ModalSeeProfile = ({ user, trigger }: ModalSeeProfileProps) => {
     const { userMarkers, getUserMarkers } = useMarkerStore();
 
     useEffect(() => {
         getUserMarkers(user.uid);
     }, [user.uid, getUserMarkers]);
-
-    const handleUnfriend = async () => {
-        try {
-            await unfriend(user.uid);
-            toast.success('Ami supprimé!');
-        } catch (error) {
-            toast.error('Une erreur est survenue.');
-        }
-    };
-
-    const handleReport = () => {};
 
     return (
         <Dialog>
@@ -79,25 +64,6 @@ const SeeProfileModal = ({ user, trigger }: SeeProfileModalProps) => {
                                 color="from-purple-500 to-indigo-500"
                             />
                         </div>
-                        {/* XXX: Maybe redundant */}
-                        {/* <div className="flex justify-center space-x-4">
-                            <ConfirmationDialog
-                                trigger={
-                                    <Button variant="outline" className="flex items-center">
-                                        <UserMinus className="mr-2 h-4 w-4" />
-                                        Unfriend
-                                    </Button>
-                                }
-                                title="Etes-vous sûr(e)?"
-                                description={`Voulez-vous vraiment supprimer ${user.displayName ?? user.username ?? 'cet ami'} de vos amis? Vous ne pourrez pas annuler cette action.`}
-                                destructive
-                                onConfirm={handleUnfriend}
-                            />
-                            <Button variant="outline" className="flex items-center" onClick={handleReport}>
-                                <Flag className="mr-2 h-4 w-4" />
-                                Report
-                            </Button>
-                        </div> */}
                     </div>
                 </Card>
             </DialogContent>
@@ -139,4 +105,4 @@ const ProfileItem = ({ icon, label, value, color, fullWidth = false }: ProfileIt
     </div>
 );
 
-export default SeeProfileModal;
+export default ModalSeeProfile;

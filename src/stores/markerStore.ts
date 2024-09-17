@@ -19,11 +19,7 @@ export interface MarkerState {
     groupsMarkers: Marker[];
     publicMarkers: Marker[];
     lastMarker: Marker | null;
-    likedMarkers: string[];
-    reportedMarkers: string[];
     addMarker: (marker: Marker) => void;
-    addClickedMarker: (marker: Marker) => void;
-    clearLastMarker: () => void;
     removeMarker: (marker: Marker) => void;
     clearUserMarkers: () => void;
     clearFriendsMarkers: () => void;
@@ -45,8 +41,6 @@ const initialState: Omit<MarkerState, 'addMarker' | 'addClickedMarker' | 'clearL
     groupsMarkers: [],
     publicMarkers: [],
     lastMarker: null,
-    likedMarkers: [],
-    reportedMarkers: [],
 };
 
 export const useMarkerStore = create<MarkerState>((set, get) => ({
@@ -58,10 +52,6 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
             lastMarker: marker
         }));
     },
-
-    addClickedMarker: (marker: Marker) => set({ lastMarker: marker }),
-
-    clearLastMarker: () => set({ lastMarker: null }),
 
     removeMarker: (marker: Marker) =>
         set((state: MarkerState) => ({
@@ -102,51 +92,67 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
 
     toggleLikeMarker: async (markerId: string, userId: string) => {
         const state = get();
-        const updatedMarkers = state.userMarkers.map((marker: Marker) => {
-            if (marker.id === markerId) {
-                if (marker.likedBy.includes(userId)) {
-                    marker.likeCount -= 1;
-                    marker.likedBy = marker.likedBy.filter((id) => id !== userId);
-                } else {
-                    marker.likeCount += 1;
-                    marker.likedBy.push(userId);
-                }
-            }
-            return marker;
+
+        const marker =
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
+
+        if (!marker) return;
+
+        const hasLiked = marker.likedBy.includes(userId);
+
+        const updatedMarker = {
+            ...marker,
+            likeCount: hasLiked ? marker.likeCount - 1 : marker.likeCount + 1,
+            likedBy: hasLiked ? marker.likedBy.filter((id) => id !== userId) : [...marker.likedBy, userId]
+        };
+
+        set((state) => {
+            return {
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+            };
         });
 
-        set({ userMarkers: updatedMarkers });
-
-        const marker = updatedMarkers.find((m: Marker) => m.id === markerId);
-        if (marker && marker.likedBy.includes(userId)) {
-            await addLike(markerId, userId);
-        } else {
+        if (hasLiked) {
             await removeLike(markerId, userId);
+        } else {
+            await addLike(markerId, userId);
         }
     },
 
     toggleReportMarker: async (markerId: string, userId: string) => {
         const state = get();
-        const updatedMarkers = state.userMarkers.map((marker: Marker) => {
-            if (marker.id === markerId) {
-                if (marker.reportedBy.includes(userId)) {
-                    marker.reportCount -= 1;
-                    marker.reportedBy = marker.reportedBy.filter((id) => id !== userId);
-                } else {
-                    marker.reportCount += 1;
-                    marker.reportedBy.push(userId);
-                }
-            }
-            return marker;
+
+        const marker =
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
+
+        if (!marker) return;
+
+        const hasReported = marker.reportedBy.includes(userId);
+
+        const updatedMarker = {
+            ...marker,
+            reportCount: hasReported ? marker.reportCount - 1 : marker.reportCount + 1,
+            reportedBy: hasReported ? marker.reportedBy.filter((id) => id !== userId) : [...marker.reportedBy, userId]
+        };
+
+        set((state) => {
+            return {
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+            };
         });
 
-        set({ userMarkers: updatedMarkers });
-
-        const marker = updatedMarkers.find((m: Marker) => m.id === markerId);
-        if (marker && marker.reportedBy.includes(userId)) {
-            await addReport(markerId, userId);
-        } else {
+        if (hasReported) {
             await removeReport(markerId, userId);
+        } else {
+            await addReport(markerId, userId);
         }
     },
 

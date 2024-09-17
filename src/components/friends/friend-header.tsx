@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { FirebaseUser } from '@/types';
+import { unfriend } from '@/services/firebase/friends';
+import { Flag, Info, MoreHorizontal, UserMinus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,12 +13,8 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Info, MoreHorizontal, UserMinus } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import ConfirmationDialog from '../ui/confirmation-dialog';
-import { unfriend } from '@/services/firebase/friends';
-import { toast } from 'sonner';
-import SeeProfileModal from '../modalSeeProfile';
+import ModalSeeProfile from '../modalSeeProfile';
 
 interface FriendHeaderProps {
     friend: FirebaseUser;
@@ -61,7 +61,7 @@ export default function FriendHeader({ friend, onFriendRemoved, className }: Fri
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <SeeProfileModal
+                    <ModalSeeProfile
                         user={friend}
                         trigger={
                             <DropdownMenuItem onSelect={(event) => event.preventDefault()}>

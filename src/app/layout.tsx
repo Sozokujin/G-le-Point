@@ -24,12 +24,12 @@ export const metadata: Metadata = {
             sizes: '16x16',
             url: '/favicon-16x16.png'
         },
-        { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#37b978' },
+        { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#00a661' },
         { rel: 'shortcut icon', url: '/favicon.ico' }
     ],
     manifest: '/site.webmanifest',
     other: {
-        'msapplication-TileColor': '#37b978',
+        'msapplication-TileColor': '#00a661',
         'msapplication-config': '/browserconfig.xml'
     }
 };

@@ -16,8 +16,14 @@ interface FriendRequestLineProps {
 }
 
 const FriendRequestLine = ({ request, onAccept, onDecline }: FriendRequestLineProps) => {
-    const { users } = useUserStore();
+    const { users, fetchUserById } = useUserStore();
     const [requestUser, setRequestUser] = useState<FirebaseUser | null>(null);
+
+    useEffect(() => {
+        if (!users.length && request.from) {
+            fetchUserById(request.from);
+        }
+    }, [fetchUserById, request.from, users.length]);
 
     useEffect(() => {
         const user = users.find((u) => u.uid === request.from);
@@ -27,7 +33,7 @@ const FriendRequestLine = ({ request, onAccept, onDecline }: FriendRequestLinePr
     }, [request.from, users]);
 
     if (!requestUser) {
-        return <li className="h-20 flex items-center justify-center">Loading...</li>;
+        return <li className="h-20 flex items-center justify-center">Chargement...</li>;
     }
 
     return (

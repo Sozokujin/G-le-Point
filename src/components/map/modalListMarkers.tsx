@@ -3,7 +3,7 @@ import useMarkerStore from '@/stores/markerStore';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { MarkerList } from '@/components/marker/marker-list';
+import { MarkersList } from '@/components/marker/markersList';
 
 interface ModalListMarkersProps {
     open: boolean;
@@ -22,7 +22,7 @@ export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProp
                 <VisuallyHidden.Root>
                     <DrawerDescription>List of your markers</DrawerDescription>
                 </VisuallyHidden.Root>
-                <MarkerList markers={userMarkers} allowDelete={true} />
+                <MarkersList markers={userMarkers} allowDelete={true} />
             </DrawerContent>
         </Drawer>
     ) : (
@@ -33,7 +33,7 @@ export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProp
                 <VisuallyHidden.Root>
                     <DialogDescription>List of your markers</DialogDescription>
                 </VisuallyHidden.Root>
-                <MarkerList markers={userMarkers} forceMobileDisplay={true} allowDelete={true} className="!p-0" />
+                <MarkersList markers={userMarkers} forceMobileDisplay={true} allowDelete={true} className="!p-0" />
             </DialogContent>
         </Dialog>
     );

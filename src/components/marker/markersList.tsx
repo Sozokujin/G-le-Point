@@ -27,7 +27,7 @@ interface MarkerListProps {
     className?: string;
 }
 
-export const MarkerList = ({
+export const MarkersList = ({
     markers,
     showUser = false,
     forceMobileDisplay = false,

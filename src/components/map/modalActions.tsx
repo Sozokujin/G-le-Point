@@ -9,6 +9,21 @@ interface ModalActionsProps {
     setModalListMarkers: (value: boolean) => void;
 }
 
+const products = [
+    {
+        name: '1 Super Point',
+        priceId: 'price_1PuAYAP4rVLS4DImVQ2x3c25',
+        price: '10',
+        description: 'Acheter 1 Super Point'
+    },
+    {
+        name: '5 Super Points',
+        priceId: 'price_1Pv0OTP4rVLS4DIml24noZ3P',
+        price: '40',
+        description: 'Acheter 5 Super Points'
+    }
+];
+
 export default function ModalActions({ filters, setFilters, setModalListMarkers }: ModalActionsProps) {
     const { showFriends, showGroups, showPublic, satelliteMap } = filters;
 
@@ -16,21 +31,6 @@ export default function ModalActions({ filters, setFilters, setModalListMarkers 
     const setShowGroups = (value: boolean) => setFilters({ ...filters, showGroups: value });
     const setShowPublic = (value: boolean) => setFilters({ ...filters, showPublic: value });
     const setSatelliteMap = (value: boolean) => setFilters({ ...filters, satelliteMap: value });
-
-    const products = [
-        {
-            name: '1 Super Point',
-            priceId: 'price_1PuAYAP4rVLS4DImVQ2x3c25',
-            price: '10',
-            description: 'Acheter 1 Super Point'
-        },
-        {
-            name: '5 Super Points',
-            priceId: 'price_1Pv0OTP4rVLS4DIml24noZ3P',
-            price: '40',
-            description: 'Acheter 5 Super Points'
-        }
-    ];
 
     return (
         <Menu as="div" className="relative inline-block text-left">

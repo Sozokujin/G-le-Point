@@ -95,10 +95,10 @@ const Friends = () => {
                         <DrawerTitle>Friends list</DrawerTitle>
                         <DrawerDescription>List of your friends</DrawerDescription>
                     </VisuallyHidden.Root>
-                    <DrawerContent className="h-[90%]">
+                    <DrawerContent className="h-[90%] p-4">
                         {selectedFriend && (
                             <FriendHeader
-                                className="m-4 bg-slate-100"
+                                className="my-4 bg-slate-100"
                                 friend={selectedFriend}
                                 onFriendRemoved={handleFriendRemoved}
                             />

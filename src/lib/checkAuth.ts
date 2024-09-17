@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getBio, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
+import { getBio, getFriends, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
 import useUserStore from '@/stores/userStore';
 
 export default function CheckAuth() {
@@ -20,6 +20,7 @@ export default function CheckAuth() {
                     email: firebaseUser.email,
                     photoURL: firebaseUser.photoURL,
                     username: await getUsername(firebaseUser.uid),
+                    friends: await getFriends(firebaseUser.uid),
                     bio: await getBio(firebaseUser.uid),
                     superMarkers: await getSuperMarkers(firebaseUser.uid),
                     score: await getScore(firebaseUser.uid)

@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { FirebaseUser } from '@/types';
 import { unfriend } from '@/services/firebase/friends';
-import { Flag, Info, MoreHorizontal, UserMinus } from 'lucide-react';
+import { Info, MoreHorizontal, UserMinus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {

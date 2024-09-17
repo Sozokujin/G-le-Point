@@ -75,7 +75,6 @@ export const ModalListFriendRequest = () => {
     }, [currentUser]);
 
     const handleAcceptFriendRequest = async (request: FriendRequest) => {
-        console.log("request:", request);
         try {
             await acceptFriendRequest(request.from);
             removeFriendRequest(request.uid);

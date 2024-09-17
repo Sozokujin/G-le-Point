@@ -8,7 +8,7 @@ import { getUserMarkers, getGroupMarkers } from '@/services/firebase/markers';
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from '@/components/ui/drawer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { MarkerList } from '@/components/marker/marker-list';
+import { MarkersList } from '@/components/marker/markersList';
 import { FriendList } from '@/components/friends/friendList';
 import FriendHeader from '@/components/friends/friend-header';
 import { GroupList } from '@/components/friends/groups/groupList';
@@ -106,7 +106,7 @@ const Friends = () => {
                         {selectedGroup && (
                             <GroupHeader className="m-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
                         )}
-                        <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
+                        <MarkersList markers={displayMarkers} showUser={!!selectedGroup} />
                     </DrawerContent>
                 </Drawer>
             ) : (
@@ -122,7 +122,7 @@ const Friends = () => {
                         <GroupHeader className="mb-4 bg-slate-100" group={selectedGroup} onGroupRemoved={handleGroupRemoved} />
                     )}
                     <div className="flex grow overflow-y-auto mb-[4.5rem]">
-                        <MarkerList markers={displayMarkers} showUser={!!selectedGroup} />
+                        <MarkersList markers={displayMarkers} showUser={!!selectedGroup} />
                     </div>
                 </section>
             )}

@@ -1,56 +1,40 @@
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useIsMobile } from '@/utils/isMobile';
 import useMarkerStore from '@/stores/markerStore';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { MarkersList } from '@/components/marker/markersList';
 
-export const ModalListMarkers = () => {
-    const UserMarkers = useMarkerStore((state) => state.userMarkers);
+interface ModalListMarkersProps {
+    open: boolean;
+    setOpen: (value: boolean) => void;
+}
 
-    const { addClickedMarker, deleteMarker } = useMarkerStore();
+export default function ModalListMarkers({ open, setOpen }: ModalListMarkersProps) {
+    const { isMobile } = useIsMobile();
+    const { userMarkers } = useMarkerStore();
 
-    return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button className="btn btn-primary absolute top-4 right-4 z-10">Vos points</Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogTitle className="text-primary text-xl font-bold">Liste des marqueurs</DialogTitle>
-                {UserMarkers.length > 0 ? (
-                    <ul className="flex flex-col gap-4 max-h-96 overflow-y-auto">
-                        {UserMarkers.map((userMarker: any, i) => (
-                            <li key={userMarker.id} className="border p-4">
-                                <p>{userMarker.name}</p>
-                                <p>
-                                    {userMarker.latitude}
-                                    {userMarker.longitude}
-                                </p>
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button variant={'secondary'}>Supprimer</Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogTitle className="text-primary text-xl font-bold">
-                                            Êtes-vous sûr de vouloir supprimer ce marqueur ?
-                                        </DialogTitle>
-                                        <DialogClose asChild>
-                                            <Button onClick={() => deleteMarker(userMarker.id)} variant={'secondary'}>
-                                                Oui
-                                            </Button>
-                                        </DialogClose>
-                                        <DialogClose asChild>
-                                            <Button>Non</Button>
-                                        </DialogClose>
-                                    </DialogContent>
-                                </Dialog>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>Aucun marqueur</p>
-                )}
-                <DialogClose asChild>
-                    <Button>Fermer</Button>
-                </DialogClose>
+    return isMobile ? (
+        <Drawer open={open} onClose={() => setOpen(false)}>
+            <DrawerContent className="max-h-[90%]">
+                <DrawerTitle className="text-xl text-center font-bold mb-0">Tous vos points</DrawerTitle>
+                {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SCREEN READER */}
+                <VisuallyHidden.Root>
+                    <DrawerDescription>List of your markers</DrawerDescription>
+                </VisuallyHidden.Root>
+                <MarkersList markers={userMarkers} allowDelete={true} />
+            </DrawerContent>
+        </Drawer>
+    ) : (
+        <Dialog open={open} onOpenChange={() => setOpen(false)}>
+            <DialogContent className="max-h-[90%] overflow-y-auto">
+                <DialogTitle className="text-xl text-center font-bold">Tous vos points</DialogTitle>
+                {/* DO NOT REMOVE VisuallyHidden, NEEDED FOR SCREEN READER */}
+                <VisuallyHidden.Root>
+                    <DialogDescription>List of your markers</DialogDescription>
+                </VisuallyHidden.Root>
+                <MarkersList markers={userMarkers} forceMobileDisplay={true} allowDelete={true} className="!p-0" />
             </DialogContent>
         </Dialog>
     );
-};
+}

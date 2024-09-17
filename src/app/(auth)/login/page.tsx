@@ -15,11 +15,43 @@ import { useState } from 'react';
 import { DotLoader } from 'react-spinners';
 import { toast } from 'sonner';
 
+const tierceApps = [
+    {
+        name: 'Google',
+        icon: '/images/google-icon.svg',
+        provider: new GoogleAuthProvider(),
+        active: true
+    },
+    {
+        name: 'Facebook',
+        icon: '/images/facebook-icon.svg',
+        provider: new FacebookAuthProvider(),
+        active: true
+    },
+    {
+        name: 'Microsoft',
+        icon: '/images/microsoft-icon.svg',
+        provider: new OAuthProvider('microsoft.com'),
+        active: true
+    },
+    {
+        name: 'X',
+        icon: '/images/x-icon.svg',
+        provider: new OAuthProvider('twitter.com'),
+        active: true
+    },
+    {
+        name: 'Apple',
+        icon: '/images/apple-icon.svg',
+        provider: null,
+        active: false
+    }
+];
+
 const Login = () => {
     const router = useRouter();
     const { setCurrentUser } = useUserStore();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const addToDbIfNewUser = async (user: FirebaseUser) => {
         const usersCollectionRef = collection(db, 'users');
@@ -40,7 +72,6 @@ const Login = () => {
 
     const signInWithProvider = async (provider: any | null) => {
         if (!provider || isLoading) return;
-        setErrorMessage(null);
         setIsLoading(true);
 
         try {
@@ -74,8 +105,8 @@ const Login = () => {
         } catch (error: Error | any) {
             setIsLoading(false);
             if (error.code === 'auth/account-exists-with-different-credential') {
-                setErrorMessage(
-                    'Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion'
+                toast.error(
+                    'Un compte avec cette adresse email existe déjà, veuillez vous connecter avec un autre fournisseur de connexion.'
                 );
             } else {
                 console.error('Error during sign-in:', error);
@@ -83,39 +114,6 @@ const Login = () => {
             }
         }
     };
-
-    const tierceApps = [
-        {
-            name: 'Google',
-            icon: '/images/google-icon.svg',
-            provider: new GoogleAuthProvider(),
-            active: true
-        },
-        {
-            name: 'Facebook',
-            icon: '/images/facebook-icon.svg',
-            provider: new FacebookAuthProvider(),
-            active: true
-        },
-        {
-            name: 'Microsoft',
-            icon: '/images/microsoft-icon.svg',
-            provider: new OAuthProvider('microsoft.com'),
-            active: true
-        },
-        {
-            name: 'X',
-            icon: '/images/x-icon.svg',
-            provider: new OAuthProvider('twitter.com'),
-            active: true
-        },
-        {
-            name: 'Apple',
-            icon: '/images/apple-icon.svg',
-            provider: null,
-            active: false
-        }
-    ];
 
     return (
         <div className="mx-auto grid w-[350px] gap-6">
@@ -157,11 +155,6 @@ const Login = () => {
                 <Link href="/" className="text-center text-xs underline">
                     Retourner sur la page d'accueil
                 </Link>
-                {errorMessage && (
-                    <div className="absolute top-4 right-4 h-auto w-48 bg-glp-green-600 p-5 rounded-sm flex justify-center items-center text-white">
-                        {errorMessage}
-                    </div>
-                )}
             </div>
         </div>
     );

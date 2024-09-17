@@ -4,13 +4,33 @@ import { getBio, getFriends, getScore, getSuperMarkers, getUsername } from '@/se
 import { onAuthStateChanged } from 'firebase/auth';
 import { create } from 'zustand';
 import { getUserById, getUsersByIds } from '@/services/firebase/user';
-import { FirebaseUser, UserStore } from '@/types';
+import { FirebaseUser } from '@/types';
 
-const useUserStore = create<UserStore>((set) => ({
+type UserStore = {
+    currentUser: FirebaseUser | null;
+    users: FirebaseUser[];
+    topUsersByScore: FirebaseUser[];
+    topFriendsUsersByScore: FirebaseUser[];
+    setCurrentUser: (currentUser: FirebaseUser) => void;
+    clearCurrentUser: () => void;
+    setUsers: (users: FirebaseUser[]) => void;
+    clearUsers: () => void;
+    fetchUserById: (id: string) => void;
+    fetchUsersByIds: (ids: string[]) => void;
+    fetchUserByScores: () => void;
+    fetchFriendsUserByScores: (userId: string) => void;
+    reset: () => void;
+};
+
+const initialState: Omit<UserStore, 'setCurrentUser' | 'clearCurrentUser' | 'setUsers' | 'clearUsers' | 'fetchUserById' | 'fetchUsersByIds' | 'fetchUserByScores' | 'fetchFriendsUserByScores' | 'reset'> = {
     currentUser: null,
     users: [],
     topUsersByScore: [],
     topFriendsUsersByScore: [],
+};
+
+const useUserStore = create<UserStore>((set) => ({
+    ...initialState,
     setCurrentUser: (currentUser: FirebaseUser) => set({ currentUser }),
     clearCurrentUser: () => set({ currentUser: null }),
     setUsers: (users: FirebaseUser[]) => set({ users }),
@@ -57,7 +77,9 @@ const useUserStore = create<UserStore>((set) => ({
                 topFriendsUsersByScore: [...state.topFriendsUsersByScore, ...newUsers]
             };
         });
-    }
+    },
+    reset: () => set(initialState)
+
 }));
 
 onAuthStateChanged(auth, async (firebaseUser) => {

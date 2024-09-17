@@ -36,9 +36,10 @@ export interface MarkerState {
     deleteMarker: (markerId: string) => void;
     toggleLikeMarker: (markerId: string, userId: string) => void;
     toggleReportMarker: (markerId: string, userId: string) => void;
+    reset: () => void;
 }
 
-export const useMarkerStore = create<MarkerState>((set, get) => ({
+const initialState: Omit<MarkerState, 'addMarker' | 'addClickedMarker' | 'clearLastMarker' | 'removeMarker' | 'clearUserMarkers' | 'clearFriendsMarkers' | 'clearGroupsMarkers' | 'clearPublicMarkers' | 'getUserMarkers' | 'getFriendsMarkers' | 'getGroupsMarkers' | 'getPublicMarkers' | 'deleteMarker' | 'toggleLikeMarker' | 'toggleReportMarker' | 'reset'> = {
     userMarkers: [],
     friendsMarkers: [],
     groupsMarkers: [],
@@ -46,7 +47,10 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
     lastMarker: null,
     likedMarkers: [],
     reportedMarkers: [],
+};
 
+export const useMarkerStore = create<MarkerState>((set, get) => ({
+    ...initialState,
     addMarker: async (marker: Marker) => {
         await addMarker(marker);
         set((state: MarkerState) => ({
@@ -144,7 +148,9 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
         } else {
             await removeReport(markerId, userId);
         }
-    }
+    },
+
+    reset: () => set(() => ({ ...initialState }))
 }));
 
 export default useMarkerStore;

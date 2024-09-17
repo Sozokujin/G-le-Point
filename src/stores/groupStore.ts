@@ -12,11 +12,16 @@ interface GroupState {
     clearGroups: () => void;
     updateGroupMembers: (groupId: string, removedUserId: string) => void;
     updateGroup: (groupId: string, updates: Partial<Group>) => void;
+    reset: () => void;
 }
 
-export const useGroupStore = create<GroupState>((set, get) => ({
+const initialState: Omit<GroupState, 'getGroups' | 'setFilteredGroups' | 'addGroup' | 'removeGroup' | 'clearGroups' | 'updateGroupMembers' | 'updateGroup' | 'reset'> = {
     groups: [],
     filteredGroups: [],
+};
+
+export const useGroupStore = create<GroupState>((set, get) => ({
+    ...initialState,
     getGroups: async () => {
         const fetchedGroups = await getAllGroups();
         set({ groups: fetchedGroups, filteredGroups: fetchedGroups });
@@ -50,5 +55,6 @@ export const useGroupStore = create<GroupState>((set, get) => ({
         set((state) => ({
             groups: state.groups.map((group) => (group.id === groupId ? { ...group, ...updates } : group)),
             filteredGroups: state.filteredGroups.map((group) => (group.id === groupId ? { ...group, ...updates } : group))
-        }))
+        })),
+    reset: () => set(() => ({ ...initialState }))
 }));

@@ -16,13 +16,19 @@ interface FriendState {
     removeFriendRequest: (requestId: string) => void;
     clearFriends: () => void;
     getInvitationCode: () => Promise<void>;
+    reset: () => void;
 }
 
-export const useFriendStore = create<FriendState>((set, get) => ({
+const initialState: Omit<FriendState, 'getFriends' | 'getFriendRequests' | 'setFilteredFriends' | 'addFriend' | 'removeFriend' | 'removeFriendRequest' | 'clearFriends' | 'getInvitationCode' | 'reset'> = {
     friends: [],
     friendRequests: [],
     invitationCode: null,
     filteredFriends: [],
+};
+
+
+export const useFriendStore = create<FriendState>((set, get) => ({
+    ...initialState,
     getFriends: async () => {
         const fetchedFriends = await getAllFriends();
         set({ friends: fetchedFriends, filteredFriends: fetchedFriends });
@@ -50,5 +56,6 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     getInvitationCode: async () => {
         const code = await getInvitationCode();
         set({ invitationCode: code });
-    }
+    },
+    reset: () => set(() => ({ ...initialState }))
 }));

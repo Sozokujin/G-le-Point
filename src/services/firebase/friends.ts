@@ -19,7 +19,11 @@ export const getAllFriends = async () => {
         }
 
         const friendsUid = querySnapshot.docs[0].data().friends;
-        if (friendsUid.length === 0) throw new Error('Aucun ami trouvé');
+        if (friendsUid.length === 0)
+        {
+            console.warn('No friends found');
+            return [];
+        }
 
         const q2 = query(usersCollectionRef, where('uid', 'in', friendsUid));
         const querySnapshot2 = await getDocs(q2);

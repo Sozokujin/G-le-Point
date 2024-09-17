@@ -28,6 +28,7 @@ import useUserStore from '@/stores/userStore';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { TrashIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/20/solid';
+import { clearAllStores } from '@/stores/clearStores';
 
 const FormSchema = z.object({
     username: z
@@ -70,7 +71,7 @@ export const ProfileCard = () => {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            clearCurrentUser();
+            clearAllStores();
             await fetch('/api/logout');
             router.push('/');
         } catch (error) {

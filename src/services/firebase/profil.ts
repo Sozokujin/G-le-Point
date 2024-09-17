@@ -1,4 +1,5 @@
 import { auth, db } from '@/services/firebase/config';
+import { clearAllStores } from '@/stores/clearStores';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser } from '@/types';
 import {
@@ -207,7 +208,7 @@ export const deleteAccount = async () => {
         await deleteUser(user);
 
         await signOut(auth);
-        clearCurrentUser();
+        clearAllStores();
         fetch('/api/logout');
         window.location.href = '/?account=deleted';
     } catch (error) {

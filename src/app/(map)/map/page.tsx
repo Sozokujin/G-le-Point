@@ -4,10 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
 import type { Feature, FeatureCollection, Point } from 'geojson';
-import ListButtonsMaps from '@/components/stripe/listButtonsMap';
-import { ModalListMarkers } from '@/components/map/modalListMarkers';
+import ModalListMarkers from '@/components/map/modalListMarkers';
+// import ListButtonsMaps from '@/components/stripe/listButtonsMap';
 import MarkerPopup from '@/components/map/markerPopup';
-import Filter from '@/components/map/filter';
+import ModalActions from '@/components/map/modalActions';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
 import { Marker } from '@/types/index';
@@ -26,22 +26,24 @@ export default function Home() {
         getUserMarkers,
         getFriendsMarkers,
         getGroupsMarkers,
-        getPublicMarkers,
-        clearLastMarker
+        getPublicMarkers
     } = useMarkerStore();
 
     const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
-    const [showFriends, setShowFriends] = useState<boolean>(true);
-    const [showGroups, setShowGroups] = useState<boolean>(true);
-    const [showPublic, setShowPublic] = useState<boolean>(true);
-    const [satelliteMap, setSatelliteMap] = useState<boolean>(false);
+    const [openModalListMarkers, setOpenModalListMarkers] = useState<boolean>(false);
+    const [mapFilters, setMapFilters] = useState({
+        showFriends: true,
+        showGroups: true,
+        showPublic: true,
+        satelliteMap: false
+    });
 
     const map = useRef<MapRef | null>(null);
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_APIKEY;
 
     const mapStyle = useMemo<string>(() => {
-        return satelliteMap ? 'mapbox://styles/mapbox/satellite-streets-v12' : 'mapbox://styles/mapbox/streets-v12';
-    }, [satelliteMap]);
+        return mapFilters.satelliteMap ? 'mapbox://styles/mapbox/satellite-streets-v12' : 'mapbox://styles/mapbox/streets-v12';
+    }, [mapFilters.satelliteMap]);
 
     const allMarkersFiltered = useMemo<FeatureCollection<Point>>(() => {
         const getMarkerGeoJson = (markers: Marker[], markerType: string): Feature<Point>[] => {
@@ -62,12 +64,12 @@ export default function Home() {
             type: 'FeatureCollection',
             features: [
                 ...getMarkerGeoJson(userMarkers, 'user'),
-                ...(showFriends ? getMarkerGeoJson(friendsMarkers, 'friend') : []),
-                ...(showGroups ? getMarkerGeoJson(groupsMarkers, 'group') : []),
-                ...(showPublic ? getMarkerGeoJson(publicMarkers, 'public') : [])
+                ...(mapFilters.showFriends ? getMarkerGeoJson(friendsMarkers, 'friend') : []),
+                ...(mapFilters.showGroups ? getMarkerGeoJson(groupsMarkers, 'group') : []),
+                ...(mapFilters.showPublic ? getMarkerGeoJson(publicMarkers, 'public') : [])
             ]
         };
-    }, [userMarkers, friendsMarkers, groupsMarkers, publicMarkers, showFriends, showGroups, showPublic]);
+    }, [userMarkers, friendsMarkers, groupsMarkers, publicMarkers, mapFilters]);
 
     const onMapLoad = useCallback(() => {
         if (!map.current) return;
@@ -76,24 +78,23 @@ export default function Home() {
         map.current.on('styledata', addMarkerImages);
     }, []);
 
-    const onMarkerClick = useCallback((e: any) => {
-        const clickedFeature = e.features[0];
-        if (
-            !clickedFeature
-            || !clickedFeature.properties
-            || clickedFeature.properties.id === selectedMarker?.id
-        ) return;
+    const onMarkerClick = useCallback(
+        (e: any) => {
+            const clickedFeature = e.features[0];
+            if (!clickedFeature || !clickedFeature.properties || clickedFeature.properties.id === selectedMarker?.id) return;
 
-        setSelectedMarker({
-            ...clickedFeature.properties,
-            user: JSON.parse(clickedFeature.properties.user)
-        });
+            setSelectedMarker({
+                ...clickedFeature.properties,
+                user: JSON.parse(clickedFeature.properties.user)
+            });
 
-        map.current!.flyTo({
-            center: clickedFeature.geometry.coordinates,
-            zoom: 15
-        });
-    }, [selectedMarker]);
+            map.current!.flyTo({
+                center: clickedFeature.geometry.coordinates,
+                zoom: 15
+            });
+        },
+        [selectedMarker]
+    );
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
@@ -112,9 +113,8 @@ export default function Home() {
                 center: [lastMarker.longitude, lastMarker.latitude],
                 zoom: 15
             });
-            clearLastMarker();
         }
-    }, [lastMarker, clearLastMarker]);
+    }, [lastMarker]);
 
     const addMarkerImages = () => {
         const currentMap = map.current!;
@@ -184,16 +184,9 @@ export default function Home() {
 
     return (
         <main className={classes.mainStyle}>
-            <Filter
-                showFriends={showFriends}
-                setShowFriends={setShowFriends}
-                showGroups={showGroups}
-                setShowGroups={setShowGroups}
-                showPublic={showPublic}
-                setShowPublic={setShowPublic}
-                satelliteMap={satelliteMap}
-                setSatelliteMap={setSatelliteMap}
-            />
+            <div className="absolute right-4 top-4 z-10">
+                <ModalActions filters={mapFilters} setFilters={setMapFilters} setModalListMarkers={setOpenModalListMarkers} />
+            </div>
             <Map
                 ref={map}
                 onLoad={onMapLoad}
@@ -206,12 +199,12 @@ export default function Home() {
                 mapStyle={mapStyle}
                 style={{ width: '100%', height: '100%' }}
                 initialViewState={{
-                    latitude: 45.75208233358573,
-                    longitude: 4.839489220284681,
+                    latitude: 45.75009,
+                    longitude: 4.82323,
                     zoom: 12
                 }}
-                maxZoom={30}
-                minZoom={3}
+                maxZoom={21}
+                minZoom={5}
             >
                 <Source
                     id="my-data"
@@ -227,9 +220,9 @@ export default function Home() {
                 </Source>
 
                 <GeolocateControl position="top-left" />
-                <ModalListMarkers />
-                <ListButtonsMaps />
-                { selectedMarker && <MarkerPopup marker={selectedMarker} setSelectedMarker={setSelectedMarker} /> }
+                {/* <ListButtonsMaps /> */}
+                <ModalListMarkers open={openModalListMarkers} setOpen={setOpenModalListMarkers} />
+                {selectedMarker && <MarkerPopup marker={selectedMarker} setSelectedMarker={setSelectedMarker} />}
             </Map>
         </main>
     );

@@ -20,8 +20,6 @@ export interface MarkerState {
     publicMarkers: Marker[];
     lastMarker: Marker | null;
     addMarker: (marker: Marker) => void;
-    addClickedMarker: (marker: Marker) => void;
-    clearLastMarker: () => void;
     removeMarker: (marker: Marker) => void;
     clearUserMarkers: () => void;
     clearFriendsMarkers: () => void;
@@ -50,10 +48,6 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
             lastMarker: marker
         }));
     },
-
-    addClickedMarker: (marker: Marker) => set({ lastMarker: marker }),
-
-    clearLastMarker: () => set({ lastMarker: null }),
 
     removeMarker: (marker: Marker) =>
         set((state: MarkerState) => ({

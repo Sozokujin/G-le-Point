@@ -37,11 +37,21 @@ Le projet utilise une architecture moderne et performante pour offrir une expér
 
 ## ⚙️ Installation et Configuration
 
+### Pré-requis :
+
+-   Accès au repository GitHub du projet.
+-   Environnement Node.js installé.
+
+### Procédure d'installation
+
 1. Cloner le dépôt : `git clone git@github.com:Oui-Dev/G-le-Point.git`
-2. Accéder au répertoire du projet.
-3. Installer les dépendances : `npm install`
-4. Ajouter les informations de configuration Firebase dans un fichier `.env.local` en vous basant sur le fichier `.env.example`.
-5. Démarrer l'application : `npm run dev`
+2. Accéder au répertoire du projet : `cd G-le-Point`
+3. Installer les dépendances du projet : `npm install`
+4. Configuration des variables d'environnement : `.env.local` à partir du fichier `.env.example`.
+
+    - Pour récupérer les clés de Stripe, Mapbox et Firebase, il faut accéder à la console de chaque outil a l'aide du compte de service team.glepoint@gmail.com
+
+5. Démarrer le projet en local : `npm run dev`
 
 ## 📝 Conventions de développement
 

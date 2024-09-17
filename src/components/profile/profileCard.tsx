@@ -42,7 +42,7 @@ const FormSchema = z.object({
 
 export const ProfileCard = () => {
     const router = useRouter();
-    const { currentUser, clearCurrentUser } = useUserStore();
+    const { currentUser } = useUserStore();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -80,13 +80,12 @@ export const ProfileCard = () => {
     };
 
     const handleDelete = async () => {
-        if (currentUser) {
-            try {
-                await deleteAccount();
-                toast.success('Votre compte a été supprimé avec succès.');
-            } catch (error) {
-                toast.error("Une erreur s'est produite lors de la suppression du compte.");
-            }
+        if (!currentUser) return;
+        try {
+            await deleteAccount();
+            toast.success('Votre compte a été supprimé avec succès.');
+        } catch (error) {
+            toast.error((error as any).message);
         }
     };
 

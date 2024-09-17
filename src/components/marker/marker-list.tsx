@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Marker } from '@/types/index';
 import { useIsMobile } from '@/utils/isMobile';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Check, Clipboard, MapPin } from 'lucide-react';
 

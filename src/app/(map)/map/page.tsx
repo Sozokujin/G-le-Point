@@ -5,7 +5,6 @@ import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import ModalListMarkers from '@/components/map/modalListMarkers';
-// import ListButtonsMaps from '@/components/stripe/listButtonsMap';
 import MarkerPopup from '@/components/map/markerPopup';
 import ModalActions from '@/components/map/modalActions';
 import useMarkerStore from '@/stores/markerStore';
@@ -220,7 +219,6 @@ export default function Home() {
                 </Source>
 
                 <GeolocateControl position="top-left" />
-                {/* <ListButtonsMaps /> */}
                 <ModalListMarkers open={openModalListMarkers} setOpen={setOpenModalListMarkers} />
                 {selectedMarker && <MarkerPopup marker={selectedMarker} setSelectedMarker={setSelectedMarker} />}
             </Map>

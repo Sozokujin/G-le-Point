@@ -1,5 +1,6 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Cog6ToothIcon } from '@heroicons/react/20/solid';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import CheckoutStripe from '@/components/stripe/buttonProducts';
 import { Switch } from '@/components/ui/switch';
 
 interface ModalActionsProps {
@@ -15,6 +16,21 @@ export default function ModalActions({ filters, setFilters, setModalListMarkers 
     const setShowGroups = (value: boolean) => setFilters({ ...filters, showGroups: value });
     const setShowPublic = (value: boolean) => setFilters({ ...filters, showPublic: value });
     const setSatelliteMap = (value: boolean) => setFilters({ ...filters, satelliteMap: value });
+
+    const products = [
+        {
+            name: '1 Super Point',
+            priceId: 'price_1PuAYAP4rVLS4DImVQ2x3c25',
+            price: '10',
+            description: 'Acheter 1 Super Point'
+        },
+        {
+            name: '5 Super Points',
+            priceId: 'price_1Pv0OTP4rVLS4DIml24noZ3P',
+            price: '40',
+            description: 'Acheter 5 Super Points'
+        }
+    ];
 
     return (
         <Menu as="div" className="relative inline-block text-left">
@@ -55,15 +71,25 @@ export default function ModalActions({ filters, setFilters, setModalListMarkers 
                     <Switch id="satelliteMap" checked={satelliteMap} onCheckedChange={() => setSatelliteMap(!satelliteMap)} />
                     <span>Vue satellite</span>
                 </div>
-                <div className="pt-3">
+                <div className="py-3">
                     <MenuItem>
                         <button onClick={() => setModalListMarkers(true)} className="hover:text-glp-green">
                             Voir mes points
                         </button>
                     </MenuItem>
-                    <MenuItem>
-                        <p>Acheter des super-points</p>
-                    </MenuItem>
+                </div>
+                <div className="pt-3">
+                    <h4 className="mt-0 text-center">Premium</h4>
+                    <div className="flex flex-col gap-2">
+                        {products.map((product) => (
+                            <CheckoutStripe
+                                key={product.priceId}
+                                priceId={product.priceId}
+                                price={product.price}
+                                description={product.description}
+                            />
+                        ))}
+                    </div>
                 </div>
             </MenuItems>
         </Menu>

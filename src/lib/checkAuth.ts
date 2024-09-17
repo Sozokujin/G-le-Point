@@ -3,11 +3,12 @@
 import { useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getBio, getFriends, getScore, getSuperMarkers, getUsername } from '@/services/firebase/profil';
+import { clearAllStores } from '@/stores/clearStores';
 import useUserStore from '@/stores/userStore';
 
 export default function CheckAuth() {
     const auth = getAuth();
-    const { currentUser, setCurrentUser, clearCurrentUser } = useUserStore();
+    const { currentUser, setCurrentUser } = useUserStore();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -26,13 +27,13 @@ export default function CheckAuth() {
                     score: await getScore(firebaseUser.uid)
                 });
             } else {
-                clearCurrentUser();
+                clearAllStores();
                 window.location.href = '/';
             }
         });
 
         return () => unsubscribe();
-    }, [auth, currentUser, setCurrentUser, clearCurrentUser]);
+    }, [auth, currentUser, setCurrentUser]);
 
     return null;
 }

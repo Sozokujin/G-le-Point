@@ -81,7 +81,7 @@ export default function Home() {
         setMapIsLoaded(true);
 
         map.current.on('styledata', addMarkerImages);
-        map.current.on('contextmenu', (e: any) => {
+        map.current.on('dblclick', (e: any) => {
             e.preventDefault();
             setSelectedMarker(null);
             router.push(`/map?create-at=${e.lngLat.lat},${e.lngLat.lng}`);
@@ -234,8 +234,8 @@ export default function Home() {
                     type="geojson"
                     data={allMarkersFiltered}
                     cluster={true}
-                    clusterMaxZoom={10}
-                    clusterRadius={100}
+                    clusterMaxZoom={11}
+                    clusterRadius={75}
                 >
                     <Layer {...clusterLayer} />
                     <Layer {...clusterCountLayer} />

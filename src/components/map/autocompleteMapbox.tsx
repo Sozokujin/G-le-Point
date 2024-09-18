@@ -2,7 +2,6 @@ import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-
 interface AutocompleteMapboxProps {
     onAddressCoordinatesSelected: (coordinates: number[], address: string) => void;
 }
@@ -31,9 +30,7 @@ const AutocompleteMapbox = ({ onAddressCoordinatesSelected }: AutocompleteMapbox
                         });
                     },
                     (error) => {
-                        setUserPosition(
-                            { latitude: 45.75009, longitude: 4.82323 }
-                        );
+                        setUserPosition({ latitude: 45.75009, longitude: 4.82323 });
                         toast.info("La géolocalisation n'est pas disponible");
                         console.error('Erreur de géolocalisation:', error);
                     }
@@ -67,12 +64,15 @@ const AutocompleteMapbox = ({ onAddressCoordinatesSelected }: AutocompleteMapbox
         searchAddress();
     }, [query, userPosition]);
 
-    const handleSelectAddress = (address: { place_name: SetStateAction<string>; geometry: { coordinates: number[] | SetStateAction<null>; }; }) => {
+    const handleSelectAddress = (address: {
+        place_name: SetStateAction<string>;
+        geometry: { coordinates: number[] | SetStateAction<null> };
+    }) => {
         setSelectedAddress(address.place_name);
         if (Array.isArray(address.geometry.coordinates)) {
             onAddressCoordinatesSelected(address.geometry.coordinates, address.place_name as string);
         } else {
-            console.error("Invalid coordinates:", address.geometry.coordinates);
+            console.error('Invalid coordinates:', address.geometry.coordinates);
         }
     };
 

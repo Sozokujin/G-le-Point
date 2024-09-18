@@ -35,12 +35,30 @@ export interface MarkerState {
     reset: () => void;
 }
 
-const initialState: Omit<MarkerState, 'addMarker' | 'addClickedMarker' | 'clearLastMarker' | 'removeMarker' | 'clearUserMarkers' | 'clearFriendsMarkers' | 'clearGroupsMarkers' | 'clearPublicMarkers' | 'getUserMarkers' | 'getFriendsMarkers' | 'getGroupsMarkers' | 'getPublicMarkers' | 'deleteMarker' | 'toggleLikeMarker' | 'toggleReportMarker' | 'reset'> = {
+const initialState: Omit<
+    MarkerState,
+    | 'addMarker'
+    | 'addClickedMarker'
+    | 'clearLastMarker'
+    | 'removeMarker'
+    | 'clearUserMarkers'
+    | 'clearFriendsMarkers'
+    | 'clearGroupsMarkers'
+    | 'clearPublicMarkers'
+    | 'getUserMarkers'
+    | 'getFriendsMarkers'
+    | 'getGroupsMarkers'
+    | 'getPublicMarkers'
+    | 'deleteMarker'
+    | 'toggleLikeMarker'
+    | 'toggleReportMarker'
+    | 'reset'
+> = {
     userMarkers: [],
     friendsMarkers: [],
     groupsMarkers: [],
     publicMarkers: [],
-    lastMarker: null,
+    lastMarker: null
 };
 
 export const useMarkerStore = create<MarkerState>((set, get) => ({

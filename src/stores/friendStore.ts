@@ -19,13 +19,23 @@ interface FriendState {
     reset: () => void;
 }
 
-const initialState: Omit<FriendState, 'getFriends' | 'getFriendRequests' | 'setFilteredFriends' | 'addFriend' | 'removeFriend' | 'removeFriendRequest' | 'clearFriends' | 'getInvitationCode' | 'reset'> = {
+const initialState: Omit<
+    FriendState,
+    | 'getFriends'
+    | 'getFriendRequests'
+    | 'setFilteredFriends'
+    | 'addFriend'
+    | 'removeFriend'
+    | 'removeFriendRequest'
+    | 'clearFriends'
+    | 'getInvitationCode'
+    | 'reset'
+> = {
     friends: [],
     friendRequests: [],
     invitationCode: null,
-    filteredFriends: [],
+    filteredFriends: []
 };
-
 
 export const useFriendStore = create<FriendState>((set, get) => ({
     ...initialState,

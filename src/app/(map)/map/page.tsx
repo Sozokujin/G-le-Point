@@ -118,7 +118,7 @@ export default function Home() {
         map.current!.flyTo({
             center: [longitude, latitude],
             zoom: 15
-        })
+        });
     }, [mapIsLoaded, searchParams]);
 
     useEffect(() => {

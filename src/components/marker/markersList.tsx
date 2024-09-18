@@ -26,12 +26,7 @@ interface MarkerListProps {
     allowDelete?: boolean;
 }
 
-export const MarkersList = ({
-    markers,
-    showUser = false,
-    forceMobileDisplay = false,
-    allowDelete = false
-}: MarkerListProps) => {
+export const MarkersList = ({ markers, showUser = false, forceMobileDisplay = false, allowDelete = false }: MarkerListProps) => {
     const router = useRouter();
     const { isMobile } = useIsMobile();
     const { deleteMarker } = useMarkerStore();
@@ -48,11 +43,11 @@ export const MarkersList = ({
 
     const goTo = (marker: Marker) => {
         router.push(`/map?go-to=${marker.latitude},${marker.longitude}`);
-    }
+    };
 
     const openInMaps = (marker: Marker) => {
         window.open(`https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude}`);
-    }
+    };
 
     const DeleteMarkerModal = ({ marker }: { marker: Marker }) => {
         if (!allowDelete) return null;
@@ -60,7 +55,7 @@ export const MarkersList = ({
         return (
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                <Button className="p-1 w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-700 transition-colors duration-300">
+                    <Button className="p-1 w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-700 transition-colors duration-300">
                         <Trash />
                     </Button>
                 </AlertDialogTrigger>

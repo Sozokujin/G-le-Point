@@ -19,11 +19,22 @@ type UserStore = {
     reset: () => void;
 };
 
-const initialState: Omit<UserStore, 'setCurrentUser' | 'clearCurrentUser' | 'setUsers' | 'clearUsers' | 'fetchUserById' | 'fetchUsersByIds' | 'fetchUserByScores' | 'fetchFriendsUserByScores' | 'reset'> = {
+const initialState: Omit<
+    UserStore,
+    | 'setCurrentUser'
+    | 'clearCurrentUser'
+    | 'setUsers'
+    | 'clearUsers'
+    | 'fetchUserById'
+    | 'fetchUsersByIds'
+    | 'fetchUserByScores'
+    | 'fetchFriendsUserByScores'
+    | 'reset'
+> = {
     currentUser: null,
     users: [],
     topUsersByScore: [],
-    topFriendsUsersByScore: [],
+    topFriendsUsersByScore: []
 };
 
 const useUserStore = create<UserStore>((set) => ({
@@ -76,7 +87,6 @@ const useUserStore = create<UserStore>((set) => ({
         });
     },
     reset: () => set(initialState)
-
 }));
 
 export default useUserStore;

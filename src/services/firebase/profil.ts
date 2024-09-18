@@ -77,7 +77,7 @@ export const getFriends = async (user: string): Promise<string[]> => {
         return friends;
     }
     return [];
-}
+};
 
 export const getSuperMarkers = async (user: string): Promise<number> => {
     const currentUser = collection(db, 'users');
@@ -152,15 +152,15 @@ export const deleteAccount = async () => {
 
     sentRequestsSnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref).catch((error) => {
-            console.error('Erreur lors de la suppression de la demande d\'ami envoyée:', error);
-            throw new Error('Échec de la suppression de la demande d\'ami envoyée.');
+            console.error("Erreur lors de la suppression de la demande d'ami envoyée:", error);
+            throw new Error("Échec de la suppression de la demande d'ami envoyée.");
         });
     });
 
     receivedRequestsSnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref).catch((error) => {
-            console.error('Erreur lors de la suppression de la demande d\'ami reçue:', error);
-            throw new Error('Échec de la suppression de la demande d\'ami reçue.');
+            console.error("Erreur lors de la suppression de la demande d'ami reçue:", error);
+            throw new Error("Échec de la suppression de la demande d'ami reçue.");
         });
     });
 
@@ -221,13 +221,13 @@ export const deleteAccount = async () => {
 
     const currentUserDocRef = doc(userCollectionRef, currentUserSnapshot.docs[0].id);
     await deleteDoc(currentUserDocRef).catch((error) => {
-        console.error('Erreur lors de la suppression de l\'utilisateur:', error);
-        throw new Error('Échec de la suppression de l\'utilisateur.');
+        console.error("Erreur lors de la suppression de l'utilisateur:", error);
+        throw new Error("Échec de la suppression de l'utilisateur.");
     });
 
     await deleteUser(user).catch((error) => {
-        console.error('Erreur lors de la suppression de l\'utilisateur:', error);
-        throw new Error('Échec de la suppression de l\'utilisateur.');
+        console.error("Erreur lors de la suppression de l'utilisateur:", error);
+        throw new Error("Échec de la suppression de l'utilisateur.");
     });
 
     await signOut(auth).catch((error) => {
@@ -237,5 +237,4 @@ export const deleteAccount = async () => {
     clearAllStores();
     fetch('/api/logout');
     window.location.href = '/?account=deleted';
-
 };

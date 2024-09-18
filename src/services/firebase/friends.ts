@@ -19,8 +19,7 @@ export const getAllFriends = async () => {
         }
 
         const friendsUid = querySnapshot.docs[0].data().friends;
-        if (friendsUid.length === 0)
-        {
+        if (friendsUid.length === 0) {
             console.warn('No friends found');
             return [];
         }
@@ -57,7 +56,7 @@ export const sendFriendRequest = async (invitationCode: string | null) => {
     const friendUid = querySnapshot.docs[0].data().uid;
     // Check if they are already friends
     if (currentUser.friends.includes(friendUid)) {
-        throw new Error("Cet utilisateur est déjà votre ami");
+        throw new Error('Cet utilisateur est déjà votre ami');
     }
 
     // Check if a friend request already exists
@@ -77,7 +76,7 @@ export const sendFriendRequest = async (invitationCode: string | null) => {
     const docRef = await addDoc(friendRequestRef, {
         from: currentUser.uid,
         to: friendUid,
-        status: 'pending',
+        status: 'pending'
     });
 
     return docRef.id;
@@ -91,11 +90,7 @@ export const getFriendRequests = async (): Promise<FriendRequest[]> => {
     }
 
     const friendRequestsCollectionRef = collection(db, 'friendRequests');
-    const q = query(
-        friendRequestsCollectionRef,
-        where('to', '==', currentUser.uid),
-        where('status', '==', 'pending')
-    );
+    const q = query(friendRequestsCollectionRef, where('to', '==', currentUser.uid), where('status', '==', 'pending'));
 
     try {
         const querySnapshot = await getDocs(q);

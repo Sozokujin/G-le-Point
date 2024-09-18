@@ -137,26 +137,26 @@ export default function ModalCreateMarker() {
         const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
 
         if (!currentUser) return;
-            const formValues = form.getValues();
-            addMarker({
-                id: idMarker,
-                name: formValues.name,
-                description: formValues.description || '',
-                tags: formValues.tag,
-                address,
-                latitude,
-                longitude,
-                visibiltyStatus: formValues.visibility,
-                createdAt: Date.now(),
-                user: {
-                    uid: currentUser.uid,
-                    username: currentUser.username || currentUser.displayName || 'Sans nom',
-                },
-                likeCount: 0,
-                likedBy: [],
-                reportCount: 0,
-                reportedBy: []
-            });
+        const formValues = form.getValues();
+        addMarker({
+            id: idMarker,
+            name: formValues.name,
+            description: formValues.description || '',
+            tags: formValues.tag,
+            address,
+            latitude,
+            longitude,
+            visibiltyStatus: formValues.visibility,
+            createdAt: Date.now(),
+            user: {
+                uid: currentUser.uid,
+                username: currentUser.username || currentUser.displayName || 'Sans nom'
+            },
+            likeCount: 0,
+            likedBy: [],
+            reportCount: 0,
+            reportedBy: []
+        });
 
         if (selectedGroups.length > 0 && currentUser?.uid) {
             addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
@@ -376,7 +376,7 @@ export default function ModalCreateMarker() {
                                     setSelectedAddress(address);
                                 }}
                             />
-                    )}
+                        )}
 
                         {display === 'gps' && (
                             <FormField
@@ -402,4 +402,4 @@ export default function ModalCreateMarker() {
             </DialogContent>
         </Dialog>
     );
-};
+}

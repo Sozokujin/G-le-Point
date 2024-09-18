@@ -15,24 +15,24 @@ export const ModalSendFriendRequest = () => {
     const [newFriendInvitationCode, setNewFriendInvitationCode] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!invitationCode && currentUser ) {
+        if (!invitationCode && currentUser) {
             getInvitationCode();
         }
     });
 
     const handleSendFriendRequest = async () => {
         if (newFriendInvitationCode === invitationCode) {
-            toast.error("Vous ne pouvez pas vous ajouter vous-même !");
+            toast.error('Vous ne pouvez pas vous ajouter vous-même !');
             return;
         }
 
-        await sendFriendRequest(newFriendInvitationCode).then(() => {
-            toast.success('Demande d\'ami envoyée !');
-        }
-        ).catch((e) => {
-            toast.error(e.message);
-        }
-        );
+        await sendFriendRequest(newFriendInvitationCode)
+            .then(() => {
+                toast.success("Demande d'ami envoyée !");
+            })
+            .catch((e) => {
+                toast.error(e.message);
+            });
     };
 
     return (
@@ -56,9 +56,7 @@ export const ModalSendFriendRequest = () => {
                         type="text"
                     />
                     <DialogClose asChild>
-                        <Button onClick={() => handleSendFriendRequest()}>
-                            Envoyer la demande
-                        </Button>
+                        <Button onClick={() => handleSendFriendRequest()}>Envoyer la demande</Button>
                     </DialogClose>
                 </DialogContent>
             </Dialog>

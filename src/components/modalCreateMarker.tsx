@@ -148,7 +148,7 @@ const ModalCreateMarker = () => {
             }
             form.reset();
             setSelectedGroups([]);
-            manageScore(currentUser.uid, 'markers', true);
+            manageScore(currentUser.uid, 'marker_created', true);
             toast.success('Point ajouté avec succès');
             setIsDialogOpen(false);
         },

@@ -6,13 +6,13 @@ import { db } from './config';
  * Liste des types d'événements et de leur score associé
  */
 const listScore: { [key: string]: number } = {
-    markers: 100,
-    super_markers: 500,
-    check_markers: 1000,
-    markers_liked: 10
+    marker_created: 100,
+    super_marker_created: 500,
+    marker_visited: 1000,
+    marker_liked: 10
 };
 
-export type EventType = 'markers' | 'super_markers' | 'check_markers' | 'markers_liked';
+export type EventType = 'marker_created' | 'super_marker_created' | 'marker_visited' | 'marker_liked';
 
 /**
  * Gère l'incrémentation du score de l'utilisateur

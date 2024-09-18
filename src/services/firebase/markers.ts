@@ -28,7 +28,7 @@ export const deleteMarker = async (markerId: string) => {
 
     const user = useUserStore.getState().currentUser;
     if (user) {
-        manageScore(user.uid, 'markers', false);
+        manageScore(user.uid, 'marker_created', false);
     }
 
     const groupsCollectionRef = collection(db, 'groups');
@@ -177,7 +177,7 @@ export const addLike = async (markerId: string, userId: string) => {
             likedBy: arrayUnion(userId),
             likeCount: currentLikeCount + 1
         });
-        await manageScore(markerData.user.uid, 'markers_liked', true);
+        await manageScore(markerData.user.uid, 'marker_liked', true);
     }
 };
 
@@ -194,7 +194,7 @@ export const removeLike = async (markerId: string, userId: string) => {
             likedBy: arrayRemove(userId),
             likeCount: currentLikeCount - 1
         });
-        await manageScore(markerData.user.uid, 'markers_liked', false);
+        await manageScore(markerData.user.uid, 'marker_liked', false);
     }
 };
 

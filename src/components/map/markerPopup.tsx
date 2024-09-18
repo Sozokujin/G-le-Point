@@ -67,7 +67,7 @@ export default function MarkerPopup({
             <div className="bg-white rounded-lg shadow-md p-4 relative">
                 <XMarkIcon onClick={closePopup} className="absolute top-1 right-1 h-5 w-5 cursor-pointer" />
                 <div className="flex w-full items-center justify-between gap-6">
-                    <div className="flex-1 flex items-center gap-3">
+                    <div className="flex-1 flex items-center gap-x-3 flex-wrap">
                         <h3 className="truncate text-sm font-semibold text-gray-900 !my-0">{currentMarker.name}</h3>
                         <div className="flex flex-col gap-1">
                             {currentMarker.isPremium && (

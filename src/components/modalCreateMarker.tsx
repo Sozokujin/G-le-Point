@@ -18,10 +18,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { FirebaseUser, Group } from '@/types';
 import { AvatarUser } from '@/components/ui/group-avatar';
+import { manageScore } from '@/services/firebase/leaderboard';
 
 const formSchema = z.object({
     visibility: z.enum(['public', 'friends', 'groups']),
-    name: z.string().min(5, 'Le nom du lieu est requis et doit contenir au moins 5 caractères'),
+    name: z.string().min(3, 'Le nom du lieu est requis et doit contenir au moins 3 caractères'),
     description: z.string().optional(),
     tag: z.string().default('Autre'),
     coordinates: z.string().optional()
@@ -120,7 +121,7 @@ const ModalCreateMarker = () => {
         (latitude: number, longitude: number, address = '') => {
             const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
 
-            if (currentUser?.uid && currentUser?.username) {
+            if (!currentUser) return;
                 const formValues = form.getValues();
                 addMarker({
                     id: idMarker,
@@ -134,19 +135,20 @@ const ModalCreateMarker = () => {
                     createdAt: Date.now(),
                     user: {
                         uid: currentUser.uid,
-                        username: currentUser.username
+                        username: currentUser.username || currentUser.displayName || 'Sans nom',
                     },
                     likeCount: 0,
                     likedBy: [],
                     reportCount: 0,
                     reportedBy: []
                 });
-            }
+
             if (selectedGroups.length > 0 && currentUser?.uid) {
                 addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
             }
             form.reset();
             setSelectedGroups([]);
+            manageScore(currentUser.uid, 'marker_created', true);
             toast.success('Point ajouté avec succès');
             setIsDialogOpen(false);
         },

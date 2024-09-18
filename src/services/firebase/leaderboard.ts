@@ -6,11 +6,13 @@ import { db } from './config';
  * Liste des types d'événements et de leur score associé
  */
 const listScore: { [key: string]: number } = {
-    markers: 10,
-    super_markers: 100,
-    check_markers: 1000,
-    markers_liked: 10
+    marker_created: 100,
+    super_marker_created: 500,
+    marker_visited: 1000,
+    marker_liked: 10
 };
+
+export type EventType = 'marker_created' | 'super_marker_created' | 'marker_visited' | 'marker_liked';
 
 /**
  * Gère l'incrémentation du score de l'utilisateur
@@ -19,10 +21,9 @@ const listScore: { [key: string]: number } = {
  * @param operation Opération à effectuer (true: incrémenter, false: décrémenter)
  */
 
-export const manageScore = async (userId: string, eventType: string, operation: boolean) => {
+export const manageScore = async (userId: string, eventType: EventType, operation: boolean) => {
     const numberScore = listScore[eventType];
     if (!numberScore) return;
-
     try {
         const usersCollectionRef = collection(db, 'users');
         const q = query(usersCollectionRef, where('uid', '==', userId));

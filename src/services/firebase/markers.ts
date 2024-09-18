@@ -13,6 +13,8 @@ import {
     updateDoc,
     where
 } from 'firebase/firestore';
+import { manageScore } from '@/services/firebase/leaderboard';
+import useUserStore from '@/stores/userStore';
 
 export const addMarker = async (marker: Marker) => {
     const markersCollectionRef = collection(db, 'markers');
@@ -23,6 +25,11 @@ export const deleteMarker = async (markerId: string) => {
     const markerDocRef = doc(db, 'markers', markerId);
 
     await deleteDoc(markerDocRef);
+
+    const user = useUserStore.getState().currentUser;
+    if (user) {
+        manageScore(user.uid, 'marker_created', false);
+    }
 
     const groupsCollectionRef = collection(db, 'groups');
     const q = query(groupsCollectionRef, where('markers', 'array-contains', markerId));
@@ -170,6 +177,7 @@ export const addLike = async (markerId: string, userId: string) => {
             likedBy: arrayUnion(userId),
             likeCount: currentLikeCount + 1
         });
+        await manageScore(markerData.user.uid, 'marker_liked', true);
     }
 };
 
@@ -186,6 +194,7 @@ export const removeLike = async (markerId: string, userId: string) => {
             likedBy: arrayRemove(userId),
             likeCount: currentLikeCount - 1
         });
+        await manageScore(markerData.user.uid, 'marker_liked', false);
     }
 };
 

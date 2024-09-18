@@ -107,6 +107,25 @@ export const getScore = async (user: string): Promise<number> => {
     return 0;
 };
 
+export const decrementSuperMarkers = async (user: string) => {
+    const currentUser = collection(db, 'users');
+    const currentUserQuery = query(currentUser, where('uid', '==', user));
+    const querySnapshot = await getDocs(currentUserQuery);
+    if (!querySnapshot.empty) {
+        let superMarkers = 0;
+        querySnapshot.forEach((doc) => {
+            superMarkers = doc.data().superMarkers;
+        });
+        if (superMarkers > 0) {
+            superMarkers--;
+            const currentUserDocRef = doc(currentUser, querySnapshot.docs[0].id);
+            updateDoc(currentUserDocRef, {
+                superMarkers
+            });
+        }
+    }
+};
+
 export const deleteAccount = async () => {
     const user = auth.currentUser;
 

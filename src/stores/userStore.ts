@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { updateUser } from '@/services/firebase/profil';
 import { getFriendsTopUsersByScore, getTopUsersByScore } from '@/services/firebase/leaderboard';
 import { getUserById, getUserLikeCount, getUsersByIds } from '@/services/firebase/user';
+import { decrementSuperMarkers } from '@/services/firebase/profil';
 import { FirebaseUser } from '@/types';
 
 type UserStore = {
@@ -102,7 +102,8 @@ const useUserStore = create<UserStore>((set) => ({
         if (!currentUser) return;
 
         currentUser.superMarkers -= 1;
-        await updateUser(currentUser);
+
+        await decrementSuperMarkers(currentUser.uid);
     },
     reset: () => set(initialState)
 }));

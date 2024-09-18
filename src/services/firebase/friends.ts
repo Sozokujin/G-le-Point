@@ -114,7 +114,7 @@ export const getFriendRequests = async (): Promise<FriendRequest[]> => {
 export const acceptFriendRequest = async (from: string) => {
     const currentUser = useUserStore.getState().currentUser;
 
-    if (!currentUser?.uid) return
+    if (!currentUser?.uid) return;
 
     const friendRequestsCollectionRef = collection(db, 'friendRequests');
     const q = query(
@@ -233,7 +233,7 @@ export const unfriend = async (friendId: string) => {
 
 export const getInvitationCode = async () => {
     const currentUser = useUserStore.getState().currentUser;
-    if (!currentUser) return
+    if (!currentUser) return;
     const usersCollectionRef = collection(db, 'users');
     const q = query(usersCollectionRef, where('uid', '==', currentUser.uid));
 

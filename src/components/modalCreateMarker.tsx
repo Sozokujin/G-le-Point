@@ -1,24 +1,26 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import Link from 'next/link';
 import * as z from 'zod';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FirebaseUser, Group } from '@/types/index';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { addMarkerGroup } from '@/services/firebase/markers';
+import { manageScore } from '@/services/firebase/leaderboard';
 import { useGroupStore } from '@/stores/groupStore';
 import useMarkerStore from '@/stores/markerStore';
 import useUserStore from '@/stores/userStore';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { GroupLine } from './friends/groups/groupList';
-import AutocompleteMapbox from './map/autocompleteMapbox';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { FirebaseUser, Group } from '@/types';
+import { GroupLine } from '@/components/friends/groups/groupList';
+import AutocompleteMapbox from '@/components/map/autocompleteMapbox';
 import { AvatarUser } from '@/components/ui/group-avatar';
-import { manageScore } from '@/services/firebase/leaderboard';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const formSchema = z.object({
     visibility: z.enum(['public', 'friends', 'groups']),
@@ -28,15 +30,18 @@ const formSchema = z.object({
     coordinates: z.string().optional()
 });
 
-const ModalCreateMarker = () => {
-    const { currentUser, fetchUsersByIds, users } = useUserStore();
+export default function ModalCreateMarker() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     const { addMarker } = useMarkerStore();
     const { groups, getGroups } = useGroupStore();
+    const { currentUser, users, fetchUsersByIds } = useUserStore();
 
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [display, setDisplay] = useState<'address' | 'gps' | 'position'>('position');
     const [addressCoordinates, setAddressCoordinates] = useState<number[]>([]);
     const [selectedGroups, setSelectedGroups] = useState<Group[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [groupMembers, setGroupMembers] = useState<{ [groupId: string]: AvatarUser[] }>({});
     const [selectedAddress, setSelectedAddress] = useState<string>('');
 
@@ -81,6 +86,15 @@ const ModalCreateMarker = () => {
     }, [form.watch('visibility')]);
 
     useEffect(() => {
+        const coords = searchParams.get('create-at');
+        if (!coords) return;
+
+        setDisplay('gps');
+        form.setValue('coordinates', coords);
+        setIsDialogOpen(true);
+    }, [searchParams]);
+
+    useEffect(() => {
         const fetchGroupMembers = async () => {
             const allMemberIds = groups.flatMap((group) => group.members);
             fetchUsersByIds(allMemberIds);
@@ -117,43 +131,43 @@ const ModalCreateMarker = () => {
         });
     };
 
-    const addMarkerCommon = useCallback(
-        (latitude: number, longitude: number, address = '') => {
-            const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+    const addMarkerCommon = (latitude: number, longitude: number, address = '') => {
+        const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
 
-            if (!currentUser) return;
-                const formValues = form.getValues();
-                addMarker({
-                    id: idMarker,
-                    name: formValues.name,
-                    description: formValues.description || '',
-                    tags: formValues.tag,
-                    address,
-                    latitude,
-                    longitude,
-                    visibiltyStatus: formValues.visibility,
-                    createdAt: Date.now(),
-                    user: {
-                        uid: currentUser.uid,
-                        username: currentUser.username || currentUser.displayName || 'Sans nom',
-                    },
-                    likeCount: 0,
-                    likedBy: [],
-                    reportCount: 0,
-                    reportedBy: []
-                });
+        if (!currentUser) return;
+            const formValues = form.getValues();
+            addMarker({
+                id: idMarker,
+                name: formValues.name,
+                description: formValues.description || '',
+                tags: formValues.tag,
+                address,
+                latitude,
+                longitude,
+                visibiltyStatus: formValues.visibility,
+                createdAt: Date.now(),
+                user: {
+                    uid: currentUser.uid,
+                    username: currentUser.username || currentUser.displayName || 'Sans nom',
+                },
+                likeCount: 0,
+                likedBy: [],
+                reportCount: 0,
+                reportedBy: []
+            });
 
-            if (selectedGroups.length > 0 && currentUser?.uid) {
-                addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
-            }
-            form.reset();
-            setSelectedGroups([]);
-            manageScore(currentUser.uid, 'marker_created', true);
-            toast.success('Point ajouté avec succès');
-            setIsDialogOpen(false);
-        },
-        [currentUser, form, addMarker, selectedGroups]
-    );
+        if (selectedGroups.length > 0 && currentUser?.uid) {
+            addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
+        }
+        form.reset();
+        setSelectedGroups([]);
+        manageScore(currentUser.uid, 'marker_created', true);
+        toast.success('Point ajouté avec succès');
+        setIsDialogOpen(false);
+        if (searchParams.get('create-at')) {
+            router.replace('/map');
+        }
+    };
 
     const addMarkerWithCurrentLocation = () => {
         if (!navigator.geolocation) {
@@ -387,4 +401,3 @@ const ModalCreateMarker = () => {
         </Dialog>
     );
 };
-export default ModalCreateMarker;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
@@ -16,6 +16,7 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const { currentUser } = useUserStore();
     const {
@@ -78,7 +79,13 @@ export default function Home() {
 
         addMarkerImages();
         setMapIsLoaded(true);
+
         map.current.on('styledata', addMarkerImages);
+        map.current.on('contextmenu', (e: any) => {
+            e.preventDefault();
+            setSelectedMarker(null);
+            router.push('/map?create-at=' + e.lngLat.lat + ',' + e.lngLat.lng);
+        });
     }, []);
 
     const onMarkerClick = useCallback(

@@ -10,10 +10,18 @@ import useUserStore from '@/stores/userStore';
 export const StatsCard = () => {
     const { currentUser } = useUserStore();
     const { userMarkers, getUserMarkers } = useMarkerStore();
+    const {fetchUserLikeCount, userLikeCount} = useUserStore();
 
     const userMarkersCount = useMemo(() => userMarkers?.length ?? 0, [userMarkers]);
     const userSuperMarkersCount = useMemo(() => currentUser?.superMarkers ?? 0, [currentUser]);
     const userScoreCount = useMemo(() => currentUser?.score ?? 0, [currentUser]);
+
+    useEffect(() => {
+        if (!currentUser) return;
+
+        fetchUserLikeCount(currentUser.uid);
+    } , [currentUser, fetchUserLikeCount]);
+
     const products = [
         {
             name: '1 Super Point',
@@ -53,7 +61,7 @@ export const StatsCard = () => {
                 <StatItem label="Nombre de points posés" value={userMarkersCount} icon="🗺️" />
                 <StatItem label="Supers points restant" value={userSuperMarkersCount} icon="📍" />
                 <StatItem label="Nombre de boussoles" value={userScoreCount} icon="🧭" />
-                <StatItem label="Nombre de likes sur tes points" value={0} icon="❤️" todo />
+                <StatItem label="Nombre de likes sur tes points" value={userLikeCount} icon="❤️" />
             </div>
             <BorderBeam size={800} duration={12} delay={36} colorFrom="#9FCF6D" colorTo="#7CC772" />
         </div>

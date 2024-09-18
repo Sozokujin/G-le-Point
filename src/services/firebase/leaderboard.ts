@@ -113,7 +113,6 @@ export const getFriendsTopUsersByScore = async (currentUserId: string) => {
             superMarkers: doc.data().superMarkers,
             friends: doc.data().friends || []
         }));
-
         return friends;
     } catch (error) {
         console.error('Error getting top friends:', error);

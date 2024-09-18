@@ -29,8 +29,10 @@ const FriendRequestLine = ({ request, onAccept, onDecline }: FriendRequestLinePr
         const user = users.find((u) => u.uid === request.from);
         if (user) {
             setRequestUser(user);
+        } else {
+            fetchUserById(request.from);
         }
-    }, [request.from, users]);
+    }, [fetchUserById, request.from, users]);
 
     if (!requestUser) {
         return <li className="h-20 flex items-center justify-center">Chargement...</li>;

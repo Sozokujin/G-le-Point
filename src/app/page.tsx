@@ -46,7 +46,6 @@ const tiers = [
         features: [
             'Toutes les fonctionnalités du plan Explorateur',
             'Mise en avant de vos lieux partagés',
-            'Fonctionnalités avancées de cartographie',
             'Promotion prioritaire dans les résultats de recherche',
             'Support prioritaire'
         ],
@@ -75,7 +74,6 @@ const tiers = [
         features: [
             'Toutes les fonctionnalités du plan Explorateur',
             'Mise en avant de vos lieux partagés',
-            'Fonctionnalités avancées de cartographie',
             'Promotion prioritaire dans les résultats de recherche',
             'Support prioritaire'
         ],

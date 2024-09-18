@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import * as z from 'zod';
-import { FirebaseUser, Group } from '@/types/index';
+import { FirebaseUser, Group, Marker } from '@/types/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addMarkerGroup } from '@/services/firebase/markers';
 import { manageScore } from '@/services/firebase/leaderboard';
@@ -142,16 +142,14 @@ export default function ModalCreateMarker() {
         });
     };
 
-    const addMarkerCommon = (latitude: number, longitude: number, address = '') => {
+    const addMarkerCommon = async (latitude: number, longitude: number, address = '') => {
         if (!currentUser) return;
 
         const formValues = form.getValues();
         const markerIsPremium = canMakePremiumMarker && formValues.isPremium;
-        const markerId = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
         const scoreType = markerIsPremium ? 'super_marker_created' : 'marker_created';
 
-        addMarker({
-            id: markerId,
+        const newMarker: Omit<Marker, 'id'> = {
             name: formValues.name,
             description: formValues.description || '',
             tags: formValues.tag,
@@ -169,12 +167,19 @@ export default function ModalCreateMarker() {
             likedBy: [],
             reportCount: 0,
             reportedBy: []
-        });
+        };
 
+
+        const markerId = await addMarker(newMarker);
+        if (!markerId) {
+            toast.error('Erreur lors de la création du point');
+            return;
+        }
         if (markerIsPremium) decrementCurrentUserSuperMarkers();
         if (selectedGroups.length > 0 && currentUser?.uid) {
             addMarkerGroup(markerId, selectedGroups, currentUser.uid);
         }
+
         form.reset();
         setSelectedGroups([]);
         manageScore(currentUser.uid, scoreType, true);

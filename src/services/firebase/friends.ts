@@ -3,6 +3,8 @@ import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser, FriendRequest } from '@/types';
 import { useFriendStore } from '@/stores/friendStore';
+import useMarkerStore from '@/stores/markerStore';
+import { use } from 'react';
 export const getAllFriends = async () => {
     try {
         const currentUser = useUserStore.getState().currentUser;
@@ -112,7 +114,7 @@ export const getFriendRequests = async (): Promise<FriendRequest[]> => {
 export const acceptFriendRequest = async (from: string) => {
     const currentUser = useUserStore.getState().currentUser;
 
-    if (!currentUser?.uid) return alert('Utilisateur non authentifié');
+    if (!currentUser?.uid) return
 
     const friendRequestsCollectionRef = collection(db, 'friendRequests');
     const q = query(
@@ -123,7 +125,7 @@ export const acceptFriendRequest = async (from: string) => {
     );
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Demande introuvable');
+    if (querySnapshot.empty) return console.warn('Demande introuvable');
 
     const docId = querySnapshot.docs[0].id;
 
@@ -179,7 +181,7 @@ export const declineFriendRequest = async (from: string) => {
     );
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Demande introuvable');
+    if (querySnapshot.empty) return console.warn('Demande introuvable');
 
     const docId = querySnapshot.docs[0].id;
 
@@ -226,17 +228,17 @@ export const unfriend = async (friendId: string) => {
     });
 
     useFriendStore.getState().removeFriend(friendId);
-    // useMarkerStore.getState().clearMarkers(); TODO
+    useMarkerStore.getState().clearFriendsMarkers();
 };
 
 export const getInvitationCode = async () => {
     const currentUser = useUserStore.getState().currentUser;
-    if (!currentUser) return alert('Utilisateur non authentifié');
+    if (!currentUser) return
     const usersCollectionRef = collection(db, 'users');
     const q = query(usersCollectionRef, where('uid', '==', currentUser.uid));
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Utilisateur introuvable');
+    if (querySnapshot.empty) return console.warn('Utilisateur introuvable');
 
     return querySnapshot.docs[0].data().invitationCode;
 };

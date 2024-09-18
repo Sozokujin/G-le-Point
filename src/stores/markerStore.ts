@@ -1,7 +1,7 @@
 import {
     addLike,
-    addMarker,
     addReport,
+    createMarker,
     deleteMarker,
     getFriendsMarkers,
     getGroupsMarkers,
@@ -19,27 +19,25 @@ export interface MarkerState {
     groupsMarkers: Marker[];
     publicMarkers: Marker[];
     lastMarker: Marker | null;
-    addMarker: (marker: Marker) => void;
+    addMarker: (marker: Omit<Marker, 'id'>) => Promise<string | null>;
     removeMarker: (marker: Marker) => void;
     clearUserMarkers: () => void;
     clearFriendsMarkers: () => void;
     clearGroupsMarkers: () => void;
     clearPublicMarkers: () => void;
-    getUserMarkers: (userUid: string) => void;
-    getFriendsMarkers: (userUid: string) => void;
-    getGroupsMarkers: (userUid: string) => void;
-    getPublicMarkers: (userUid: string) => void;
-    deleteMarker: (markerId: string) => void;
-    toggleLikeMarker: (markerId: string, userId: string) => void;
-    toggleReportMarker: (markerId: string, userId: string) => void;
+    getUserMarkers: (userUid: string) => Promise<void>;
+    getFriendsMarkers: (userUid: string) => Promise<void>;
+    getGroupsMarkers: (userUid: string) => Promise<void>;
+    getPublicMarkers: (userUid: string) => Promise<void>;
+    deleteMarker: (markerId: string) => Promise<void>;
+    toggleLikeMarker: (markerId: string, userId: string) => Promise<void>;
+    toggleReportMarker: (markerId: string, userId: string) => Promise<void>;
     reset: () => void;
 }
 
 const initialState: Omit<
     MarkerState,
     | 'addMarker'
-    | 'addClickedMarker'
-    | 'clearLastMarker'
     | 'removeMarker'
     | 'clearUserMarkers'
     | 'clearFriendsMarkers'
@@ -63,12 +61,25 @@ const initialState: Omit<
 
 export const useMarkerStore = create<MarkerState>((set, get) => ({
     ...initialState,
-    addMarker: async (marker: Marker) => {
-        await addMarker(marker);
-        set((state: MarkerState) => ({
-            userMarkers: [...state.userMarkers, marker],
-            lastMarker: marker
-        }));
+
+    addMarker: async (marker: Omit<Marker, 'id'>): Promise<string | null> => {
+        try {
+            const id = await createMarker(marker);
+            if (id) {
+                const newMarker: Marker = { id, ...marker };
+                set((state: MarkerState) => ({
+                    userMarkers: [...state.userMarkers, newMarker],
+                    lastMarker: newMarker
+                }));
+                return id;
+            } else {
+                console.error('Failed to create marker: No ID returned');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error adding marker:', error);
+            return null;
+        }
     },
 
     removeMarker: (marker: Marker) =>
@@ -102,9 +113,16 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
     },
 
     deleteMarker: async (markerId: string) => {
+        if (!markerId) {
+            console.error('Invalid marker ID');
+            return;
+        }
         await deleteMarker(markerId);
-        set((state: any) => ({
-            userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId)
+        set((state: MarkerState) => ({
+            userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId),
+            friendsMarkers: state.friendsMarkers.filter((m: Marker) => m.id !== markerId),
+            groupsMarkers: state.groupsMarkers.filter((m: Marker) => m.id !== markerId),
+            publicMarkers: state.publicMarkers.filter((m: Marker) => m.id !== markerId)
         }));
     },
 
@@ -126,13 +144,11 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
             likedBy: hasLiked ? marker.likedBy.filter((id) => id !== userId) : [...marker.likedBy, userId]
         };
 
-        set((state) => {
-            return {
-                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
-                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
-                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
-            };
-        });
+        set((state) => ({
+            friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+            groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+            publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+        }));
 
         if (hasLiked) {
             await removeLike(markerId, userId);
@@ -159,13 +175,11 @@ export const useMarkerStore = create<MarkerState>((set, get) => ({
             reportedBy: hasReported ? marker.reportedBy.filter((id) => id !== userId) : [...marker.reportedBy, userId]
         };
 
-        set((state) => {
-            return {
-                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
-                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
-                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
-            };
-        });
+        set((state) => ({
+            friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+            groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+            publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+        }));
 
         if (hasReported) {
             await removeReport(markerId, userId);

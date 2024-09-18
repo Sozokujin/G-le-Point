@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
+import { Inter } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { BeatLoader } from 'react-spinners';
 import Cookies from '@/components/cookies';
 import { Toaster } from '@/components/ui/sonner';
 import '@/styles/global.css';
-import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -46,7 +48,15 @@ export default function RootLayout({
     return (
         <html lang="fr" className="scroll-smooth">
             <body className={inter.className}>
-                {children}
+                <Suspense
+                    fallback={
+                        <div className="min-h-[100svh] flex justify-center items-center">
+                            <BeatLoader color="#00a661" />
+                        </div>
+                    }
+                >
+                    {children}
+                </Suspense>
                 <Cookies />
                 <Toaster richColors position="top-right" />
             </body>

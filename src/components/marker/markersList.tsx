@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Marker } from '@/types/index';
+import { useRouter } from 'next/navigation';
 import { useIsMobile } from '@/utils/isMobile';
 import useMarkerStore from '@/stores/markerStore';
 import {
@@ -16,7 +17,7 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Check, Clipboard, MapPin, Trash } from 'lucide-react';
+import { Check, Clipboard, MapPin, Trash, SquareArrowOutUpRight } from 'lucide-react';
 
 interface MarkerListProps {
     markers: Marker[];
@@ -31,6 +32,7 @@ export const MarkersList = ({
     forceMobileDisplay = false,
     allowDelete = false
 }: MarkerListProps) => {
+    const router = useRouter();
     const { isMobile } = useIsMobile();
     const { deleteMarker } = useMarkerStore();
 
@@ -43,6 +45,14 @@ export const MarkersList = ({
             setShowPopupCopy((prev) => ({ ...prev, [marker.id!]: false }));
         }, 3000);
     };
+
+    const goTo = (marker: Marker) => {
+        router.push(`/map?go-to=${marker.latitude},${marker.longitude}`);
+    }
+
+    const openInMaps = (marker: Marker) => {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${marker.latitude},${marker.longitude}`);
+    }
 
     const DeleteMarkerModal = ({ marker }: { marker: Marker }) => {
         if (!allowDelete) return null;
@@ -105,14 +115,17 @@ export const MarkersList = ({
                         <div className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full w-fit mr-auto">
                             {marker.tags || 'Autre'}
                         </div>
+                        <Button className="p-1 w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors duration-300">
+                            <MapPin onClick={() => goTo(marker)} className="w-4 h-4" />
+                        </Button>
                         <Button
                             className="p-1 w-6 h-6 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300"
                             onClick={() => copyToClipboard(marker)}
                         >
                             {!showPopupCopy[marker.id] ? <Clipboard className="w-4 h-4" /> : <Check className="w-4 h-4" />}
                         </Button>
-                        <Button className="p-1 w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors duration-300">
-                            <MapPin className="w-4 h-4" />
+                        <Button className="p-1 w-6 h-6 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300">
+                            <SquareArrowOutUpRight onClick={() => openInMaps(marker)} className="w-4 h-4" />
                         </Button>
                         <DeleteMarkerModal marker={marker} />
                     </div>
@@ -140,14 +153,20 @@ export const MarkersList = ({
                         {marker.address || `${marker.latitude}, ${marker.longitude}`}
                     </p>
                     <div className="flex justify-end space-x-3">
+                        <Button className="p-2 w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors duration-300">
+                            <MapPin onClick={() => goTo(marker)} className="w-5 h-5" />
+                        </Button>
                         <Button
-                            className="p-2 w-10 h-10 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors duration-300"
+                            className="p-2 w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300"
                             onClick={() => copyToClipboard(marker)}
                         >
                             {!showPopupCopy[marker.id] ? <Clipboard className="w-5 h-5" /> : <Check className="w-5 h-5" />}
                         </Button>
-                        <Button className="p-2 w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300">
-                            <MapPin className="w-5 h-5" />
+                        <Button
+                            className="p-2 w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300"
+                            onClick={() => openInMaps(marker)}
+                        >
+                            <SquareArrowOutUpRight className="w-5 h-5" />
                         </Button>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
@@ -62,7 +62,7 @@ export default function ModalCreateMarker() {
 
     const { addMarker } = useMarkerStore();
     const { groups, getGroups } = useGroupStore();
-    const { currentUser, users, fetchUsersByIds } = useUserStore();
+    const { currentUser, users, fetchUsersByIds, decrementCurrentUserSuperMarkers } = useUserStore();
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [display, setDisplay] = useState<'address' | 'gps' | 'position'>('position');
@@ -70,6 +70,11 @@ export default function ModalCreateMarker() {
     const [selectedGroups, setSelectedGroups] = useState<Group[]>([]);
     const [groupMembers, setGroupMembers] = useState<{ [groupId: string]: AvatarUser[] }>({});
     const [selectedAddress, setSelectedAddress] = useState<string>('');
+
+    const canMakePremiumMarker = useMemo(() => {
+        if (!currentUser) return false;
+        return currentUser?.superMarkers > 0;
+    }, [currentUser]);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -141,8 +146,9 @@ export default function ModalCreateMarker() {
         if (!currentUser) return;
 
         const formValues = form.getValues();
+        const markerIsPremium = canMakePremiumMarker && formValues.isPremium;
         const markerId = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
-        const markerType = formValues.isPremium ? 'super_marker_created' : 'marker_created';
+        const scoreType = markerIsPremium ? 'super_marker_created' : 'marker_created';
 
         addMarker({
             id: markerId,
@@ -158,19 +164,20 @@ export default function ModalCreateMarker() {
                 uid: currentUser.uid,
                 username: currentUser.username || currentUser.displayName || 'Sans nom'
             },
-            isPremium: formValues.isPremium,
+            isPremium: markerIsPremium,
             likeCount: 0,
             likedBy: [],
             reportCount: 0,
             reportedBy: []
         });
 
+        if (markerIsPremium) decrementCurrentUserSuperMarkers();
         if (selectedGroups.length > 0 && currentUser?.uid) {
             addMarkerGroup(markerId, selectedGroups, currentUser.uid);
         }
         form.reset();
         setSelectedGroups([]);
-        manageScore(currentUser.uid, markerType, true);
+        manageScore(currentUser.uid, scoreType, true);
         toast.success('Point ajouté avec succès');
         setIsDialogOpen(false);
         if (searchParams.get('create-at')) {
@@ -334,19 +341,21 @@ export default function ModalCreateMarker() {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="isPremium"
-                            render={({ field }) => (
-                                <FormItem className="inline-flex items-center gap-2">
-                                    <FormLabel>Point Premium</FormLabel>
-                                    <FormControl>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} className="!mt-0" />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        {canMakePremiumMarker && (
+                            <FormField
+                                control={form.control}
+                                name="isPremium"
+                                render={({ field }) => (
+                                    <FormItem className="inline-flex items-center gap-2">
+                                        <FormLabel>Super-point (restant : {currentUser?.superMarkers})</FormLabel>
+                                        <FormControl>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} className="!mt-0" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
 
                         {form.watch('visibility') === 'groups' && (
                             <div>

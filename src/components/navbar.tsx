@@ -1,55 +1,57 @@
-"use client";
+'use client';
 
-import { useAuthStore } from "@/stores/authStore";
-import { MapIcon, UsersIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import Link from "next/link";
+import classes from '@/styles/navbar.module.css';
+import { MapIcon, StarIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline';
+import {
+    MapIcon as SolidMapIcon,
+    StarIcon as SolidStarIcon,
+    UserGroupIcon as SolidUserGroupIcon,
+    UserIcon as SolidUserIcon
+} from '@heroicons/react/24/solid';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import ModalCreateMarker from './modalCreateMarker';
 
 const Navbar = () => {
-  const { isAuthenticated, isAuthChecking, user } = useAuthStore();
+    const pathname = usePathname();
 
-  return (
-    <nav className="fixed bottom-0 w-full h-[10%] bg-white text-primary">
-      <ul className="flex flex-row w-full h-full items-center justify-evenly gap-8">
-        <li>
-          <Image
-            src={"logo-glepoint-secondaire.svg"}
-            width={40}
-            height={40}
-            className="rounded-full"
-            alt="Logo de GlePoint"
-          />
-        </li>
-        <li>
-          <Link href="/map">
-            <MapIcon className="h-8 w-8 mx-auto" />
-            Carte
-          </Link>
-        </li>
-        <li>
-          <Link href="/friends">
-            <UsersIcon className="h-8 w-8 mx-auto" />
-            Amis
-          </Link>
-        </li>
-
-        {!isAuthenticated ? null : (
-          <li>
-            <Link href="/profile">
-              <Image
-                alt="image de profil Google"
-                src={user?.photoURL ?? ""}
-                width={50}
-                height={50}
-                className="rounded-full"
-                priority
-              />
-            </Link>
-          </li>
-        )}
-      </ul>
-    </nav>
-  );
+    return (
+        <div className="fixed bottom-4 w-full z-10">
+            <nav className={classes.navContainer}>
+                <Link href="/map">
+                    {pathname === '/map' ? (
+                        <SolidMapIcon className={classes.icon + ' active'} />
+                    ) : (
+                        <MapIcon className={classes.icon} />
+                    )}
+                </Link>
+                <Link href="/leaderboard">
+                    {pathname === '/leaderboard' ? (
+                        <SolidStarIcon className={classes.icon + ' active'} />
+                    ) : (
+                        <StarIcon className={classes.icon} />
+                    )}
+                </Link>
+                <div className="-mt-7 sm:-mt-9 rounded-full">
+                    <ModalCreateMarker />
+                </div>
+                <Link href="/friends">
+                    {pathname === '/friends' ? (
+                        <SolidUserGroupIcon className={classes.icon + ' active'} />
+                    ) : (
+                        <UserGroupIcon className={classes.icon} />
+                    )}
+                </Link>
+                <Link href="/profile">
+                    {pathname === '/profile' ? (
+                        <SolidUserIcon className={classes.icon + ' active'} />
+                    ) : (
+                        <UserIcon className={classes.icon} />
+                    )}
+                </Link>
+            </nav>
+        </div>
+    );
 };
 
 export default Navbar;

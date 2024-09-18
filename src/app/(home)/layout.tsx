@@ -1,28 +1,17 @@
-import LandingFooter from "@/components/landingFooter";
-import LandingNavbar from "@/components/landingNavbar";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "G'Le Point",
-  description: "Votre carte collaborative",
-};
+import LandingFooter from '@/components/landingFooter';
+import LandingNavbar from '@/components/landingNavbar';
+import '@/styles/global.css';
 
 export default function RootLayout({
-  children,
+    children
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="fr">
-      <body className={inter.className}>
-        <LandingNavbar />
-        {children}
-        <LandingFooter />
-      </body>
-    </html>
-  );
+    return (
+        <>
+            <LandingNavbar />
+            {children}
+            <LandingFooter />
+        </>
+    );
 }

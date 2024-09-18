@@ -1,68 +1,162 @@
-import { db } from "@/db/firebase";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { create } from "zustand";
+import {
+    addLike,
+    addMarker,
+    addReport,
+    deleteMarker,
+    getFriendsMarkers,
+    getGroupsMarkers,
+    getPublicMarkers,
+    getUserMarkers,
+    removeLike,
+    removeReport
+} from '@/services/firebase/markers';
+import { Marker } from '@/types/index';
+import { create } from 'zustand';
 
-interface Marker {
-  name: string;
-  description: string | null;
-  tags: string[];
-  address: string | null;
-  latitude: number;
-  longitude: number;
-  user: {
-    uid: string | null;
-    displayName: string | null;
-  };
+export interface MarkerState {
+    userMarkers: Marker[];
+    friendsMarkers: Marker[];
+    groupsMarkers: Marker[];
+    publicMarkers: Marker[];
+    lastMarker: Marker | null;
+    addMarker: (marker: Marker) => void;
+    removeMarker: (marker: Marker) => void;
+    clearUserMarkers: () => void;
+    clearFriendsMarkers: () => void;
+    clearGroupsMarkers: () => void;
+    clearPublicMarkers: () => void;
+    getUserMarkers: (userUid: string) => void;
+    getFriendsMarkers: (userUid: string) => void;
+    getGroupsMarkers: (userUid: string) => void;
+    getPublicMarkers: (userUid: string) => void;
+    deleteMarker: (markerId: string) => void;
+    toggleLikeMarker: (markerId: string, userId: string) => void;
+    toggleReportMarker: (markerId: string, userId: string) => void;
+    reset: () => void;
 }
 
-const useMarkerStore = create((set: any) => ({
-  markers: [] as Marker[],
-  addMarker: async (marker: Marker) =>
-    set((state: any) => {
-      const markersCollectionRef = collection(db, "markers");
-      addDoc(markersCollectionRef, marker);
-      return { markers: [...state.markers, marker] };
-    }),
-  removeMarker: (marker: Marker) =>
-    set((state: any) => ({
-      markers: state.markers.filter((m: Marker) => m !== marker),
-    })),
-  clearMarkers: () => set({ markers: [] }),
-  getMarkers: async (userUid: any) => {
-    const markersCollectionRef = collection(db, "markers");
-    const querry = query(
-      markersCollectionRef,
-      where("user.uid", "==", userUid)
-    );
-    const querySnapshot = await getDocs(querry);
-    const markersData = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    set({ markers: markersData });
-  },
-  getFriendsMarkers: async (userUid: any) => {
-    const markersCollectionRef = collection(db, "markers");
-    const userCollectionRef = collection(db, "users");
+const initialState: Omit<MarkerState, 'addMarker' | 'addClickedMarker' | 'clearLastMarker' | 'removeMarker' | 'clearUserMarkers' | 'clearFriendsMarkers' | 'clearGroupsMarkers' | 'clearPublicMarkers' | 'getUserMarkers' | 'getFriendsMarkers' | 'getGroupsMarkers' | 'getPublicMarkers' | 'deleteMarker' | 'toggleLikeMarker' | 'toggleReportMarker' | 'reset'> = {
+    userMarkers: [],
+    friendsMarkers: [],
+    groupsMarkers: [],
+    publicMarkers: [],
+    lastMarker: null,
+};
 
-    const userDocSnapshot = await getDocs(userCollectionRef);
+export const useMarkerStore = create<MarkerState>((set, get) => ({
+    ...initialState,
+    addMarker: async (marker: Marker) => {
+        await addMarker(marker);
+        set((state: MarkerState) => ({
+            userMarkers: [...state.userMarkers, marker],
+            lastMarker: marker
+        }));
+    },
 
-    const friends: [] = userDocSnapshot.docs
-      .map((doc) => doc.data())
-      .find((user) => user.uid === userUid)?.friends;
+    removeMarker: (marker: Marker) =>
+        set((state: MarkerState) => ({
+            userMarkers: state.userMarkers.filter((m: Marker) => m.id !== marker.id)
+        })),
 
-    if (!friends || friends.length == 0) return;
-    const querry = query(
-      markersCollectionRef,
-      where("user.uid", "in", friends)
-    );
-    const querySnapshot = await getDocs(querry);
-    const markersData = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
-    set((state: any) => ({ markers: [...state.markers, ...markersData] }));
-  },
+    clearUserMarkers: () => set({ userMarkers: [] }),
+    clearFriendsMarkers: () => set({ friendsMarkers: [] }),
+    clearGroupsMarkers: () => set({ groupsMarkers: [] }),
+    clearPublicMarkers: () => set({ publicMarkers: [] }),
+
+    getUserMarkers: async (userUid: string) => {
+        const userMarkers = await getUserMarkers(userUid);
+        set({ userMarkers });
+    },
+
+    getFriendsMarkers: async (userUid: string) => {
+        const friendsMarkers = await getFriendsMarkers(userUid);
+        set({ friendsMarkers });
+    },
+
+    getGroupsMarkers: async (userUid: string) => {
+        const groupsMarkers = await getGroupsMarkers(userUid);
+        set({ groupsMarkers });
+    },
+
+    getPublicMarkers: async (userUid: string) => {
+        const publicMarkers = await getPublicMarkers(userUid);
+        set({ publicMarkers });
+    },
+
+    deleteMarker: async (markerId: string) => {
+        await deleteMarker(markerId);
+        set((state: any) => ({
+            userMarkers: state.userMarkers.filter((m: Marker) => m.id !== markerId)
+        }));
+    },
+
+    toggleLikeMarker: async (markerId: string, userId: string) => {
+        const state = get();
+
+        const marker =
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
+
+        if (!marker) return;
+
+        const hasLiked = marker.likedBy.includes(userId);
+
+        const updatedMarker = {
+            ...marker,
+            likeCount: hasLiked ? marker.likeCount - 1 : marker.likeCount + 1,
+            likedBy: hasLiked ? marker.likedBy.filter((id) => id !== userId) : [...marker.likedBy, userId]
+        };
+
+        set((state) => {
+            return {
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+            };
+        });
+
+        if (hasLiked) {
+            await removeLike(markerId, userId);
+        } else {
+            await addLike(markerId, userId);
+        }
+    },
+
+    toggleReportMarker: async (markerId: string, userId: string) => {
+        const state = get();
+
+        const marker =
+            state.friendsMarkers.find((m) => m.id === markerId) ||
+            state.groupsMarkers.find((m) => m.id === markerId) ||
+            state.publicMarkers.find((m) => m.id === markerId);
+
+        if (!marker) return;
+
+        const hasReported = marker.reportedBy.includes(userId);
+
+        const updatedMarker = {
+            ...marker,
+            reportCount: hasReported ? marker.reportCount - 1 : marker.reportCount + 1,
+            reportedBy: hasReported ? marker.reportedBy.filter((id) => id !== userId) : [...marker.reportedBy, userId]
+        };
+
+        set((state) => {
+            return {
+                friendsMarkers: state.friendsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                groupsMarkers: state.groupsMarkers.map((m) => (m.id === markerId ? updatedMarker : m)),
+                publicMarkers: state.publicMarkers.map((m) => (m.id === markerId ? updatedMarker : m))
+            };
+        });
+
+        if (hasReported) {
+            await removeReport(markerId, userId);
+        } else {
+            await addReport(markerId, userId);
+        }
+    },
+
+    reset: () => set(() => ({ ...initialState }))
 }));
 
-export { useMarkerStore };
+export default useMarkerStore;

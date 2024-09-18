@@ -1,36 +1,21 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { redirectTo } from "@/lib/actions";
-import { googleLogOut, useAuthStore } from "@/stores/authStore";
-import { useEffect } from "react";
+import { ProfileCard } from '@/components/profile/profileCard';
+import { StatsCard } from '@/components/profile/statsCard';
 
 const Profile = () => {
-  const { user, isAuthenticated, logout } = useAuthStore();
-
-  const handleLogout = async () => {
-    try {
-      await googleLogOut();
-      logout();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      redirectTo("/login");
-    }
-  }, [isAuthenticated]);
-
-  return (
-    <div>
-      <h1>Profile</h1>
-      <Button onClick={handleLogout} variant="default" size="sm">
-        Logout
-      </Button>
-    </div>
-  );
+    return (
+        <div className="min-h-svh bg-muted p-2 sm:p-4 flex justify-center items-center w-full">
+            <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full max-w-7xl navbar-padding">
+                <div className="w-full h-full flex justify-center">
+                    <ProfileCard />
+                </div>
+                <div className="w-full h-full flex justify-center">
+                    <StatsCard />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Profile;

@@ -54,7 +54,7 @@ export default function Home() {
                 type: 'Feature',
                 properties: {
                     ...marker,
-                    type: marker.isPremium ? 'super' : markerType,
+                    type: marker.isPremium ? 'super' : markerType
                 },
                 geometry: {
                     type: 'Point',

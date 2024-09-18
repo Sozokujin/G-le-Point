@@ -59,19 +59,26 @@ export default function MarkerPopup({
             latitude={currentMarker.latitude}
             closeButton={false}
             closeOnClick={false}
-            offset={24}
+            offset={currentMarker.isPremium ? 38 : 24}
             anchor="bottom"
             maxWidth="400px"
             className="w-full p-2"
         >
-            <div className="bg-white p-4 rounded-lg shadow-lg relative">
+            <div className="bg-white rounded-lg shadow-md p-4 relative">
                 <XMarkIcon onClick={closePopup} className="absolute top-1 right-1 h-5 w-5 cursor-pointer" />
                 <div className="flex w-full items-center justify-between gap-6">
                     <div className="flex-1 flex items-center gap-3">
                         <h3 className="truncate text-sm font-semibold text-gray-900 !my-0">{currentMarker.name}</h3>
-                        <span className="inline-flex truncate flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                            {currentMarker.tags}
-                        </span>
+                        <div className="flex flex-col gap-1">
+                            {currentMarker.isPremium && (
+                                <span className="truncate w-fit rounded-full bg-[#FFD700]/20 px-1.5 py-0.5 text-xs font-medium text-orange-400 ring-1 ring-inset ring-[#FFD700]/50">
+                                    Super-point
+                                </span>
+                            )}
+                            <span className="truncate w-fit rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                {currentMarker.tags}
+                            </span>
+                        </div>
                     </div>
                     <p className="!leading-6">Par : {currentMarker.user.username}</p>
                 </div>

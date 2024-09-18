@@ -3,6 +3,8 @@ import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser, FriendRequest } from '@/types';
 import { useFriendStore } from '@/stores/friendStore';
+import useMarkerStore from '@/stores/markerStore';
+import { use } from 'react';
 export const getAllFriends = async () => {
     try {
         const currentUser = useUserStore.getState().currentUser;
@@ -226,7 +228,7 @@ export const unfriend = async (friendId: string) => {
     });
 
     useFriendStore.getState().removeFriend(friendId);
-    // useMarkerStore.getState().clearMarkers(); TODO
+    useMarkerStore.getState().clearFriendsMarkers();
 };
 
 export const getInvitationCode = async () => {

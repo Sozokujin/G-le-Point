@@ -15,9 +15,19 @@ interface GroupState {
     reset: () => void;
 }
 
-const initialState: Omit<GroupState, 'getGroups' | 'setFilteredGroups' | 'addGroup' | 'removeGroup' | 'clearGroups' | 'updateGroupMembers' | 'updateGroup' | 'reset'> = {
+const initialState: Omit<
+    GroupState,
+    | 'getGroups'
+    | 'setFilteredGroups'
+    | 'addGroup'
+    | 'removeGroup'
+    | 'clearGroups'
+    | 'updateGroupMembers'
+    | 'updateGroup'
+    | 'reset'
+> = {
     groups: [],
-    filteredGroups: [],
+    filteredGroups: []
 };
 
 export const useGroupStore = create<GroupState>((set, get) => ({

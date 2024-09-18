@@ -1,4 +1,3 @@
-
 export interface Marker {
     id: string;
     name: string;
@@ -7,12 +6,13 @@ export interface Marker {
     address: string | null;
     latitude: number;
     longitude: number;
-    visibiltyStatus: string // public / friend / groups
+    visibiltyStatus: string; // public / friend / groups
     createdAt: number;
     user: {
         uid: string | null;
         username: string | null;
     };
+    isPremium: boolean;
     likeCount: number;
     likedBy: string[];
     reportCount: number;

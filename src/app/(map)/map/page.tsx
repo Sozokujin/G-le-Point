@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
@@ -15,6 +16,8 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const { currentUser } = useUserStore();
     const {
         userMarkers,
@@ -30,6 +33,7 @@ export default function Home() {
 
     const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
     const [openModalListMarkers, setOpenModalListMarkers] = useState<boolean>(false);
+    const [mapIsLoaded, setMapIsLoaded] = useState<boolean>(false);
     const [mapFilters, setMapFilters] = useState({
         showFriends: true,
         showGroups: true,
@@ -50,7 +54,7 @@ export default function Home() {
                 type: 'Feature',
                 properties: {
                     ...marker,
-                    type: markerType
+                    type: marker.isPremium ? 'super' : markerType
                 },
                 geometry: {
                     type: 'Point',
@@ -74,7 +78,14 @@ export default function Home() {
         if (!map.current) return;
 
         addMarkerImages();
+        setMapIsLoaded(true);
+
         map.current.on('styledata', addMarkerImages);
+        map.current.on('dblclick', (e: any) => {
+            e.preventDefault();
+            setSelectedMarker(null);
+            router.push(`/map?create-at=${e.lngLat.lat},${e.lngLat.lng}`);
+        });
     }, []);
 
     const onMarkerClick = useCallback(
@@ -96,6 +107,21 @@ export default function Home() {
     );
 
     useEffect(() => {
+        const coords = searchParams.get('go-to');
+        if (!mapIsLoaded || !coords) return;
+
+        const [latitude, longitude] = coords.split(',').map((coord) => parseFloat(coord.trim()));
+        if (!latitude || !longitude) return;
+
+        setOpenModalListMarkers(false);
+
+        map.current!.flyTo({
+            center: [longitude, latitude],
+            zoom: 15
+        });
+    }, [mapIsLoaded, searchParams]);
+
+    useEffect(() => {
         if (currentUser && currentUser.uid) {
             getUserMarkers(currentUser.uid);
             getFriendsMarkers(currentUser.uid);
@@ -105,15 +131,13 @@ export default function Home() {
     }, [currentUser, getUserMarkers, getFriendsMarkers, getGroupsMarkers, getPublicMarkers]);
 
     useEffect(() => {
-        if (lastMarker && map.current) {
-            const currentMap = map.current.getMap();
+        if (!lastMarker || !mapIsLoaded) return;
 
-            currentMap.flyTo({
-                center: [lastMarker.longitude, lastMarker.latitude],
-                zoom: 15
-            });
-        }
-    }, [lastMarker]);
+        map.current!.flyTo({
+            center: [lastMarker.longitude, lastMarker.latitude],
+            zoom: 15
+        });
+    }, [lastMarker, mapIsLoaded]);
 
     const addMarkerImages = () => {
         const currentMap = map.current!;
@@ -127,10 +151,11 @@ export default function Home() {
             });
         };
 
-        loadImage('images/logo-user.png', 'logo-user');
-        loadImage('images/logo-friend.png', 'logo-friend');
-        loadImage('images/logo-group.png', 'logo-group');
-        loadImage('images/logo-public.png', 'logo-public');
+        loadImage('images/map/logo-user.png', 'logo-user');
+        loadImage('images/map/logo-super.png', 'logo-super');
+        loadImage('images/map/logo-group.png', 'logo-group');
+        loadImage('images/map/logo-friend.png', 'logo-friend');
+        loadImage('images/map/logo-public.png', 'logo-public');
     };
 
     const clusterLayer: CircleLayerSpecification = {
@@ -167,10 +192,12 @@ export default function Home() {
                 ['get', 'type'],
                 'user',
                 'logo-user',
-                'friend',
-                'logo-friend',
+                'super',
+                'logo-super',
                 'group',
                 'logo-group',
+                'friend',
+                'logo-friend',
                 'public',
                 'logo-public',
                 'default-marker'
@@ -210,8 +237,8 @@ export default function Home() {
                     type="geojson"
                     data={allMarkersFiltered}
                     cluster={true}
-                    clusterMaxZoom={10}
-                    clusterRadius={100}
+                    clusterMaxZoom={11}
+                    clusterRadius={75}
                 >
                     <Layer {...clusterLayer} />
                     <Layer {...clusterCountLayer} />

@@ -66,7 +66,9 @@ export const ModalCreateGroup = () => {
                         />
                         {groupName === '' && <p className="text-red-500 text-sm">Le nom du groupe ne peut pas être vide</p>}
                         <h3 className="text-primary text-lg font-bold">Sélectionner des amis</h3>
-                        {selectedFriends.length === 0 && <p className="text-red-500 text-sm">Veuillez selectionner au moins un amis</p>}
+                        {selectedFriends.length === 0 && (
+                            <p className="text-red-500 text-sm">Veuillez selectionner au moins un amis</p>
+                        )}
                         <ul>
                             {friends.length !== 0 ? (
                                 friends.map((friend, index) => (

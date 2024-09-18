@@ -3,6 +3,8 @@ import { db } from '@/services/firebase/config';
 import useUserStore from '@/stores/userStore';
 import { FirebaseUser, FriendRequest } from '@/types';
 import { useFriendStore } from '@/stores/friendStore';
+import useMarkerStore from '@/stores/markerStore';
+import { use } from 'react';
 export const getAllFriends = async () => {
     try {
         const currentUser = useUserStore.getState().currentUser;
@@ -19,8 +21,7 @@ export const getAllFriends = async () => {
         }
 
         const friendsUid = querySnapshot.docs[0].data().friends;
-        if (friendsUid.length === 0)
-        {
+        if (friendsUid.length === 0) {
             console.warn('No friends found');
             return [];
         }
@@ -57,7 +58,7 @@ export const sendFriendRequest = async (invitationCode: string | null) => {
     const friendUid = querySnapshot.docs[0].data().uid;
     // Check if they are already friends
     if (currentUser.friends.includes(friendUid)) {
-        throw new Error("Cet utilisateur est déjà votre ami");
+        throw new Error('Cet utilisateur est déjà votre ami');
     }
 
     // Check if a friend request already exists
@@ -77,7 +78,7 @@ export const sendFriendRequest = async (invitationCode: string | null) => {
     const docRef = await addDoc(friendRequestRef, {
         from: currentUser.uid,
         to: friendUid,
-        status: 'pending',
+        status: 'pending'
     });
 
     return docRef.id;
@@ -91,11 +92,7 @@ export const getFriendRequests = async (): Promise<FriendRequest[]> => {
     }
 
     const friendRequestsCollectionRef = collection(db, 'friendRequests');
-    const q = query(
-        friendRequestsCollectionRef,
-        where('to', '==', currentUser.uid),
-        where('status', '==', 'pending')
-    );
+    const q = query(friendRequestsCollectionRef, where('to', '==', currentUser.uid), where('status', '==', 'pending'));
 
     try {
         const querySnapshot = await getDocs(q);
@@ -117,7 +114,7 @@ export const getFriendRequests = async (): Promise<FriendRequest[]> => {
 export const acceptFriendRequest = async (from: string) => {
     const currentUser = useUserStore.getState().currentUser;
 
-    if (!currentUser?.uid) return alert('Utilisateur non authentifié');
+    if (!currentUser?.uid) return
 
     const friendRequestsCollectionRef = collection(db, 'friendRequests');
     const q = query(
@@ -128,7 +125,7 @@ export const acceptFriendRequest = async (from: string) => {
     );
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Demande introuvable');
+    if (querySnapshot.empty) return console.warn('Demande introuvable');
 
     const docId = querySnapshot.docs[0].id;
 
@@ -184,7 +181,7 @@ export const declineFriendRequest = async (from: string) => {
     );
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Demande introuvable');
+    if (querySnapshot.empty) return console.warn('Demande introuvable');
 
     const docId = querySnapshot.docs[0].id;
 
@@ -231,17 +228,17 @@ export const unfriend = async (friendId: string) => {
     });
 
     useFriendStore.getState().removeFriend(friendId);
-    // useMarkerStore.getState().clearMarkers(); TODO
+    useMarkerStore.getState().clearFriendsMarkers();
 };
 
 export const getInvitationCode = async () => {
     const currentUser = useUserStore.getState().currentUser;
-    if (!currentUser) return alert('Utilisateur non authentifié');
+    if (!currentUser) return
     const usersCollectionRef = collection(db, 'users');
     const q = query(usersCollectionRef, where('uid', '==', currentUser.uid));
 
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return alert('Utilisateur introuvable');
+    if (querySnapshot.empty) return console.warn('Utilisateur introuvable');
 
     return querySnapshot.docs[0].data().invitationCode;
 };

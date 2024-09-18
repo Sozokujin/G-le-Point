@@ -124,7 +124,7 @@ export const decrementSuperMarkers = async (user: string) => {
             });
         }
     }
-}
+};
 
 export const deleteAccount = async () => {
     const user = auth.currentUser;

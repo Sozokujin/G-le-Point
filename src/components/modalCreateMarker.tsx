@@ -169,7 +169,6 @@ export default function ModalCreateMarker() {
             reportedBy: []
         };
 
-
         const markerId = await addMarker(newMarker);
         if (!markerId) {
             toast.error('Erreur lors de la création du point');

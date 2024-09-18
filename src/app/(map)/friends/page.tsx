@@ -35,6 +35,12 @@ const Friends = () => {
         }
     }, [groups, selectedGroupId]);
 
+    useEffect(() => {
+        if (!selectedFriend) {
+            setDisplayMarkers([]);
+        }
+    } , [selectedFriend]);
+
     const handleSelectedFriendChange = async (friend: FirebaseUser) => {
         setDisplayMarkers([]);
         setSelectedGroupId(null);

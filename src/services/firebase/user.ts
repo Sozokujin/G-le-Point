@@ -53,3 +53,26 @@ export const getUsersByIds = async (uids: string[]): Promise<FirebaseUser[]> => 
         return [];
     }
 };
+
+export const getUserLikeCount = async (uid: string): Promise<number> => {
+    if (!uid) {
+        console.error('Aucun ID d\'utilisateur fourni.');
+        return 0;
+    }
+    try {
+        const markersRef = collection(db, 'markers');
+        const userMarkersQuery = query(markersRef, where('user.uid', '==', uid));
+        const querySnapshot = await getDocs(userMarkersQuery);
+
+        let totalLikes = 0;
+        querySnapshot.forEach((doc) => {
+            const markerData = doc.data();
+            totalLikes += markerData.likeCount || 0;
+        });
+
+        return totalLikes;
+    } catch (error) {
+        console.error('Error fetching user like count:', error);
+        return 0;
+    }
+};

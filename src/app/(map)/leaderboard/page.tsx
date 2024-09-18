@@ -15,9 +15,9 @@ const Leaderboard = () => {
 
     useEffect(() => {
         const loadUsers = async () => {
-            await fetchUserByScores();
+            fetchUserByScores();
             if (currentUser) {
-                await fetchFriendsUserByScores(currentUser.uid);
+                fetchFriendsUserByScores(currentUser.uid);
             }
             setLoading(false);
         };

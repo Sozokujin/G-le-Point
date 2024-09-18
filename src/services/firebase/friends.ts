@@ -194,7 +194,6 @@ export const declineFriendRequest = async (from: string) => {
 };
 
 export const unfriend = async (friendId: string) => {
-    //TODO: REMOVE MARKERS FROM STORE
     const currentUser = useUserStore.getState().currentUser;
 
     if (!currentUser?.uid) return;

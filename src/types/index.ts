@@ -7,7 +7,7 @@ export interface Marker {
     address: string | null;
     latitude: number;
     longitude: number;
-    visibiltyStatus: string | null; // public / friend / groups
+    visibiltyStatus: string // public / friend / groups
     createdAt: number;
     user: {
         uid: string | null;
@@ -48,20 +48,3 @@ export interface Group {
         idUser: string;
     }[];
 }
-
-export type Tag =
-    | 'Points de vue'
-    | 'Randonnée et sentiers'
-    | 'Espace vert'
-    | 'Site sportif'
-    | 'Site touristique'
-    | 'Site historique'
-    | 'Site culturel'
-    | 'Loisirs'
-    | 'Commerce'
-    | 'Transport'
-    | 'Restauration'
-    | 'Hébergement'
-    | 'Service public'
-    | 'Espace de santé'
-    | 'Autre';

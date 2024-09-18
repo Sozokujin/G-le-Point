@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 
-const AutocompleteMapbox = ({
-    onAddressCoordinatesSelected
-}: {
-    onAddressCoordinatesSelected: (coordinates: number[]) => void;
-}) => {
+
+interface AutocompleteMapboxProps {
+    onAddressCoordinatesSelected: (coordinates: number[], address: string) => void;
+}
+
+const AutocompleteMapbox = ({ onAddressCoordinatesSelected }: AutocompleteMapboxProps) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [userPosition, setUserPosition] = useState<{
         latitude: number;
         longitude: number;
     } | null>(null);
-    const [coordinates, setCoordinates] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState('');
     const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
     const autompleteRef = useRef<HTMLInputElement>(null);
@@ -64,11 +64,13 @@ const AutocompleteMapbox = ({
         searchAddress();
     }, [query, userPosition]);
 
-    const handleSelectAddress = (address: any) => {
+    const handleSelectAddress = (address: { place_name: SetStateAction<string>; geometry: { coordinates: number[] | SetStateAction<null>; }; }) => {
         setSelectedAddress(address.place_name);
-        setCoordinates(address.geometry.coordinates);
-        onAddressCoordinatesSelected(address.geometry.coordinates);
-        setIsSuggestionsVisible(false);
+        if (Array.isArray(address.geometry.coordinates)) {
+            onAddressCoordinatesSelected(address.geometry.coordinates, address.place_name as string);
+        } else {
+            console.error("Invalid coordinates:", address.geometry.coordinates);
+        }
     };
 
     const handleClickOutside = (event: MouseEvent) => {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CircleLayerSpecification, SymbolLayerSpecification } from 'mapbox-gl';
 import Map, { GeolocateControl, Layer, MapRef, Source } from 'react-map-gl';
@@ -15,6 +16,7 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
+    const searchParams = useSearchParams();
     const { currentUser } = useUserStore();
     const {
         userMarkers,
@@ -30,6 +32,7 @@ export default function Home() {
 
     const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
     const [openModalListMarkers, setOpenModalListMarkers] = useState<boolean>(false);
+    const [mapIsLoaded, setMapIsLoaded] = useState<boolean>(false);
     const [mapFilters, setMapFilters] = useState({
         showFriends: true,
         showGroups: true,
@@ -74,6 +77,7 @@ export default function Home() {
         if (!map.current) return;
 
         addMarkerImages();
+        setMapIsLoaded(true);
         map.current.on('styledata', addMarkerImages);
     }, []);
 
@@ -96,6 +100,21 @@ export default function Home() {
     );
 
     useEffect(() => {
+        if (!mapIsLoaded) return;
+
+        const lat = searchParams.get('lat');
+        const lng = searchParams.get('lng');
+
+        if (!lat || !lng) return;
+        setOpenModalListMarkers(false);
+
+        map.current!.flyTo({
+            center: [parseFloat(lng), parseFloat(lat)],
+            zoom: 15
+        })
+    }, [mapIsLoaded, searchParams]);
+
+    useEffect(() => {
         if (currentUser && currentUser.uid) {
             getUserMarkers(currentUser.uid);
             getFriendsMarkers(currentUser.uid);
@@ -105,15 +124,13 @@ export default function Home() {
     }, [currentUser, getUserMarkers, getFriendsMarkers, getGroupsMarkers, getPublicMarkers]);
 
     useEffect(() => {
-        if (lastMarker && map.current) {
-            const currentMap = map.current.getMap();
+        if (!lastMarker || !mapIsLoaded) return;
 
-            currentMap.flyTo({
-                center: [lastMarker.longitude, lastMarker.latitude],
-                zoom: 15
-            });
-        }
-    }, [lastMarker]);
+        map.current!.flyTo({
+            center: [lastMarker.longitude, lastMarker.latitude],
+            zoom: 15
+        });
+    }, [lastMarker, mapIsLoaded]);
 
     const addMarkerImages = () => {
         const currentMap = map.current!;

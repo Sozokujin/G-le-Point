@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Marker } from '@/types/index';
+import { useRouter } from 'next/navigation';
 import { useIsMobile } from '@/utils/isMobile';
 import useMarkerStore from '@/stores/markerStore';
 import {
@@ -31,6 +32,7 @@ export const MarkersList = ({
     forceMobileDisplay = false,
     allowDelete = false
 }: MarkerListProps) => {
+    const router = useRouter();
     const { isMobile } = useIsMobile();
     const { deleteMarker } = useMarkerStore();
 
@@ -43,6 +45,10 @@ export const MarkersList = ({
             setShowPopupCopy((prev) => ({ ...prev, [marker.id!]: false }));
         }, 3000);
     };
+
+    const goTo = (marker: Marker) => {
+        router.push(`/map?lat=${marker.latitude}&lng=${marker.longitude}`);
+    }
 
     const DeleteMarkerModal = ({ marker }: { marker: Marker }) => {
         if (!allowDelete) return null;
@@ -112,7 +118,7 @@ export const MarkersList = ({
                             {!showPopupCopy[marker.id] ? <Clipboard className="w-4 h-4" /> : <Check className="w-4 h-4" />}
                         </Button>
                         <Button className="p-1 w-6 h-6 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors duration-300">
-                            <MapPin className="w-4 h-4" />
+                            <MapPin onClick={() => goTo(marker)} className="w-4 h-4" />
                         </Button>
                         <DeleteMarkerModal marker={marker} />
                     </div>
@@ -147,7 +153,7 @@ export const MarkersList = ({
                             {!showPopupCopy[marker.id] ? <Clipboard className="w-5 h-5" /> : <Check className="w-5 h-5" />}
                         </Button>
                         <Button className="p-2 w-10 h-10 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors duration-300">
-                            <MapPin className="w-5 h-5" />
+                            <MapPin onClick={() => goTo(marker)} className="w-5 h-5" />
                         </Button>
                     </div>
                 </div>

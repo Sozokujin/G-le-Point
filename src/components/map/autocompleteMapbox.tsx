@@ -1,5 +1,6 @@
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 
 interface AutocompleteMapboxProps {
@@ -30,11 +31,13 @@ const AutocompleteMapbox = ({ onAddressCoordinatesSelected }: AutocompleteMapbox
                         });
                     },
                     (error) => {
+                        setUserPosition(
+                            { latitude: 45.75009, longitude: 4.82323 }
+                        );
+                        toast.info("La géolocalisation n'est pas disponible");
                         console.error('Erreur de géolocalisation:', error);
                     }
                 );
-            } else {
-                console.error("La géolocalisation n'est pas supportée par ce navigateur.");
             }
         };
 

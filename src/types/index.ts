@@ -12,6 +12,7 @@ export interface Marker {
         uid: string | null;
         username: string | null;
     };
+    isPremium: boolean;
     likeCount: number;
     likedBy: string[];
     reportCount: number;

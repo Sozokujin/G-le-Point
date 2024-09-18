@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { updateUser } from '@/services/firebase/profil';
 import { getFriendsTopUsersByScore, getTopUsersByScore } from '@/services/firebase/leaderboard';
 import { getUserById, getUsersByIds } from '@/services/firebase/user';
 import { FirebaseUser } from '@/types';
@@ -16,6 +17,7 @@ type UserStore = {
     fetchUsersByIds: (ids: string[]) => void;
     fetchUserByScores: () => void;
     fetchFriendsUserByScores: (userId: string) => void;
+    decrementCurrentUserSuperMarkers: () => void;
     reset: () => void;
 };
 
@@ -29,6 +31,7 @@ const initialState: Omit<
     | 'fetchUsersByIds'
     | 'fetchUserByScores'
     | 'fetchFriendsUserByScores'
+    | 'decrementCurrentUserSuperMarkers'
     | 'reset'
 > = {
     currentUser: null,
@@ -85,6 +88,13 @@ const useUserStore = create<UserStore>((set) => ({
                 topFriendsUsersByScore: [...state.topFriendsUsersByScore, ...newUsers]
             };
         });
+    },
+    decrementCurrentUserSuperMarkers: async () => {
+        const currentUser = useUserStore.getState().currentUser;
+        if (!currentUser) return;
+
+        currentUser.superMarkers -= 1;
+        await updateUser(currentUser);
     },
     reset: () => set(initialState)
 }));

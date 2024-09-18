@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
@@ -17,17 +17,43 @@ import AutocompleteMapbox from '@/components/map/autocompleteMapbox';
 import { AvatarUser } from '@/components/ui/group-avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const formSchema = z.object({
     visibility: z.enum(['public', 'friends', 'groups']),
+    isPremium: z.boolean(),
     name: z.string().min(3, 'Le nom du lieu est requis et doit contenir au moins 3 caractères'),
     description: z.string().optional(),
     tag: z.string().default('Autre'),
     coordinates: z.string().optional()
 });
+
+const mapTags: string[] = [
+    'Bar',
+    'Camping',
+    'Centre de loisirs',
+    'Commerce',
+    'Espace aquatique',
+    'Espace de détente',
+    'Espace de santé',
+    'Espace de travail',
+    'Espace vert',
+    'Hébergement',
+    'Hôtel',
+    'Points de vue',
+    'Randonnée et sentiers',
+    'Restauration',
+    'Service public',
+    'Site culturel',
+    'Site historique',
+    'Site sportif',
+    'Site touristique',
+    'Transport',
+    'Autre'
+];
 
 export default function ModalCreateMarker() {
     const router = useRouter();
@@ -36,7 +62,7 @@ export default function ModalCreateMarker() {
 
     const { addMarker } = useMarkerStore();
     const { groups, getGroups } = useGroupStore();
-    const { currentUser, users, fetchUsersByIds } = useUserStore();
+    const { currentUser, users, fetchUsersByIds, decrementCurrentUserSuperMarkers } = useUserStore();
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [display, setDisplay] = useState<'address' | 'gps' | 'position'>('position');
@@ -45,39 +71,22 @@ export default function ModalCreateMarker() {
     const [groupMembers, setGroupMembers] = useState<{ [groupId: string]: AvatarUser[] }>({});
     const [selectedAddress, setSelectedAddress] = useState<string>('');
 
+    const canMakePremiumMarker = useMemo(() => {
+        if (!currentUser) return false;
+        return currentUser?.superMarkers > 0;
+    }, [currentUser]);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             visibility: 'public',
+            isPremium: false,
             name: '',
             description: '',
             tag: 'Autre',
             coordinates: ''
         }
     });
-    const mapTags: string[] = [
-        'Points de vue',
-        'Randonnée et sentiers',
-        'Espace vert',
-        'Espace aquatique',
-        'Espace de détente',
-        'Site sportif',
-        'Site touristique',
-        'Site historique',
-        'Site culturel',
-        'Centre de loisirs',
-        'Commerce',
-        'Transport',
-        'Restauration',
-        'Bar',
-        'Hôtel',
-        'Camping',
-        'Hébergement',
-        'Service public',
-        'Espace de santé',
-        'Espace de travail',
-        'Autre'
-    ];
 
     useEffect(() => {
         if (groups.length === 0) {
@@ -135,7 +144,11 @@ export default function ModalCreateMarker() {
 
     const addMarkerCommon = async (latitude: number, longitude: number, address = '') => {
         if (!currentUser) return;
+
         const formValues = form.getValues();
+        const markerIsPremium = canMakePremiumMarker && formValues.isPremium;
+        const scoreType = markerIsPremium ? 'super_marker_created' : 'marker_created';
+
         const newMarker: Omit<Marker, 'id'> = {
             name: formValues.name,
             description: formValues.description || '',
@@ -149,24 +162,27 @@ export default function ModalCreateMarker() {
                 uid: currentUser.uid,
                 username: currentUser.username || currentUser.displayName || 'Sans nom'
             },
+            isPremium: markerIsPremium,
             likeCount: 0,
             likedBy: [],
             reportCount: 0,
             reportedBy: []
         };
 
+
         const markerId = await addMarker(newMarker);
         if (!markerId) {
             toast.error('Erreur lors de la création du point');
             return;
         }
+        if (markerIsPremium) decrementCurrentUserSuperMarkers();
         if (selectedGroups.length > 0 && currentUser?.uid) {
             addMarkerGroup(markerId, selectedGroups, currentUser.uid);
         }
 
         form.reset();
         setSelectedGroups([]);
-        manageScore(currentUser.uid, 'marker_created', true);
+        manageScore(currentUser.uid, scoreType, true);
         toast.success('Point ajouté avec succès');
         setIsDialogOpen(false);
         if (searchParams.get('create-at')) {
@@ -329,6 +345,22 @@ export default function ModalCreateMarker() {
                                 </FormItem>
                             )}
                         />
+
+                        {canMakePremiumMarker && (
+                            <FormField
+                                control={form.control}
+                                name="isPremium"
+                                render={({ field }) => (
+                                    <FormItem className="inline-flex items-center gap-2">
+                                        <FormLabel>Super-point (restant : {currentUser?.superMarkers})</FormLabel>
+                                        <FormControl>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} className="!mt-0" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
 
                         {form.watch('visibility') === 'groups' && (
                             <div>

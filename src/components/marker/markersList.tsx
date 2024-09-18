@@ -47,7 +47,7 @@ export const MarkersList = ({
     };
 
     const goTo = (marker: Marker) => {
-        router.push(`/map?lat=${marker.latitude}&lng=${marker.longitude}`);
+        router.push(`/map?go-to=${marker.latitude},${marker.longitude}`);
     }
 
     const openInMaps = (marker: Marker) => {

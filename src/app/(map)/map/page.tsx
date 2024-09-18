@@ -84,7 +84,7 @@ export default function Home() {
         map.current.on('contextmenu', (e: any) => {
             e.preventDefault();
             setSelectedMarker(null);
-            router.push('/map?create-at=' + e.lngLat.lat + ',' + e.lngLat.lng);
+            router.push(`/map?create-at=${e.lngLat.lat},${e.lngLat.lng}`);
         });
     }, []);
 
@@ -107,16 +107,16 @@ export default function Home() {
     );
 
     useEffect(() => {
-        if (!mapIsLoaded) return;
+        const coords = searchParams.get('go-to');
+        if (!mapIsLoaded || !coords) return;
 
-        const lat = searchParams.get('lat');
-        const lng = searchParams.get('lng');
+        const [latitude, longitude] = coords.split(',').map((coord) => parseFloat(coord.trim()));
+        if (!latitude || !longitude) return;
 
-        if (!lat || !lng) return;
         setOpenModalListMarkers(false);
 
         map.current!.flyTo({
-            center: [parseFloat(lng), parseFloat(lat)],
+            center: [longitude, latitude],
             zoom: 15
         })
     }, [mapIsLoaded, searchParams]);

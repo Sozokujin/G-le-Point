@@ -39,7 +39,7 @@ const Friends = () => {
         if (!selectedFriend) {
             setDisplayMarkers([]);
         }
-    } , [selectedFriend]);
+    }, [selectedFriend]);
 
     const handleSelectedFriendChange = async (friend: FirebaseUser) => {
         setDisplayMarkers([]);

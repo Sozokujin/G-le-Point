@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -32,6 +31,7 @@ const formSchema = z.object({
 
 export default function ModalCreateMarker() {
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
 
     const { addMarker } = useMarkerStore();
@@ -86,13 +86,15 @@ export default function ModalCreateMarker() {
     }, [form.watch('visibility')]);
 
     useEffect(() => {
+        if (pathname !== '/map') return;
+
         const coords = searchParams.get('create-at');
         if (!coords) return;
 
         setDisplay('gps');
         form.setValue('coordinates', coords);
         setIsDialogOpen(true);
-    }, [searchParams]);
+    }, [searchParams, pathname]);
 
     useEffect(() => {
         const fetchGroupMembers = async () => {

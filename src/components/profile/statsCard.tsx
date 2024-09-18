@@ -10,7 +10,7 @@ import useUserStore from '@/stores/userStore';
 export const StatsCard = () => {
     const { currentUser } = useUserStore();
     const { userMarkers, getUserMarkers } = useMarkerStore();
-    const {fetchUserLikeCount, userLikeCount} = useUserStore();
+    const { fetchUserLikeCount, userLikeCount } = useUserStore();
 
     const userMarkersCount = useMemo(() => userMarkers?.length ?? 0, [userMarkers]);
     const userSuperMarkersCount = useMemo(() => currentUser?.superMarkers ?? 0, [currentUser]);
@@ -20,7 +20,7 @@ export const StatsCard = () => {
         if (!currentUser) return;
 
         fetchUserLikeCount(currentUser.uid);
-    } , [currentUser, fetchUserLikeCount]);
+    }, [currentUser, fetchUserLikeCount]);
 
     const products = [
         {

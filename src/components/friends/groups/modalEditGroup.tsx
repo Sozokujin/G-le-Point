@@ -24,7 +24,7 @@ export const ModalEditGroup = ({ group }: EditGroupModalProps) => {
     const [members, setMembers] = useState<FirebaseUser[]>([]);
     const [groupName, setGroupName] = useState<string>(group.name);
     const [isOpen, setIsOpen] = useState(false);
-    const isButtonDisabled = groupName.trim() === '' || groupName === group.name;
+    const isButtonDisabled = groupName.trim() === '';
 
     useEffect(() => {
         if (friends.length === 0) {

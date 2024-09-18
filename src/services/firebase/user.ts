@@ -56,7 +56,7 @@ export const getUsersByIds = async (uids: string[]): Promise<FirebaseUser[]> => 
 
 export const getUserLikeCount = async (uid: string): Promise<number> => {
     if (!uid) {
-        console.error('Aucun ID d\'utilisateur fourni.');
+        console.error("Aucun ID d'utilisateur fourni.");
         return 0;
     }
     try {

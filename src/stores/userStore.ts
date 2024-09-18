@@ -94,7 +94,7 @@ const useUserStore = create<UserStore>((set) => ({
         });
     },
     fetchUserLikeCount: async (userId: string) => {
-        const likeCount =  await getUserLikeCount(userId);
+        const likeCount = await getUserLikeCount(userId);
         set({ userLikeCount: likeCount });
     },
     decrementCurrentUserSuperMarkers: async () => {

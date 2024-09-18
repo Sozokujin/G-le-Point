@@ -95,17 +95,19 @@ export const getGroupMarkers = async (groupId: string): Promise<Marker[]> => {
         return [];
     }
 
-    const markerIds = markers.map(marker => marker.idMarker);
-
+    const markerIds = markers.map((marker) => marker.idMarker);
 
     const markerCollectionRef = collection(db, 'markers');
     const markerQuery = query(markerCollectionRef, where(documentId(), 'in', markerIds));
     const markerQuerySnapshot = await getDocs(markerQuery);
 
-    return markerQuerySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    } as Marker));
+    return markerQuerySnapshot.docs.map(
+        (doc) =>
+            ({
+                id: doc.id,
+                ...doc.data()
+            }) as Marker
+    );
 };
 
 export const getGroupsMarkers = async (userUid: string): Promise<Marker[]> => {
@@ -114,11 +116,11 @@ export const getGroupsMarkers = async (userUid: string): Promise<Marker[]> => {
     const groupQuerySnapshot = await getDocs(groupQuery);
 
     const allMarkerIds: string[] = [];
-    groupQuerySnapshot.forEach(groupDoc => {
+    groupQuerySnapshot.forEach((groupDoc) => {
         const group = groupDoc.data() as Group;
         const groupMarkerIds = (group.markers || [])
-            .filter(marker => marker.idUser !== userUid)
-            .map(marker => marker.idMarker);
+            .filter((marker) => marker.idUser !== userUid)
+            .map((marker) => marker.idMarker);
         allMarkerIds.push(...groupMarkerIds);
     });
 
@@ -134,10 +136,13 @@ export const getGroupsMarkers = async (userUid: string): Promise<Marker[]> => {
     );
     const markerQuerySnapshot = await getDocs(markerQuery);
 
-    return markerQuerySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    } as Marker));
+    return markerQuerySnapshot.docs.map(
+        (doc) =>
+            ({
+                id: doc.id,
+                ...doc.data()
+            }) as Marker
+    );
 };
 
 export const getPublicMarkers = async (userUid: string) => {

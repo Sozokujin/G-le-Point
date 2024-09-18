@@ -54,7 +54,7 @@ export default function Home() {
                 type: 'Feature',
                 properties: {
                     ...marker,
-                    type: markerType
+                    type: marker.isPremium ? 'super' : markerType,
                 },
                 geometry: {
                     type: 'Point',
@@ -151,10 +151,11 @@ export default function Home() {
             });
         };
 
-        loadImage('images/logo-user.png', 'logo-user');
-        loadImage('images/logo-friend.png', 'logo-friend');
-        loadImage('images/logo-group.png', 'logo-group');
-        loadImage('images/logo-public.png', 'logo-public');
+        loadImage('images/map/logo-user.png', 'logo-user');
+        loadImage('images/map/logo-super.png', 'logo-super');
+        loadImage('images/map/logo-group.png', 'logo-group');
+        loadImage('images/map/logo-friend.png', 'logo-friend');
+        loadImage('images/map/logo-public.png', 'logo-public');
     };
 
     const clusterLayer: CircleLayerSpecification = {
@@ -191,10 +192,12 @@ export default function Home() {
                 ['get', 'type'],
                 'user',
                 'logo-user',
-                'friend',
-                'logo-friend',
+                'super',
+                'logo-super',
                 'group',
                 'logo-group',
+                'friend',
+                'logo-friend',
                 'public',
                 'logo-public',
                 'default-marker'

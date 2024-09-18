@@ -17,17 +17,43 @@ import AutocompleteMapbox from '@/components/map/autocompleteMapbox';
 import { AvatarUser } from '@/components/ui/group-avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const formSchema = z.object({
     visibility: z.enum(['public', 'friends', 'groups']),
+    isPremium: z.boolean(),
     name: z.string().min(3, 'Le nom du lieu est requis et doit contenir au moins 3 caractères'),
     description: z.string().optional(),
     tag: z.string().default('Autre'),
     coordinates: z.string().optional()
 });
+
+const mapTags: string[] = [
+    'Bar',
+    'Camping',
+    'Centre de loisirs',
+    'Commerce',
+    'Espace aquatique',
+    'Espace de détente',
+    'Espace de santé',
+    'Espace de travail',
+    'Espace vert',
+    'Hébergement',
+    'Hôtel',
+    'Points de vue',
+    'Randonnée et sentiers',
+    'Restauration',
+    'Service public',
+    'Site culturel',
+    'Site historique',
+    'Site sportif',
+    'Site touristique',
+    'Transport',
+    'Autre'
+];
 
 export default function ModalCreateMarker() {
     const router = useRouter();
@@ -49,35 +75,13 @@ export default function ModalCreateMarker() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             visibility: 'public',
+            isPremium: false,
             name: '',
             description: '',
             tag: 'Autre',
             coordinates: ''
         }
     });
-    const mapTags: string[] = [
-        'Points de vue',
-        'Randonnée et sentiers',
-        'Espace vert',
-        'Espace aquatique',
-        'Espace de détente',
-        'Site sportif',
-        'Site touristique',
-        'Site historique',
-        'Site culturel',
-        'Centre de loisirs',
-        'Commerce',
-        'Transport',
-        'Restauration',
-        'Bar',
-        'Hôtel',
-        'Camping',
-        'Hébergement',
-        'Service public',
-        'Espace de santé',
-        'Espace de travail',
-        'Autre'
-    ];
 
     useEffect(() => {
         if (groups.length === 0) {
@@ -134,12 +138,14 @@ export default function ModalCreateMarker() {
     };
 
     const addMarkerCommon = (latitude: number, longitude: number, address = '') => {
-        const idMarker = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
-
         if (!currentUser) return;
+
         const formValues = form.getValues();
+        const markerId = new Date().getTime().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7);
+        const markerType = formValues.isPremium ? 'super_marker_created' : 'marker_created';
+
         addMarker({
-            id: idMarker,
+            id: markerId,
             name: formValues.name,
             description: formValues.description || '',
             tags: formValues.tag,
@@ -152,6 +158,7 @@ export default function ModalCreateMarker() {
                 uid: currentUser.uid,
                 username: currentUser.username || currentUser.displayName || 'Sans nom'
             },
+            isPremium: formValues.isPremium,
             likeCount: 0,
             likedBy: [],
             reportCount: 0,
@@ -159,11 +166,11 @@ export default function ModalCreateMarker() {
         });
 
         if (selectedGroups.length > 0 && currentUser?.uid) {
-            addMarkerGroup(idMarker, selectedGroups, currentUser.uid);
+            addMarkerGroup(markerId, selectedGroups, currentUser.uid);
         }
         form.reset();
         setSelectedGroups([]);
-        manageScore(currentUser.uid, 'marker_created', true);
+        manageScore(currentUser.uid, markerType, true);
         toast.success('Point ajouté avec succès');
         setIsDialogOpen(false);
         if (searchParams.get('create-at')) {
@@ -322,6 +329,20 @@ export default function ModalCreateMarker() {
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="isPremium"
+                            render={({ field }) => (
+                                <FormItem className="inline-flex items-center gap-2">
+                                    <FormLabel>Point Premium</FormLabel>
+                                    <FormControl>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} className="!mt-0" />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
